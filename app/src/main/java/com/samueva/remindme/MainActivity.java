@@ -1,8 +1,11 @@
 package com.samueva.remindme;
 
+import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,31 +17,45 @@ import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import java.util.ArrayList;
 //import android.view.Menu;
 
 // TODO: 6/9/19 Gestire il funzionamento del database con room
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int addTaskActivity_requestCode = 101;
+
+    private AppDatabase db;
+
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter recyclerAdapter;
+    TaskRecyclerAdapter recyclerAdapter;
+
+    private FloatingActionButton fab;
+    private boolean fabWasShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Database
+        this.db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").build();
+
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // TODO: 6/13/19 Implementare al creazione di un nuovo task
         // FloatingActionButton
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        this.fab = findViewById(R.id.fab);
+        this.fabWasShown = fab.isShown();
+        this.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                startAddTaskActivity();
             }
         });
 
@@ -52,11 +69,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // RecyclerView
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0) {
+                    fab.hide();
+                    fabWasShown = false;
+                } else {
+                    fab.show();
+                    fabWasShown = true;
+                }
+            }
+        });
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        // TODO: 6/9/19 Gestire la corretta creazione della lista di task
-        //recyclerAdapter = new TaskRecyclerAdapter();
+        recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
+            @Override
+            public void onTaskCardClick(int taskId) {
+                // TODO: 6/13/19 Implementare la richiesta di informazioni
+            }
+
+            @Override
+            public void onTaskCardLater(int taskId) {
+                // TODO: 6/13/19 Implementare il rimando del task
+            }
+
+            @Override
+            public void onTaskCardDone(int taskId) {
+                // TODO: 6/13/19 implementare il completamento del task
+            }
+
+            @Override
+            public void onTaskCardDelete(int taskId) {
+                // TODO: 6/13/19 Implementare l'eliminazione del task
+            }
+        });
         recyclerView.setAdapter(recyclerAdapter);
+
+        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INIT).execute();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case addTaskActivity_requestCode:
+                    // TODO: 5/11/19 controllare che la risposta non sia nulla
+                    // TODO: 5/9/19 gestire la chiave "category" dell'intent di risposta
+                    Task newTask = new Task(data.getExtras().getString("title"), data.getExtras().getInt("year"), data.getExtras().getInt("month"), data.getExtras().getInt("dayOfMonth"), data.getExtras().getInt("hourOfDay"), data.getExtras().getInt("minute"), data.getExtras().getString("place"), data.getExtras().getString("status"));
+                    new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT, newTask).execute();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -114,5 +180,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void startAddTaskActivity() {
+        Intent intent = new Intent(this, AddTaskActivity.class);
+        startActivityForResult(intent, addTaskActivity_requestCode);
     }
 }

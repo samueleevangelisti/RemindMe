@@ -25,7 +25,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.task = task;
     }
 
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, TaskRecyclerAdapter recyclerAdapter) {
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.myDbAction = myDbAction;
