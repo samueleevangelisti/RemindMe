@@ -1,14 +1,14 @@
 package com.samueva.remindme;
 
-//import android.arch.persistence.room.Entity;
-//import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Calendar;
 
-//@Entity
+@Entity
 public class Task {
 
-    //@PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
     private int year;
