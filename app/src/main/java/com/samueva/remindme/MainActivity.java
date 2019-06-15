@@ -21,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 //import android.view.Menu;
 
-// TODO: 6/9/19 Gestire il funzionamento del database con room
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDelete(int taskId) {
-                // TODO: 6/13/19 Implementare l'eliminazione del task
+                new DbAsyncTask(db, recyclerAdapter, dbAction.DELETE, taskId).execute();
             }
         });
         recyclerView.setAdapter(recyclerAdapter);
