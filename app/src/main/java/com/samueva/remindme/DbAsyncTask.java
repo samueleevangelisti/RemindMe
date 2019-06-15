@@ -17,12 +17,19 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     private int taskId;
     private Task task;
 
-    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task) {
+    DbAsyncTaskCallback dbAsyncTaskCallback;
+
+    public interface DbAsyncTaskCallback {
+        void onInfoCallback(Task task);
+    }
+
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, DbAsyncTaskCallback dbAsyncTaskCallback) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
         this.task = task;
+        this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
 
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction) {
@@ -31,6 +38,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = null;
+        this.dbAsyncTaskCallback = null;
     }
 
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, Task task) {
@@ -39,6 +47,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = task;
+        this.dbAsyncTaskCallback = null;
     }
 
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId) {
@@ -47,6 +56,16 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = taskId;
         this.task = null;
+        this.dbAsyncTaskCallback = null;
+    }
+
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, DbAsyncTaskCallback dbAsyncTaskCallback) {
+        this.db = db;
+        this.recyclerAdapter = recyclerAdapter;
+        this.myDbAction = myDbAction;
+        this.taskId = taskId;
+        this.task = null;
+        this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
 
     @Override
@@ -91,8 +110,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 recyclerAdapter.notifyDataSetChanged();
                 break;
             case INFO:
-                // TODO: 6/12/19 Gestione dell'activity per chiedere informazioni
-                //startTaskInfoActivity(task);
+                dbAsyncTaskCallback.onInfoCallback(task);
                 break;
             default:
                 break;

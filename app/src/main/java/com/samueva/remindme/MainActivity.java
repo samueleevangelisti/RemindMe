@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // TODO: 6/13/19 Implementare al creazione di un nuovo task
         // FloatingActionButton
         this.fab = findViewById(R.id.fab);
         this.fabWasShown = fab.isShown();
@@ -85,7 +84,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
             @Override
             public void onTaskCardClick(int taskId) {
-                // TODO: 6/13/19 Implementare la richiesta di informazioni
+                new DbAsyncTask(db, recyclerAdapter, dbAction.INFO, taskId, new DbAsyncTask.DbAsyncTaskCallback() {
+                    @Override
+                    public void onInfoCallback(Task task) {
+                        startTaskInfoActivity(task);
+                    }
+                }).execute();
             }
 
             @Override
@@ -106,22 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setAdapter(recyclerAdapter);
 
         new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INIT).execute();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case addTaskActivity_requestCode:
-                    // TODO: 5/11/19 controllare che la risposta non sia nulla
-                    // TODO: 5/9/19 gestire la chiave "category" dell'intent di risposta
-                    Task newTask = new Task(data.getExtras().getString("title"), data.getExtras().getInt("year"), data.getExtras().getInt("month"), data.getExtras().getInt("dayOfMonth"), data.getExtras().getInt("hourOfDay"), data.getExtras().getInt("minute"), data.getExtras().getString("place"), data.getExtras().getString("status"));
-                    new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT, newTask).execute();
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     @Override
@@ -181,8 +169,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case addTaskActivity_requestCode:
+                    // TODO: 5/11/19 controllare che la risposta non sia nulla
+                    // TODO: 5/9/19 gestire la chiave "category" dell'intent di risposta
+                    Task newTask = new Task(data.getExtras().getString("title"), data.getExtras().getInt("year"), data.getExtras().getInt("month"), data.getExtras().getInt("dayOfMonth"), data.getExtras().getInt("hourOfDay"), data.getExtras().getInt("minute"), data.getExtras().getString("place"), data.getExtras().getString("status"));
+                    new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT, newTask).execute();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void startAddTaskActivity() {
         Intent intent = new Intent(this, AddTaskActivity.class);
         startActivityForResult(intent, addTaskActivity_requestCode);
+    }
+
+    private void startTaskInfoActivity(Task task) {
+        Intent intent = new Intent(this, TaskInfoActivity.class);
+        intent.putExtra("id", task.getId());
+        intent.putExtra("title", task.getTitle());
+        intent.putExtra("year", task.getYear());
+        intent.putExtra("month", task.getMonth());
+        intent.putExtra("dayOfMonth", task.getDayOfMonth());
+        intent.putExtra("hourOfDay", task.getHourOfDay());
+        intent.putExtra("minute", task.getMinute());
+        intent.putExtra("place", task.getPlace());
+        intent.putExtra("status", task.getStatus());
+        startActivity(intent);
     }
 }
