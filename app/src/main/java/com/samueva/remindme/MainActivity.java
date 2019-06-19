@@ -183,8 +183,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case addTaskActivity_requestCode:
-                    // TODO: 5/9/19 gestire la chiave "category" dell'intent di risposta
-                    Task newTask = new Task(data.getExtras().getString("title"), data.getExtras().getInt("year"), data.getExtras().getInt("month"), data.getExtras().getInt("dayOfMonth"), data.getExtras().getInt("hourOfDay"), data.getExtras().getInt("minute"), data.getExtras().getString("place"), "data.getExtras().getString(\"category\")", data.getExtras().getString("status"));
+                    Intent intent = getIntent();
+                    Bundle bundle = intent.getExtras();
+                    Task newTask = bundle.getParcelable("task");
                     new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT_TASK, newTask).execute();
                     break;
                 default:

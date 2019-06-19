@@ -145,7 +145,7 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.title);
+        dest.writeString(title);
         dest.writeInt(this.year);
         dest.writeInt(this.month);
         dest.writeInt(this.dayOfMonth);

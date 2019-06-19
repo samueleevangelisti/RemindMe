@@ -50,7 +50,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         createTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTaskCallback();
+                sendNewTaskToCaller();
             }
         });
         /*Button editCustomCategory = (Button) findViewById(R.id.edit_custom_category);
@@ -80,21 +80,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         });
     }
 
-    public void addTaskCallback() {
-        Intent data = new Intent();
+    public void sendNewTaskToCaller() {
         TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
         TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
         Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
-        data.putExtra("title", newTaskTitle.getText().toString());
-        data.putExtra("year", this.newTaskCalendar.get(Calendar.YEAR));
-        data.putExtra("month", this.newTaskCalendar.get(Calendar.MONTH));
-        data.putExtra("dayOfMonth", this.newTaskCalendar.get(Calendar.DAY_OF_MONTH));
-        data.putExtra("hourOfDay", this.newTaskCalendar.get(Calendar.HOUR_OF_DAY));
-        data.putExtra("minute", this.newTaskCalendar.get(Calendar.MINUTE));
-        data.putExtra("place", newTaskPlace.getText().toString());
-        //data.putExtra("category", newTaskCategory.getSelectedItem().toString());
-        data.putExtra("status", "Pending");
-        setResult(RESULT_OK, data);
+        Task task = new Task(newTaskTitle.getText().toString(), this.newTaskCalendar, newTaskPlace.getText().toString(), "newTaskCategory.getSelectedItem().toString()", "Pending");
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("task", task);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
         super.finish();
     }
 
