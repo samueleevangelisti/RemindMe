@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case addTaskActivity_requestCode:
-                    Task newTask = data.getExtras().getParcelable("task");
+                    Task newTask = (Task) data.getExtras().getParcelable("task");
                     new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT_TASK, newTask).execute();
                     break;
                 default:
@@ -198,16 +198,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void startTaskInfoActivity(Task task) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("task", task);
         Intent intent = new Intent(this, TaskInfoActivity.class);
-        intent.putExtra("id", task.getId());
-        intent.putExtra("title", task.getTitle());
-        intent.putExtra("year", task.getYear());
-        intent.putExtra("month", task.getMonth());
-        intent.putExtra("dayOfMonth", task.getDayOfMonth());
-        intent.putExtra("hourOfDay", task.getHourOfDay());
-        intent.putExtra("minute", task.getMinute());
-        intent.putExtra("place", task.getPlace());
-        intent.putExtra("status", task.getStatus());
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

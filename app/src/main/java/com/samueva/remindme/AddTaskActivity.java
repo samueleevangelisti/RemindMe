@@ -105,6 +105,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         this.newTaskCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         this.newTaskCalendar.set(Calendar.MINUTE, minute);
         TextView newTaskTime = (TextView) findViewById(R.id.new_task_time);
-        newTaskTime.setText(String.format("%1$tH : %1$tM", this.newTaskCalendar));
+        newTaskTime.setText(String.format("%1$tH:%1$tM", this.newTaskCalendar));
     }
 }

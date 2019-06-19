@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 public class TaskInfoActivity extends AppCompatActivity {
 
+    Task task;
     private static Calendar calendar;
 
     @Override
@@ -15,23 +16,22 @@ public class TaskInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_info);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            TextView taskId = (TextView) findViewById(R.id.task_info_id);
-            TextView taskTitle = (TextView) findViewById(R.id.task_info_title);
-            TextView taskDate = (TextView) findViewById(R.id.task_info_date);
-            TextView taskTime = (TextView) findViewById(R.id.task_info_time);
-            TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
-            TextView taskStatus = (TextView) findViewById(R.id.task_info_status);
-            this.calendar = Calendar.getInstance();
-            this.calendar.set(extras.getInt("year"), extras.getInt("month"), extras.getInt("dayOfMonth"), extras.getInt("hourOfDay"), extras.getInt("minute"));
-            taskId.setText(String.valueOf(extras.getInt("id")));
-            taskTitle.setText(extras.getString("title"));
-            taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.calendar));
-            taskTime.setText(String.format("%1$tH : %1$tM", this.calendar));
-            taskPlace.setText(extras.getString("place"));
-            taskStatus.setText(extras.getString("status"));
+        this.task = (Task) getIntent().getExtras().getParcelable("task");
+        this.calendar = Calendar.getInstance();
+        this.calendar.set(this.task.getYear(), this.task.getMonth(), this.task.getDayOfMonth(), this.task.getHourOfDay(), this.task.getMinute());
 
-        }
+        TextView taskId = (TextView) findViewById(R.id.task_info_id);
+        TextView taskTitle = (TextView) findViewById(R.id.task_info_title);
+        TextView taskDate = (TextView) findViewById(R.id.task_info_date);
+        TextView taskTime = (TextView) findViewById(R.id.task_info_time);
+        TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
+        TextView taskStatus = (TextView) findViewById(R.id.task_info_status);
+
+        taskId.setText(String.valueOf(this.task.getId()));
+        taskTitle.setText(this.task.getTitle());
+        taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.calendar));
+        taskTime.setText(String.format("%1$tH : %1$tM", this.calendar));
+        taskPlace.setText(this.task.getPlace());
+        taskStatus.setText(this.task.getStatus());
     }
 }
