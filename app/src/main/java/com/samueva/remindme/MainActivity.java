@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
+import java.util.List;
 //import android.view.Menu;
 
 
@@ -42,6 +43,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Database
         this.db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").build();
+
+        // Categories
+        List<String> categories = new ArrayList<String>();
+        categories.add("Family");
+        categories.add("Work");
+        categories.add("Sport");
+        new DbAsyncTask(this.db, dbAction.CONFIG_CATEGORY, categories);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -84,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
             @Override
             public void onTaskCardClick(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.INFO, taskId, new DbAsyncTask.DbAsyncTaskCallback() {
+                new DbAsyncTask(db, recyclerAdapter, dbAction.INFO_TASK, taskId, new DbAsyncTask.DbAsyncTaskCallback() {
                     @Override
                     public void onInfoCallback(Task task) {
                         startTaskInfoActivity(task);
@@ -104,12 +112,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDelete(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.DELETE, taskId).execute();
+                new DbAsyncTask(db, recyclerAdapter, dbAction.DELETE_TASK, taskId).execute();
             }
         });
         recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INIT).execute();
+        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INIT_TASK).execute();
     }
 
     @Override
@@ -176,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case addTaskActivity_requestCode:
                     // TODO: 5/9/19 gestire la chiave "category" dell'intent di risposta
                     Task newTask = new Task(data.getExtras().getString("title"), data.getExtras().getInt("year"), data.getExtras().getInt("month"), data.getExtras().getInt("dayOfMonth"), data.getExtras().getInt("hourOfDay"), data.getExtras().getInt("minute"), data.getExtras().getString("place"), "data.getExtras().getString(\"category\")", data.getExtras().getString("status"));
-                    new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT, newTask).execute();
+                    new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT_TASK, newTask).execute();
                     break;
                 default:
                     break;
