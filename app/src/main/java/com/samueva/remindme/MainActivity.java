@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").build();
 
         // Categories
+        // TODO: 6/19/19 L'iniziallizzazione delle categories di default va fatta prendendole da un file risorsa
         List<String> categories = new ArrayList<String>();
         categories.add("Family");
         categories.add("Work");
