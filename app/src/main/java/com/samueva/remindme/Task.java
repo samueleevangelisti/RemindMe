@@ -17,9 +17,10 @@ public class Task {
     private int hourOfDay;
     private int minute;
     private String place;
+    private String category;
     private String status;
 
-    public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String status) {
+    public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String category, String status) {
         this.title = title;
         this.year = year;
         this.month = month;
@@ -27,10 +28,11 @@ public class Task {
         this.hourOfDay = hourOfDay;
         this.minute = minute;
         this.place = place;
+        this.category = category;
         this.status = status;
     }
 
-    public Task(String title, Calendar calendar, String place, String status) {
+    public Task(String title, Calendar calendar, String place, String category, String status) {
         this.title = title;
         this.year = calendar.get(Calendar.YEAR);
         this.month = calendar.get(Calendar.MONTH);
@@ -38,6 +40,7 @@ public class Task {
         this.hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         this.minute = calendar.get(Calendar.MINUTE);
         this.place = place;
+        this.category = category;
         this.status = status;
     }
 
@@ -103,6 +106,14 @@ public class Task {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getStatus() {
