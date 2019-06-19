@@ -183,9 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case addTaskActivity_requestCode:
-                    Intent intent = getIntent();
-                    Bundle bundle = intent.getExtras();
-                    Task newTask = bundle.getParcelable("task");
+                    Task newTask = data.getExtras().getParcelable("task");
                     new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT_TASK, newTask).execute();
                     break;
                 default:
