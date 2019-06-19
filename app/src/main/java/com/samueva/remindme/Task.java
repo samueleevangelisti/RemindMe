@@ -2,11 +2,13 @@ package com.samueva.remindme;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Calendar;
 
 @Entity
-public class Task {
+public class Task implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -42,6 +44,18 @@ public class Task {
         this.place = place;
         this.category = category;
         this.status = status;
+    }
+
+    public Task(Parcel parcel) {
+        this.title = parcel.readString();
+        this.year = parcel.readInt();
+        this.month = parcel.readInt();
+        this.dayOfMonth = parcel.readInt();
+        this.hourOfDay = parcel.readInt();
+        this.minute = parcel.readInt();
+        this.place = parcel.readString();
+        this.category = parcel.readString();
+        this.status = parcel.readString();
     }
 
     public int getId() {
@@ -123,4 +137,35 @@ public class Task {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.title);
+        dest.writeInt(this.year);
+        dest.writeInt(this.month);
+        dest.writeInt(this.dayOfMonth);
+        dest.writeInt(this.hourOfDay);
+        dest.writeInt(this.minute);
+        dest.writeString(this.place);
+        dest.writeString(this.category);
+        dest.writeString(this.status);
+    }
+
+    public final static Parcelable.Creator CREATOR = new Parcelable.Creator() {
+
+        @Override
+        public Task createFromParcel(Parcel source) {
+            return new Task(source);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 }
