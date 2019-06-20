@@ -24,7 +24,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     DbAsyncTaskCallback dbAsyncTaskCallback;
 
     public interface DbAsyncTaskCallback {
-        void onInfoCallback(Task task);
+        void onInfoReadyCallback(Task task);
     }
 
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, List<String> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
@@ -139,7 +139,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 recyclerAdapter.notifyDataSetChanged();
                 break;
             case INFO_TASK:
-                dbAsyncTaskCallback.onInfoCallback(task);
+                dbAsyncTaskCallback.onInfoReadyCallback(task);
                 break;
             default:
                 break;

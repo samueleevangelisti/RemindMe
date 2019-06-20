@@ -25,16 +25,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    // Request codes
     private static final int addTaskActivity_requestCode = 101;
 
+    // AppDatabase
     private AppDatabase db;
 
+    //RecylerView
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     TaskRecyclerAdapter recyclerAdapter;
 
+    // FloatingActionButton
     private FloatingActionButton fab;
-    private boolean fabWasShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // FloatingActionButton
         this.fab = findViewById(R.id.fab);
-        this.fabWasShown = fab.isShown();
         this.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,10 +83,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0) {
                     fab.hide();
-                    fabWasShown = false;
                 } else {
                     fab.show();
-                    fabWasShown = true;
                 }
             }
         });
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onTaskCardClick(int taskId) {
                 new DbAsyncTask(db, recyclerAdapter, dbAction.INFO_TASK, taskId, new DbAsyncTask.DbAsyncTaskCallback() {
                     @Override
-                    public void onInfoCallback(Task task) {
+                    public void onInfoReadyCallback(Task task) {
                         startTaskInfoActivity(task);
                     }
                 }).execute();
