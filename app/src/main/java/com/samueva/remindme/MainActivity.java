@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,11 +26,25 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    // TODO: 6/23/19 STRING DI DEBUG
+    private static final String TAG = "ReMe_MainActivity";
+
     // Request codes
     private static final int addTaskActivity_requestCode = 101;
 
     // AppDatabase
     private AppDatabase db;
+    private final DbAsyncTask.DbAsyncTaskCallback dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskCallback() {
+        @Override
+        public void onInsertTaskCallback() {
+
+        }
+
+        @Override
+        public void onInfoReadyCallback(Task task) {
+            startTaskInfoActivity(task);
+        }
+    };
 
     //RecylerView
     RecyclerView recyclerView;
@@ -53,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         categories.add("Family");
         categories.add("Work");
         categories.add("Sport");
-        new DbAsyncTask(this.db, dbAction.CONFIG_CATEGORY, categories);
+        new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categories);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -93,12 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
             @Override
             public void onTaskCardClick(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.INFO_TASK, taskId, new DbAsyncTask.DbAsyncTaskCallback() {
-                    @Override
-                    public void onInfoReadyCallback(Task task) {
-                        startTaskInfoActivity(task);
-                    }
-                }).execute();
+                new DbAsyncTask(db, recyclerAdapter, dbAction.INFO_TASK, taskId, dbAsyncTaskListener).execute();
             }
 
             @Override
@@ -118,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INIT_TASK).execute();
+        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETALL_TASK).execute();
     }
 
     @Override
@@ -184,8 +194,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case addTaskActivity_requestCode:
-                    Task newTask = (Task) data.getExtras().getParcelable("task");
-                    new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.INSERT_TASK, newTask).execute();
+                    Log.d(TAG, "onActivityResult: " + data.getBooleanExtra("new", false));
+                    if (data.getBooleanExtra("new", false)) {
+                        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETALL_TASK).execute();
+                    }
                     break;
                 default:
                     break;

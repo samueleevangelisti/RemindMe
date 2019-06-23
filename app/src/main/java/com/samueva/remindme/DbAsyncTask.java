@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 import java.util.List;
 
 enum dbAction {
-    INIT_TASK,
+    GETALL_TASK,
     INSERT_TASK,
     DELETE_TASK,
     INFO_TASK,
-    CONFIG_CATEGORY
+    INIT_CATEGORY
 }
 
 public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
@@ -24,6 +24,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     DbAsyncTaskCallback dbAsyncTaskCallback;
 
     public interface DbAsyncTaskCallback {
+        void onInsertTaskCallback();
         void onInfoReadyCallback(Task task);
     }
 
@@ -37,7 +38,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
 
-    // INIT_TASK
+    // GETALL_TASK
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
@@ -49,14 +50,14 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     }
 
     // INSERT_TASK
-    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, Task task) {
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, DbAsyncTaskCallback dbAsyncTaskCallback) {
         this.db = db;
-        this.recyclerAdapter = recyclerAdapter;
+        this.recyclerAdapter = null;
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = task;
         this.categoryList = null;
-        this.dbAsyncTaskCallback = null;
+        this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
 
     // DELETE_TASK
@@ -81,7 +82,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
 
-    // CONFIG_CATEGORY
+    // INIT_CATEGORY
     public DbAsyncTask(AppDatabase db, dbAction myDbAction, List<String> categoryList) {
         this.db = db;
         this.recyclerAdapter = null;
@@ -95,12 +96,11 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     @Override
     protected Task doInBackground(Void... voids) {
         switch (this.myDbAction) {
-            case INIT_TASK:
+            case GETALL_TASK:
                 recyclerAdapter.refreshData(db.taskDao().getAll());
                 return null;
             case INSERT_TASK:
                 db.taskDao().insertAll(this.task);
-                recyclerAdapter.refreshData((db.taskDao().getAll()));
                 return null;
             case DELETE_TASK:
                 if(this.task != null) {
@@ -116,7 +116,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 } else {
                     return db.taskDao().getById(this.taskId);
                 }
-            case CONFIG_CATEGORY:
+            case INIT_CATEGORY:
                 for (String category : this.categoryList) {
                     db.taskCategoryDao().insertAll(new TaskCategory(category));
                 }
@@ -129,11 +129,11 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     @Override
     protected void onPostExecute(Task task) {
         switch (this.myDbAction) {
-            case INIT_TASK:
+            case GETALL_TASK:
                 recyclerAdapter.notifyDataSetChanged();
                 break;
             case INSERT_TASK:
-                recyclerAdapter.notifyDataSetChanged();
+                dbAsyncTaskCallback.onInsertTaskCallback();
                 break;
             case DELETE_TASK:
                 recyclerAdapter.notifyDataSetChanged();

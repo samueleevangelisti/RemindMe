@@ -19,6 +19,20 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
     // TODO: 5/10/19 STRINGA_DI_DEBUG
     private static final String TAG = "ReMe_AddTaskActivity";
 
+    // AppDatabase
+    private AppDatabase db;
+    private final DbAsyncTask.DbAsyncTaskCallback dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskCallback() {
+        @Override
+        public void onInsertTaskCallback() {
+            addTaskActivityFinish();
+        }
+
+        @Override
+        public void onInfoReadyCallback(Task task) {
+
+        }
+    };
+
     // Calendar
     private static Calendar newTaskCalendar;
 
@@ -28,6 +42,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        // AppDatabase
+        this.db = AppDatabase.getInstance();
 
         // Date and Time
         this.newTaskCalendar = Calendar.getInstance();
@@ -50,7 +67,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         createTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendNewTaskToCaller();
+                TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
+                TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
+                Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
+                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), "newTaskCategory.getSelectedItem().toString()", "Pending");
+                new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
             }
         });
         /*Button editCustomCategory = (Button) findViewById(R.id.edit_custom_category);
@@ -80,15 +101,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         });
     }
 
-    public void sendNewTaskToCaller() {
-        TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
-        TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
-        Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
-        Task task = new Task(newTaskTitle.getText().toString(), this.newTaskCalendar, newTaskPlace.getText().toString(), "newTaskCategory.getSelectedItem().toString()", "Pending");
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("task", task);
+    private void addTaskActivityFinish() {
         Intent intent = new Intent();
-        intent.putExtras(bundle);
+        intent.putExtra("new", (boolean) true);
         setResult(RESULT_OK, intent);
         super.finish();
     }
