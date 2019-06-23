@@ -94,7 +94,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         });
         this.calendar.set(this.tasks.get(i).getYear(), this.tasks.get(i).getMonth(), this.tasks.get(i).getDayOfMonth(), this.tasks.get(i).getHourOfDay(), this.tasks.get(i).getMinute());
         viewHolder.itemDate.setText(String.format("%1$td/%1$tm/%1$tY", this.calendar));
-        viewHolder.itemTime.setText(String.format("%1$tH : %1$tM", this.calendar));
+        viewHolder.itemTime.setText(String.format("%1$tH:%1$tM", this.calendar));
         viewHolder.itemTitle.setText(this.tasks.get(i).getTitle());
         viewHolder.itemPlace.setText(this.tasks.get(i).getPlace());
         viewHolder.itemStatus.setText(this.tasks.get(i).getStatus());
