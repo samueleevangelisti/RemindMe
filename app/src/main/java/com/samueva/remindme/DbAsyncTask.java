@@ -19,16 +19,16 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     private dbAction myDbAction;
     private int taskId;
     private Task task;
-    private List<String> categoryList;
+    private List<TaskCategory> categoryList;
 
     DbAsyncTaskCallback dbAsyncTaskCallback;
 
     public interface DbAsyncTaskCallback {
         void onInsertTaskCallback();
-        void onInfoReadyCallback(Task task);
+        void onInfoTaskCallback(Task task);
     }
 
-    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, List<String> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, List<TaskCategory> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.myDbAction = myDbAction;
@@ -72,7 +72,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     }
 
     // INFO_TASK
-    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, DbAsyncTaskCallback dbAsyncTaskCallback) {
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, DbAsyncTaskCallback dbAsyncTaskCallback) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.myDbAction = myDbAction;
@@ -83,7 +83,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     }
 
     // INIT_CATEGORY
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, List<String> categoryList) {
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, List<TaskCategory> categoryList) {
         this.db = db;
         this.recyclerAdapter = null;
         this.myDbAction = myDbAction;
@@ -117,8 +117,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                     return db.taskDao().getById(this.taskId);
                 }
             case INIT_CATEGORY:
-                for (String category : this.categoryList) {
-                    db.taskCategoryDao().insertAll(new TaskCategory(category));
+                for (TaskCategory category : this.categoryList) {
+                    db.taskCategoryDao().insertAll(category);
                 }
                 return null;
             default:
@@ -139,7 +139,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 recyclerAdapter.notifyDataSetChanged();
                 break;
             case INFO_TASK:
-                dbAsyncTaskCallback.onInfoReadyCallback(task);
+                dbAsyncTaskCallback.onInfoTaskCallback(task);
                 break;
             default:
                 break;

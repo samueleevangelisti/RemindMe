@@ -28,7 +28,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         }
 
         @Override
-        public void onInfoReadyCallback(Task task) {
+        public void onInfoTaskCallback(Task task) {
 
         }
     };

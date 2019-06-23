@@ -34,17 +34,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // AppDatabase
     private AppDatabase db;
-    private final DbAsyncTask.DbAsyncTaskCallback dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskCallback() {
-        @Override
-        public void onInsertTaskCallback() {
-
-        }
-
-        @Override
-        public void onInfoReadyCallback(Task task) {
-            startTaskInfoActivity(task);
-        }
-    };
 
     //RecylerView
     RecyclerView recyclerView;
@@ -64,10 +53,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Categories
         // TODO: 6/19/19 L'iniziallizzazione delle categories di default va fatta prendendole da un file risorsa
-        List<String> categories = new ArrayList<String>();
-        categories.add("Family");
-        categories.add("Work");
-        categories.add("Sport");
+        List<TaskCategory> categories = new ArrayList<TaskCategory>();
+        categories.add(new TaskCategory("Family"));
+        categories.add(new TaskCategory("Work"));
+        categories.add(new TaskCategory("Sport"));
         new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categories);
 
         // Toolbar
@@ -108,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
             @Override
             public void onTaskCardClick(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.INFO_TASK, taskId, dbAsyncTaskListener).execute();
+                startTaskInfoActivity(taskId);
             }
 
             @Override
@@ -210,11 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(intent, addTaskActivity_requestCode);
     }
 
-    private void startTaskInfoActivity(Task task) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("task", task);
+    private void startTaskInfoActivity(int taskId) {
         Intent intent = new Intent(this, TaskInfoActivity.class);
-        intent.putExtras(bundle);
+        intent.putExtra("taskId", (int) taskId);
         startActivity(intent);
     }
 }
