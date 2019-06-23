@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class TaskInfoActivity extends AppCompatActivity {
 
@@ -33,6 +34,11 @@ public class TaskInfoActivity extends AppCompatActivity {
             taskPlace.setText(task.getPlace());
             taskStatus.setText(task.getStatus());
             taskId.setText(String.valueOf(task.getId()));
+        }
+
+        @Override
+        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+
         }
     };
 

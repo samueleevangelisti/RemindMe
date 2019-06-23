@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         categories.add(new TaskCategory("Family"));
         categories.add(new TaskCategory("Work"));
         categories.add(new TaskCategory("Sport"));
-        new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categories);
+        new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categories).execute();
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);

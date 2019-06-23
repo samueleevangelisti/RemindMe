@@ -1,6 +1,7 @@
 package com.samueva.remindme;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 
@@ -9,10 +10,14 @@ enum dbAction {
     INSERT_TASK,
     DELETE_TASK,
     INFO_TASK,
-    INIT_CATEGORY
+    INIT_CATEGORY,
+    GETALL_CATEGORY
 }
 
 public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
+
+    // TODO: 6/23/19 STRINGA DI DEBUG
+    private static final String TAG = "ReMe_DbAsyncTask";
 
     private AppDatabase db;
     private TaskRecyclerAdapter recyclerAdapter;
@@ -26,6 +31,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     public interface DbAsyncTaskCallback {
         void onInsertTaskCallback();
         void onInfoTaskCallback(Task task);
+        void onGetAllCategoryCallback(List<TaskCategory> categoryList);
     }
 
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, List<TaskCategory> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
@@ -93,6 +99,17 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.dbAsyncTaskCallback = null;
     }
 
+    // GETALL_CATEGORY
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskCallback dbAsyncTaskCallback) {
+        this.db = db;
+        this.recyclerAdapter = null;
+        this.myDbAction = myDbAction;
+        this.taskId = 0;
+        this.task = null;
+        this.categoryList = null;
+        this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+    }
+
     @Override
     protected Task doInBackground(Void... voids) {
         switch (this.myDbAction) {
@@ -121,6 +138,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                     db.taskCategoryDao().insertAll(category);
                 }
                 return null;
+            case GETALL_CATEGORY:
+                this.categoryList = db.taskCategoryDao().getAll();
+                return null;
             default:
                 return null;
         }
@@ -140,6 +160,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 break;
             case INFO_TASK:
                 dbAsyncTaskCallback.onInfoTaskCallback(task);
+                break;
+            case GETALL_CATEGORY:
+                dbAsyncTaskCallback.onGetAllCategoryCallback(this.categoryList);
                 break;
             default:
                 break;

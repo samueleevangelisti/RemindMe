@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,12 +32,22 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         public void onInfoTaskCallback(Task task) {
 
         }
+
+        @Override
+        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+            List<String> categories = new ArrayList<String>();
+            for (TaskCategory category : categoryList) {
+                categories.add(category.getName());
+            }
+            Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, categories);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            newTaskCategory.setAdapter(spinnerAdapter);
+        }
     };
 
     // Calendar
     private static Calendar newTaskCalendar;
-
-    //private List<String> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +64,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         TextView newTaskTime = (TextView) findViewById(R.id.new_task_time);
         newTaskTime.setText(String.format("%1$tH : %1$tM", this.newTaskCalendar));
 
-        /*// Category List
-        this.categoryList = new ArrayList<String>(R.array.task_categories);*/
-
-        /*// Spinner
-        Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.task_categories, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        newTaskCategory.setAdapter(spinnerAdapter);*/
+        // Spinner
+        new DbAsyncTask(this.db, dbAction.GETALL_CATEGORY, this.dbAsyncTaskListener).execute();
 
         // Buttons
         Button createTask = (Button) findViewById(R.id.create_task);
