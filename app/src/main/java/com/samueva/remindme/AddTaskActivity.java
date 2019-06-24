@@ -75,7 +75,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
                 TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
                 TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
                 Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
-                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), "newTaskCategory.getSelectedItem().toString()", "Pending");
+                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskCategory.getSelectedItem().toString(), "Pending");
                 new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
             }
         });
