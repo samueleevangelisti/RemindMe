@@ -53,11 +53,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Categories
         // TODO: 6/19/19 L'iniziallizzazione delle categories di default va fatta prendendole da un file risorsa
-        List<TaskCategory> categories = new ArrayList<TaskCategory>();
-        categories.add(new TaskCategory("Family"));
-        categories.add(new TaskCategory("Work"));
-        categories.add(new TaskCategory("Sport"));
-        new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categories).execute();
+        List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
+        String[] categories = getResources().getStringArray(R.array.categories);
+        for (int i = 0; i < categories.length; i++) {
+            categoryList.add(new TaskCategory(categories[i]));
+        }
+        new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categoryList).execute();
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
