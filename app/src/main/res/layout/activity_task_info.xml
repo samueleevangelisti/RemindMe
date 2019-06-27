@@ -57,12 +57,12 @@
         app:layout_constraintTop_toBottomOf="@+id/task_info_place" />
 
     <TextView
-        android:id="@+id/task_info_note"
+        android:id="@+id/task_info_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="@string/note"
+        android:text="@string/description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_info_category" />
 
@@ -84,5 +84,5 @@
         android:layout_marginTop="8dp"
         android:text="@string/id"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_info_note" />
+        app:layout_constraintTop_toBottomOf="@+id/task_info_description" />
 </android.support.constraint.ConstraintLayout>

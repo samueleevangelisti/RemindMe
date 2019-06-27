@@ -25,6 +25,7 @@ public class TaskInfoActivity extends AppCompatActivity {
             TextView taskDate = (TextView) findViewById(R.id.task_info_date);
             TextView taskTime = (TextView) findViewById(R.id.task_info_time);
             TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
+            TextView taskDescription = (TextView) findViewById(R.id.task_info_description);
             TextView taskCategory = (TextView) findViewById(R.id.task_info_category);
             TextView taskStatus = (TextView) findViewById(R.id.task_info_status);
             TextView taskId = (TextView) findViewById(R.id.task_info_id);
@@ -33,6 +34,7 @@ public class TaskInfoActivity extends AppCompatActivity {
             taskDate.setText(String.format("%1$td/%1$tm/%1$tY", calendar));
             taskTime.setText(String.format("%1$tH:%1$tM", calendar));
             taskPlace.setText(task.getPlace());
+            taskDescription.setText(task.getDescription());
             taskCategory.setText(task.getCategory());
             taskStatus.setText(task.getStatus());
             taskId.setText(String.valueOf(task.getId()));

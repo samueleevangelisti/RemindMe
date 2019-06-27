@@ -19,6 +19,12 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE id = :taskId")
     Task getById(int taskId);
 
+    @Query("SELECT * FROM task WHERE year = :taskYear AND month = :taskMonth AND dayOfMonth = :taskDayOfMonth")
+    List<Task> getAllByDate(int taskYear, int taskMonth, int taskDayOfMonth);
+
+    @Query("SELECT * FROM task WHERE year = :taskYear AND month = :taskMonth AND dayOfMonth = :taskDayOfMonth AND status = :taskStatus")
+    List<Task> getAllByDateStatus(int taskYear, int taskMonth, int taskDayOfMonth, int taskStatus);
+
     @Query("SELECT * FROM task WHERE category = :taskCategory")
     List<Task> getAllByCategory(String taskCategory);
 

@@ -19,10 +19,11 @@ public class Task implements Parcelable {
     private int hourOfDay;
     private int minute;
     private String place;
+    private String description;
     private String category;
     private String status;
 
-    public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String category, String status) {
+    public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String description, String category, String status) {
         this.title = title;
         this.year = year;
         this.month = month;
@@ -30,11 +31,12 @@ public class Task implements Parcelable {
         this.hourOfDay = hourOfDay;
         this.minute = minute;
         this.place = place;
+        this.description = description;
         this.category = category;
         this.status = status;
     }
 
-    public Task(String title, Calendar calendar, String place, String category, String status) {
+    public Task(String title, Calendar calendar, String place, String description, String category, String status) {
         this.title = title;
         this.year = calendar.get(Calendar.YEAR);
         this.month = calendar.get(Calendar.MONTH);
@@ -42,6 +44,7 @@ public class Task implements Parcelable {
         this.hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         this.minute = calendar.get(Calendar.MINUTE);
         this.place = place;
+        this.description = description;
         this.category = category;
         this.status = status;
     }
@@ -54,6 +57,7 @@ public class Task implements Parcelable {
         this.hourOfDay = parcel.readInt();
         this.minute = parcel.readInt();
         this.place = parcel.readString();
+        this.description = parcel.readString();
         this.category = parcel.readString();
         this.status = parcel.readString();
     }
@@ -122,6 +126,14 @@ public class Task implements Parcelable {
         this.place = place;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -152,6 +164,7 @@ public class Task implements Parcelable {
         dest.writeInt(this.hourOfDay);
         dest.writeInt(this.minute);
         dest.writeString(this.place);
+        dest.writeString(this.description);
         dest.writeString(this.category);
         dest.writeString(this.status);
     }

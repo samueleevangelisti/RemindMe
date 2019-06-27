@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -75,7 +74,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
                 TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
                 TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
                 Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
-                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskCategory.getSelectedItem().toString(), "Pending");
+                TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
+                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), "Pending");
                 new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
             }
         });

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    // TODO: 6/23/19 STRING DI DEBUG
+    // TODO: 6/23/19 STRINGA DI DEBUG
     private static final String TAG = "ReMe_MainActivity";
 
     // Request codes
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");
 
         // Categories
-        // TODO: 6/19/19 L'iniziallizzazione delle categories di default va fatta prendendole da un file risorsa
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         String[] categories = getResources().getStringArray(R.array.categories);
         for (int i = 0; i < categories.length; i++) {
