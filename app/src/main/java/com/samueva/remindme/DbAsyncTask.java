@@ -7,8 +7,10 @@ import java.util.List;
 
 enum dbAction {
     GETALL_TASK,
+    GETPENDING_TASK,
     INSERT_TASK,
     DELETE_TASK,
+    UPDATESTATUS_TASK,
     INFO_TASK,
     INIT_CATEGORY,
     GETALL_CATEGORY
@@ -24,6 +26,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     private dbAction myDbAction;
     private int taskId;
     private Task task;
+    private String taskStatus;
     private List<TaskCategory> categoryList;
 
     DbAsyncTaskCallback dbAsyncTaskCallback;
@@ -34,23 +37,25 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         void onGetAllCategoryCallback(List<TaskCategory> categoryList);
     }
 
-    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, List<TaskCategory> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, Task task, String taskStatus, List<TaskCategory> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
         this.task = task;
+        this.taskStatus = taskStatus;
         this.categoryList = categoryList;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
 
-    // GETALL_TASK
+    // GETALL_TASK, GETPENDING_TASK
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = null;
+        this.taskStatus = "";
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
     }
@@ -62,6 +67,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = task;
+        this.taskStatus = "";
         this.categoryList = null;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
@@ -73,6 +79,19 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = taskId;
         this.task = null;
+        this.taskStatus = "";
+        this.categoryList = null;
+        this.dbAsyncTaskCallback = null;
+    }
+
+    // UPDATESTATUS_TASK
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, String taskStatus) {
+        this.db = db;
+        this.recyclerAdapter = recyclerAdapter;
+        this.myDbAction = myDbAction;
+        this.taskId = taskId;
+        this.task = null;
+        this.taskStatus = taskStatus;
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
     }
@@ -84,6 +103,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = taskId;
         this.task = null;
+        this.taskStatus = "";
         this.categoryList = null;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
@@ -95,6 +115,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = null;
+        this.taskStatus = "";
         this.categoryList = categoryList;
         this.dbAsyncTaskCallback = null;
     }
@@ -106,6 +127,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.myDbAction = myDbAction;
         this.taskId = 0;
         this.task = null;
+        this.taskStatus = "";
         this.categoryList = null;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
     }
@@ -114,32 +136,31 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     protected Task doInBackground(Void... voids) {
         switch (this.myDbAction) {
             case GETALL_TASK:
-                recyclerAdapter.refreshData(db.taskDao().getAll());
+                this.recyclerAdapter.refreshData(this.db.taskDao().getAll());
+                return null;
+            case GETPENDING_TASK:
+                this.recyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Pending"));
                 return null;
             case INSERT_TASK:
-                db.taskDao().insertAll(this.task);
+                this.db.taskDao().insertAll(this.task);
                 return null;
             case DELETE_TASK:
-                if(this.task != null) {
-                    db.taskDao().delete(this.task);
-                } else {
-                    db.taskDao().delete(db.taskDao().getById(this.taskId));
-                }
-                recyclerAdapter.refreshData(db.taskDao().getAll());
+                this.db.taskDao().delete(this.db.taskDao().getById(this.taskId));
+                recyclerAdapter.refreshData(this.db.taskDao().getAll());
+                return null;
+            case UPDATESTATUS_TASK:
+                this.db.taskDao().updateTaskStatus(this.taskId, this.taskStatus);
+                this.recyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Pending"));
                 return null;
             case INFO_TASK:
-                if (this.task != null) {
-                    return this.task;
-                } else {
-                    return db.taskDao().getById(this.taskId);
-                }
+                return this.db.taskDao().getById(this.taskId);
             case INIT_CATEGORY:
                 for (TaskCategory category : this.categoryList) {
-                    db.taskCategoryDao().insertAll(category);
+                    this.db.taskCategoryDao().insertAll(category);
                 }
                 return null;
             case GETALL_CATEGORY:
-                this.categoryList = db.taskCategoryDao().getAll();
+                this.categoryList = this.db.taskCategoryDao().getAll();
                 return null;
             default:
                 return null;
@@ -150,19 +171,25 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     protected void onPostExecute(Task task) {
         switch (this.myDbAction) {
             case GETALL_TASK:
-                recyclerAdapter.notifyDataSetChanged();
+                this.recyclerAdapter.notifyDataSetChanged();
+                break;
+            case GETPENDING_TASK:
+                this.recyclerAdapter.notifyDataSetChanged();
                 break;
             case INSERT_TASK:
-                dbAsyncTaskCallback.onInsertTaskCallback();
+                this.dbAsyncTaskCallback.onInsertTaskCallback();
                 break;
             case DELETE_TASK:
-                recyclerAdapter.notifyDataSetChanged();
+                this.recyclerAdapter.notifyDataSetChanged();
+                break;
+            case UPDATESTATUS_TASK:
+                this.recyclerAdapter.notifyDataSetChanged();
                 break;
             case INFO_TASK:
-                dbAsyncTaskCallback.onInfoTaskCallback(task);
+                this.dbAsyncTaskCallback.onInfoTaskCallback(task);
                 break;
             case GETALL_CATEGORY:
-                dbAsyncTaskCallback.onGetAllCategoryCallback(this.categoryList);
+                this.dbAsyncTaskCallback.onGetAllCategoryCallback(this.categoryList);
                 break;
             default:
                 break;

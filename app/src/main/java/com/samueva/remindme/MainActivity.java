@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDone(int taskId) {
-                // TODO: 6/13/19 implementare il completamento del task
+                new DbAsyncTask(db, recyclerAdapter, dbAction.UPDATESTATUS_TASK, taskId, "Done").execute();
             }
 
             @Override
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETALL_TASK).execute();
+        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETPENDING_TASK).execute();
     }
 
     @Override
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case addTaskActivity_requestCode:
                     Log.d(TAG, "onActivityResult: " + data.getBooleanExtra("new", false));
                     if (data.getBooleanExtra("new", false)) {
-                        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETALL_TASK).execute();
+                        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETPENDING_TASK).execute();
                     }
                     break;
                 default:

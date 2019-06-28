@@ -18,6 +18,11 @@ public class Task implements Parcelable {
     private int dayOfMonth;
     private int hourOfDay;
     private int minute;
+    private int doneYear;
+    private int doneMonth;
+    private int doneDayOfMonth;
+    private int doneHourOfDay;
+    private int doneMinute;
     private String place;
     private String description;
     private String category;
@@ -56,6 +61,11 @@ public class Task implements Parcelable {
         this.dayOfMonth = parcel.readInt();
         this.hourOfDay = parcel.readInt();
         this.minute = parcel.readInt();
+        this.doneYear = parcel.readInt();
+        this.doneMonth = parcel.readInt();
+        this.doneDayOfMonth = parcel.readInt();
+        this.doneHourOfDay = parcel.readInt();
+        this.doneMinute = parcel.readInt();
         this.place = parcel.readString();
         this.description = parcel.readString();
         this.category = parcel.readString();
@@ -118,6 +128,46 @@ public class Task implements Parcelable {
         this.minute = minute;
     }
 
+    public int getDoneYear() {
+        return doneYear;
+    }
+
+    public void setDoneYear(int doneYear) {
+        this.doneYear = doneYear;
+    }
+
+    public int getDoneMonth() {
+        return doneMonth;
+    }
+
+    public void setDoneMonth(int doneMonth) {
+        this.doneMonth = doneMonth;
+    }
+
+    public int getDoneDayOfMonth() {
+        return doneDayOfMonth;
+    }
+
+    public void setDoneDayOfMonth(int doneDayOfMonth) {
+        this.doneDayOfMonth = doneDayOfMonth;
+    }
+
+    public int getDoneHourOfDay() {
+        return doneHourOfDay;
+    }
+
+    public void setDoneHourOfDay(int doneHourOfDay) {
+        this.doneHourOfDay = doneHourOfDay;
+    }
+
+    public int getDoneMinute() {
+        return doneMinute;
+    }
+
+    public void setDoneMinute(int doneMinute) {
+        this.doneMinute = doneMinute;
+    }
+
     public String getPlace() {
         return place;
     }
@@ -163,6 +213,11 @@ public class Task implements Parcelable {
         dest.writeInt(this.dayOfMonth);
         dest.writeInt(this.hourOfDay);
         dest.writeInt(this.minute);
+        dest.writeInt(this.doneYear);
+        dest.writeInt(this.doneMonth);
+        dest.writeInt(this.doneDayOfMonth);
+        dest.writeInt(this.doneHourOfDay);
+        dest.writeInt(this.doneMinute);
         dest.writeString(this.place);
         dest.writeString(this.description);
         dest.writeString(this.category);
