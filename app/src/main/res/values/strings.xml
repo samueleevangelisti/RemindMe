@@ -27,4 +27,6 @@
     <string name="edit">Edit</string>
     <string name="id">Id</string>
     <string name="description">Description</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
 </resources>
