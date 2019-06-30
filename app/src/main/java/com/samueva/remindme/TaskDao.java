@@ -35,6 +35,9 @@ public interface TaskDao {
     @Query("UPDATE task SET status = :taskStatus WHERE id = :taskId")
     void updateTaskStatus(int taskId, String taskStatus);
 
+    @Query("UPDATE task SET doneYear = :taskYear, doneMonth = :taskMonth, doneDayOfMonth = :taskDayOfMonth, doneHourOfDay = :taskHourOfDay, doneMinute = :taskMinute WHERE id = :taskId")
+    void updateTaskDoneCalendar(int taskId, int taskYear, int taskMonth, int taskDayOfMonth, int taskHourOfDay, int taskMinute);
+
     @Update
     void updateTask(Task task);
 

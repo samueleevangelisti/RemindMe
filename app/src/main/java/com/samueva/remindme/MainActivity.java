@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 //import android.view.Menu;
 
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Request codes
     private static final int addTaskActivity_requestCode = 101;
+
+    // Calendar
+    private static Calendar calendar;
 
     // AppDatabase
     private AppDatabase db;
@@ -106,7 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDone(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.UPDATESTATUS_TASK, taskId, "Done").execute();
+                calendar = Calendar.getInstance();
+                new DbAsyncTask(db, recyclerAdapter, dbAction.SETDONE_TASK, taskId, "Done", calendar).execute();
             }
 
             @Override
