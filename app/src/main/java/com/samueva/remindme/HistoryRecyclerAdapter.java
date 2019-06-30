@@ -15,27 +15,25 @@ import java.util.List;
 
 // TODO: 5/9/19 implementare le funzione per la gestione rapida dei task 
 
-public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder> {
+public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecyclerAdapter.ViewHolder> {
 
     // TODO: 5/9/19 STRINGA DI DEBUG
-    private static final String TAG = "ReMe_TaskRecyclerAdapter";
+    private static final String TAG = "ReMe_HistoryRecyclerAdapter";
 
     private List<Task> tasks;
     private static Calendar calendar;
 
-    TaskCardClickListener taskCardClickListener;
+    HistoryCardClickListener historyCardClickListener;
 
-    public interface TaskCardClickListener {
+    public interface HistoryCardClickListener {
         void onTaskCardClick(int taskId);
-        void onTaskCardLater(int taskId);
-        void onTaskCardDone(int taskId);
-        void onTaskCardDelete(int taskId);
+        void onHistoryCardDelete(int taskId);
     }
 
-    public TaskRecyclerAdapter(List<Task> tasks, TaskCardClickListener taskCardClickListener) {
+    public HistoryRecyclerAdapter(List<Task> tasks, HistoryCardClickListener historyCardClickListener) {
         this.tasks = tasks;
         sortData();
-        this.taskCardClickListener = taskCardClickListener;
+        this.historyCardClickListener = historyCardClickListener;
         this.calendar = Calendar.getInstance();
     }
 
@@ -60,7 +58,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.task_card_layout, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_card_layout, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -71,30 +69,21 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         viewHolder.taskCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardClick((int) viewHolder.taskCard.getTag());
-            }
-        });
-        viewHolder.buttonLater.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskCardClickListener.onTaskCardLater((int) viewHolder.taskCard.getTag());
-            }
-        });
-        viewHolder.buttonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskCardClickListener.onTaskCardDone((int) viewHolder.taskCard.getTag());
+                historyCardClickListener.onTaskCardClick((int) viewHolder.taskCard.getTag());
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardDelete((int) viewHolder.taskCard.getTag());
+                historyCardClickListener.onHistoryCardDelete((int) viewHolder.taskCard.getTag());
             }
         });
         this.calendar.set(this.tasks.get(i).getYear(), this.tasks.get(i).getMonth(), this.tasks.get(i).getDayOfMonth(), this.tasks.get(i).getHourOfDay(), this.tasks.get(i).getMinute());
         viewHolder.itemDate.setText(String.format("%1$td/%1$tm/%1$tY", this.calendar));
         viewHolder.itemTime.setText(String.format("%1$tH:%1$tM", this.calendar));
+        this.calendar.set(this.tasks.get(i).getDoneYear(), this.tasks.get(i).getDoneMonth(), this.tasks.get(i).getDoneDayOfMonth(), this.tasks.get(i).getDoneHourOfDay(), this.tasks.get(i).getDoneMinute());
+        viewHolder.itemDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.calendar));
+        viewHolder.itemDoneTime.setText(String.format("%1$tH:%1$tM", this.calendar));
         viewHolder.itemTitle.setText(this.tasks.get(i).getTitle());
         viewHolder.itemPlace.setText(this.tasks.get(i).getPlace());
         viewHolder.itemStatus.setText(this.tasks.get(i).getStatus());
@@ -110,11 +99,11 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         public CardView taskCard;
         public TextView itemDate;
         public TextView itemTime;
+        public TextView itemDoneDate;
+        public TextView itemDoneTime;
         public TextView itemTitle;
         public TextView itemPlace;
         public TextView itemStatus;
-        public Button buttonLater;
-        public Button buttonDone;
         public Button buttonDelete;
 
         public ViewHolder(@NonNull View itemView) {
@@ -122,11 +111,11 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
             this.taskCard = (CardView) itemView.findViewById(R.id.history_card);
             this.itemDate = (TextView) itemView.findViewById(R.id.history_card_date);
             this.itemTime = (TextView) itemView.findViewById(R.id.history_card_time);
+            this.itemDoneDate = (TextView) itemView.findViewById(R.id.history_card_done_date);
+            this.itemDoneTime = (TextView) itemView.findViewById(R.id.history_card_done_time);
             this.itemTitle = (TextView) itemView.findViewById(R.id.history_card_title);
             this.itemPlace = (TextView) itemView.findViewById(R.id.history_card_place);
             this.itemStatus = (TextView) itemView.findViewById(R.id.history_card_status);
-            this.buttonLater = (Button) itemView.findViewById(R.id.task_card_later);
-            this.buttonDone = (Button) itemView.findViewById(R.id.task_card_done);
             this.buttonDelete = (Button) itemView.findViewById(R.id.history_card_delete);
         }
     }

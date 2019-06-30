@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Database
         this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");
 
-        // Categories
+        // Init Categories
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         String[] categories = getResources().getStringArray(R.array.categories);
         for (int i = 0; i < categories.length; i++) {
@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         // RecyclerView
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        this.recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0) {
@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
+        this.layoutManager = new LinearLayoutManager(this);
+        this.recyclerView.setLayoutManager(layoutManager);
+        this.recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
             @Override
             public void onTaskCardClick(int taskId) {
                 startTaskInfoActivity(taskId);
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new DbAsyncTask(db, recyclerAdapter, dbAction.DELETE_TASK, taskId).execute();
             }
         });
-        recyclerView.setAdapter(recyclerAdapter);
+        this.recyclerView.setAdapter(recyclerAdapter);
 
         new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETPENDING_TASK).execute();
     }
@@ -164,11 +164,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_add) {
-
+            startAddTaskActivity();
         } else if (id == R.id.nav_trend) {
 
         } else if (id == R.id.nav_history) {
-
+            startHistoryActivity();
         } else if (id == R.id.nav_categories) {
 
         } else if (id == R.id.nav_settings) {
@@ -204,6 +204,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void startTaskInfoActivity(int taskId) {
         Intent intent = new Intent(this, TaskInfoActivity.class);
         intent.putExtra("taskId", (int) taskId);
+        startActivity(intent);
+    }
+
+    private void startHistoryActivity() {
+        Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 }

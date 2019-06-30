@@ -32,4 +32,6 @@
     <string name="add_task">Add Task</string>
     <string name="categories">Categories</string>
     <string name="trend">Trend</string>
+    <string name="done_date">Done Date</string>
+    <string name="done_time">Done Time</string>
 </resources>
