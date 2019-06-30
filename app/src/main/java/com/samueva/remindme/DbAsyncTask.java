@@ -146,7 +146,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 return null;
             case DELETE_TASK:
                 this.db.taskDao().delete(this.db.taskDao().getById(this.taskId));
-                recyclerAdapter.refreshData(this.db.taskDao().getAll());
+                recyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Pending"));
                 return null;
             case UPDATESTATUS_TASK:
                 this.db.taskDao().updateTaskStatus(this.taskId, this.taskStatus);

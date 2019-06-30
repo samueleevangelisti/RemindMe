@@ -1,6 +1,5 @@
 package com.samueva.remindme;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -159,17 +158,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_add) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_trend) {
 
-        } else if (id == R.id.nav_tools) {
+        } else if (id == R.id.nav_history) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_categories) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_settings) {
 
         }
 
