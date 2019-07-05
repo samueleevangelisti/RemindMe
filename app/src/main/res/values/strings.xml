@@ -34,4 +34,6 @@
     <string name="trend">Trend</string>
     <string name="done_date">Done Date</string>
     <string name="done_time">Done Time</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="name">Name</string>
 </resources>

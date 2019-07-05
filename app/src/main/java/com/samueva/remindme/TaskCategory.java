@@ -9,9 +9,11 @@ public class TaskCategory {
 
     @PrimaryKey
     @NonNull private String name;
+    @NonNull private boolean isDefault;
 
-    public TaskCategory(String name) {
+    public TaskCategory(String name, boolean isDefault) {
         this.name = name;
+        this.isDefault = isDefault;
     }
 
     public String getName() {
@@ -20,5 +22,13 @@ public class TaskCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }

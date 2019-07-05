@@ -9,15 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HistoryActivity"
-            android:label="History">
-        </activity>
-        <activity android:name=".AddTaskActivity"
-            android:label="Add Task">
-        </activity>
-        <activity android:name=".TaskInfoActivity"
-            android:label="Task Informations">
-        </activity>
+        <activity
+            android:name=".CategoryActivity"
+            android:label="@string/categories"></activity>
+        <activity
+            android:name=".HistoryActivity"
+            android:label="History" />
+        <activity
+            android:name=".AddTaskActivity"
+            android:label="Add Task" />
+        <activity
+            android:name=".TaskInfoActivity"
+            android:label="Task Informations" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

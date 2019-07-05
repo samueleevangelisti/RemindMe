@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         String[] categories = getResources().getStringArray(R.array.categories);
         for (int i = 0; i < categories.length; i++) {
-            categoryList.add(new TaskCategory(categories[i]));
+            categoryList.add(new TaskCategory(categories[i], true));
         }
         new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categoryList).execute();
 
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_history) {
             startHistoryActivity();
         } else if (id == R.id.nav_categories) {
-
+            startCategoryActivity();
         } else if (id == R.id.nav_settings) {
 
         }
@@ -209,6 +209,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startHistoryActivity() {
         Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
+    }
+
+    private void startCategoryActivity() {
+        Intent intent = new Intent(this, CategoryActivity.class);
         startActivity(intent);
     }
 }
