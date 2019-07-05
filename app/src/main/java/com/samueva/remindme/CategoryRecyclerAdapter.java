@@ -63,12 +63,16 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         viewHolder.categoryCard.setTag((String) this.categories.get(i).getName());
-        viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoryCardClickListener.onCategoryCardDelete((String) viewHolder.categoryCard.getTag());
-            }
-        });
+        if (this.categories.get(i).getIsDefault()) {
+            viewHolder.buttonDelete.setEnabled(false);
+        } else {
+            viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    categoryCardClickListener.onCategoryCardDelete((String) viewHolder.categoryCard.getTag());
+                }
+            });
+        }
         viewHolder.itemName.setText(this.categories.get(i).getName());
     }
 
