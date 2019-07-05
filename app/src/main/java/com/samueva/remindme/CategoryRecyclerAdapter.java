@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -86,13 +87,13 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         public CardView categoryCard;
         public TextView itemName;
-        public Button buttonDelete;
+        public ImageButton buttonDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.categoryCard = (CardView) itemView.findViewById(R.id.category_card);
             this.itemName = (TextView) itemView.findViewById(R.id.category_card_name);
-            this.buttonDelete = (Button) itemView.findViewById(R.id.category_card_delete);
+            this.buttonDelete = (ImageButton) itemView.findViewById(R.id.category_card_delete);
         }
     }
 }
