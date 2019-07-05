@@ -43,6 +43,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             newTaskCategory.setAdapter(spinnerAdapter);
         }
+
+        @Override
+        public void onInsertCategoryCallback() {
+
+        }
+
+        @Override
+        public void onDeleteCategoryCallback() {
+
+        }
     };
 
     // Calendar

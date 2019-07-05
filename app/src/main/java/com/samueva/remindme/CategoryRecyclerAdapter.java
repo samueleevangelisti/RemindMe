@@ -65,6 +65,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         viewHolder.categoryCard.setTag((String) this.categories.get(i).getName());
         if (this.categories.get(i).getIsDefault()) {
             viewHolder.buttonDelete.setEnabled(false);
+            viewHolder.buttonDelete.setAlpha((float) 0.5);
         } else {
             viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

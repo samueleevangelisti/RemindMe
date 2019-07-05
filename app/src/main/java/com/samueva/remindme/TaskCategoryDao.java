@@ -19,4 +19,7 @@ public interface TaskCategoryDao {
 
     @Delete
     void delete(TaskCategory taskCategory);
+
+    @Query("DELETE FROM taskcategory WHERE name = :categoryName")
+    void deleteByName(String categoryName);
 }

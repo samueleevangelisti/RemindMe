@@ -15,6 +15,8 @@ enum dbAction {
     INFO_TASK,
     INIT_CATEGORY,
     GETALL_CATEGORY,
+    INSERT_CATEGORY,
+    DELETE_CATEGORY,
     GETDONE_HISTORY,
     DELETE_HISTORY,
     DELETEALL_HYSTORY
@@ -34,6 +36,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
     private String taskStatus;
     private Calendar taskCalendar;
     private List<TaskCategory> categoryList;
+    private TaskCategory category;
+    private String categoryName;
 
     DbAsyncTaskCallback dbAsyncTaskCallback;
 
@@ -41,9 +45,11 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         void onInsertTaskCallback();
         void onInfoTaskCallback(Task task);
         void onGetAllCategoryCallback(List<TaskCategory> categoryList);
+        void onInsertCategoryCallback();
+        void onDeleteCategoryCallback();
     }
 
-    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, HistoryRecyclerAdapter historyRecyclerAdapter, dbAction myDbAction, int taskId, Task task, String taskStatus, Calendar taskCalendar, List<TaskCategory> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback) {
+    public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, HistoryRecyclerAdapter historyRecyclerAdapter, dbAction myDbAction, int taskId, Task task, String taskStatus, Calendar taskCalendar, List<TaskCategory> categoryList, DbAsyncTaskCallback dbAsyncTaskCallback, TaskCategory category, String categoryName) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
         this.historyRecyclerAdapter = historyRecyclerAdapter;
@@ -54,6 +60,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = taskCalendar;
         this.categoryList = categoryList;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+        this.category = category;
+        this.categoryName = categoryName;
     }
 
     // GETALL_TASK, GETPENDING_TASK
@@ -68,6 +76,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // INSERT_TASK
@@ -82,6 +92,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // DELETE_TASK
@@ -96,6 +108,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // SETDONE_TASK
@@ -110,6 +124,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = taskCalendar;
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // INFO_TASK
@@ -124,6 +140,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // INIT_CATEGORY
@@ -138,6 +156,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = categoryList;
         this.dbAsyncTaskCallback = null;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // GETALL_CATEGORY
@@ -152,6 +172,40 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+        this.category = null;
+        this.categoryName = null;
+    }
+
+    // INSERT_CATEGORY
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskCallback dbAsyncTaskCallback, TaskCategory category) {
+        this.db = db;
+        this.recyclerAdapter = null;
+        this.historyRecyclerAdapter = null;
+        this.myDbAction = myDbAction;
+        this.taskId = 0;
+        this.task = null;
+        this.taskStatus = "";
+        this.taskCalendar = null;
+        this.categoryList = null;
+        this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+        this.category = category;
+        this.categoryName = null;
+    }
+
+    // DELETE_CATEGORY
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskCallback dbAsyncTaskCallback, String categoryName) {
+        this.db = db;
+        this.recyclerAdapter = null;
+        this.historyRecyclerAdapter = null;
+        this.myDbAction = myDbAction;
+        this.taskId = 0;
+        this.task = null;
+        this.taskStatus = "";
+        this.taskCalendar = null;
+        this.categoryList = null;
+        this.dbAsyncTaskCallback = dbAsyncTaskCallback;
+        this.category = null;
+        this.categoryName = categoryName;
     }
 
     // GETDONE_HISTORY, DELETEALL_HISTORY
@@ -166,6 +220,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
+        this.category = null;
+        this.categoryName = null;
     }
 
     // DELETE_HISTORY
@@ -180,6 +236,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.taskCalendar = null;
         this.categoryList = null;
         this.dbAsyncTaskCallback = null;
+        this.category = null;
+        this.categoryName = null;
     }
 
     @Override
@@ -212,6 +270,12 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 return null;
             case GETALL_CATEGORY:
                 this.categoryList = this.db.taskCategoryDao().getAll();
+                return null;
+            case INSERT_CATEGORY:
+                this.db.taskCategoryDao().insertAll(this.category);
+                return null;
+            case DELETE_CATEGORY:
+                this.db.taskCategoryDao().deleteByName(categoryName);
                 return null;
             case GETDONE_HISTORY:
                 this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Done"));
@@ -252,6 +316,12 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 break;
             case GETALL_CATEGORY:
                 this.dbAsyncTaskCallback.onGetAllCategoryCallback(this.categoryList);
+                break;
+            case INSERT_CATEGORY:
+                this.dbAsyncTaskCallback.onInsertCategoryCallback();
+                break;
+            case DELETE_CATEGORY:
+                this.dbAsyncTaskCallback.onDeleteCategoryCallback();
                 break;
             case GETDONE_HISTORY:
                 this.historyRecyclerAdapter.notifyDataSetChanged();

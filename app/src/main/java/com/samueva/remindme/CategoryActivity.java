@@ -3,6 +3,7 @@ package com.samueva.remindme;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +13,39 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CategoryActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
+public class CategoryActivity extends AppCompatActivity implements AddCategoryDialogFragment.AddCategoryDialogListener, GestureDetector.OnGestureListener {
+
+    // AppDatabase
+    private AppDatabase db;
+    private final DbAsyncTask.DbAsyncTaskCallback dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskCallback() {
+        @Override
+        public void onInsertTaskCallback() {
+
+        }
+
+        @Override
+        public void onInfoTaskCallback(Task task) {
+
+        }
+
+        @Override
+        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+            recyclerAdapter.refreshData(categoryList);
+            recyclerAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onInsertCategoryCallback() {
+            new DbAsyncTask(db, dbAction.GETALL_CATEGORY, dbAsyncTaskListener).execute();
+        }
+
+        @Override
+        public void onDeleteCategoryCallback() {
+            new DbAsyncTask(db, dbAction.GETALL_CATEGORY, dbAsyncTaskListener).execute();
+        }
+    };
 
     // RecyclerView
     RecyclerView recyclerView;
@@ -28,13 +60,16 @@ public class CategoryActivity extends AppCompatActivity implements GestureDetect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
+        // Database
+        this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");
+
         // FloatingActionButton
         fab = findViewById(R.id.fab3);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                DialogFragment addCategoryDialogFragment = new AddCategoryDialogFragment();
+                addCategoryDialogFragment.show(getSupportFragmentManager(), "acdfmanager");
             }
         });
 
@@ -46,12 +81,18 @@ public class CategoryActivity extends AppCompatActivity implements GestureDetect
         this.recyclerAdapter = new CategoryRecyclerAdapter(new ArrayList<TaskCategory>(), new CategoryRecyclerAdapter.CategoryCardClickListener() {
             @Override
             public void onCategoryCardDelete(String categoryName) {
-                // TODO: 7/5/19 eliminazione della category quando richiesta
+                new DbAsyncTask(db, dbAction.DELETE_CATEGORY, dbAsyncTaskListener, categoryName).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        // TODO: 7/5/19 compilazione degli elementi della recycler view presi dal database
+        new DbAsyncTask(this.db, dbAction.GETALL_CATEGORY, this.dbAsyncTaskListener).execute();
+    }
+
+    @Override
+    public void onDialogPositiveClick(String category) {
+        TaskCategory newCategory = new TaskCategory(category, false);
+        new DbAsyncTask(this.db, dbAction.INSERT_CATEGORY, this.dbAsyncTaskListener, newCategory).execute();
     }
 
     @Override

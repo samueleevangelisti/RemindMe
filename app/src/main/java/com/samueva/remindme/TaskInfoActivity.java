@@ -55,6 +55,16 @@ public class TaskInfoActivity extends AppCompatActivity {
         public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
 
         }
+
+        @Override
+        public void onInsertCategoryCallback() {
+
+        }
+
+        @Override
+        public void onDeleteCategoryCallback() {
+
+        }
     };
 
     private static Calendar calendar;

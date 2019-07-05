@@ -36,4 +36,6 @@
     <string name="done_time">Done Time</string>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="name">Name</string>
+    <string name="new_category">New Category</string>
+    <string name="cancel">Cancel</string>
 </resources>
