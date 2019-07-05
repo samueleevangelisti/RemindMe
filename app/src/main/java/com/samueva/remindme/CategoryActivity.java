@@ -69,7 +69,7 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
             @Override
             public void onClick(View view) {
                 DialogFragment addCategoryDialogFragment = new AddCategoryDialogFragment();
-                addCategoryDialogFragment.show(getSupportFragmentManager(), "acdfmanager");
+                addCategoryDialogFragment.show(getSupportFragmentManager(), "acdfmanagerfromca");
             }
         });
 

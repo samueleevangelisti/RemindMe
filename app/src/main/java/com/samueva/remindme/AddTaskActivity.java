@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddTaskActivity extends AppCompatActivity implements DatePickerFragment.TaskDatePickerListener, TimePickerFragment.TaskTimePickerListener {
+public class AddTaskActivity extends AppCompatActivity implements AddCategoryDialogFragment.AddCategoryDialogListener, DatePickerFragment.TaskDatePickerListener, TimePickerFragment.TaskTimePickerListener {
 
     // TODO: 5/10/19 STRINGA_DI_DEBUG
     private static final String TAG = "ReMe_AddTaskActivity";
@@ -46,7 +47,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
 
         @Override
         public void onInsertCategoryCallback() {
-
+            new DbAsyncTask(db, dbAction.GETALL_CATEGORY, dbAsyncTaskListener).execute();
         }
 
         @Override
@@ -89,15 +90,14 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
                 new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
             }
         });
-        /*Button editCustomCategory = (Button) findViewById(R.id.edit_custom_category);
-        editCustomCategory.setOnClickListener(new View.OnClickListener() {
+        ImageButton addTaskCategory = (ImageButton) findViewById(R.id.add_task_category);
+        addTaskCategory.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                CategoryDialogFragment newFragment = new CategoryDialogFragment();
-                newFragment.setRecyclerAdapter(categoryList);
-                newFragment.show(getSupportFragmentManager(), "customCategory");
+            public void onClick(View view) {
+                DialogFragment addCategoryDialogFragment = new AddCategoryDialogFragment();
+                addCategoryDialogFragment.show(getSupportFragmentManager(), "acdfmanagerfromata");
             }
-        });*/
+        });
         Button setTaskDate = (Button) findViewById(R.id.set_task_date);
         setTaskDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +121,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerFrag
         intent.putExtra("new", (boolean) true);
         setResult(RESULT_OK, intent);
         super.finish();
+    }
+
+    @Override
+    public void onDialogPositiveClick(String category) {
+        TaskCategory newCategory = new TaskCategory(category, false);
+        new DbAsyncTask(this.db, dbAction.INSERT_CATEGORY, this.dbAsyncTaskListener, newCategory).execute();
     }
 
     @Override
