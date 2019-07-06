@@ -11,13 +11,13 @@ enum dbAction {
     GETPENDING_TASK,
     INSERT_TASK,
     DELETE_TASK,
-    SETDONE_TASK,
+    SETCOMPLETED_TASK,
     INFO_TASK,
     INIT_CATEGORY,
     GETALL_CATEGORY,
     INSERT_CATEGORY,
     DELETE_CATEGORY,
-    GETDONE_HISTORY,
+    GETCOMPLETED_HISTORY,
     DELETE_HISTORY,
     DELETEALL_HYSTORY
 }
@@ -112,7 +112,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.categoryName = null;
     }
 
-    // SETDONE_TASK
+    // SETCOMPLETED_TASK
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, dbAction myDbAction, int taskId, String taskStatus, Calendar taskCalendar) {
         this.db = db;
         this.recyclerAdapter = recyclerAdapter;
@@ -208,7 +208,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
         this.categoryName = categoryName;
     }
 
-    // GETDONE_HISTORY, DELETEALL_HISTORY
+    // GETCOMPLETED_HISTORY, DELETEALL_HISTORY
     public DbAsyncTask(AppDatabase db, HistoryRecyclerAdapter historyRecyclerAdapter, dbAction myDbAction) {
         this.db = db;
         this.recyclerAdapter = null;
@@ -256,7 +256,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
                 this.db.taskDao().delete(this.db.taskDao().getById(this.taskId));
                 this.recyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Pending"));
                 return null;
-            case SETDONE_TASK:
+            case SETCOMPLETED_TASK:
                 this.db.taskDao().updateTaskStatus(this.taskId, this.taskStatus);
                 this.db.taskDao().updateTaskDoneCalendar(this.taskId, this.taskCalendar.get(Calendar.YEAR), this.taskCalendar.get(Calendar.MONTH), this.taskCalendar.get(Calendar.DAY_OF_MONTH), this.taskCalendar.get(Calendar.HOUR_OF_DAY), this.taskCalendar.get(Calendar.MINUTE));
                 this.recyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Pending"));
@@ -277,16 +277,16 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
             case DELETE_CATEGORY:
                 this.db.taskCategoryDao().deleteByName(categoryName);
                 return null;
-            case GETDONE_HISTORY:
-                this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Done"));
+            case GETCOMPLETED_HISTORY:
+                this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Completed"));
                 return null;
             case DELETE_HISTORY:
                 this.db.taskDao().delete(this.db.taskDao().getById(this.taskId));
-                this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Done"));
+                this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Completed"));
                 return null;
             case DELETEALL_HYSTORY:
-                this.db.taskDao().deleteAllByStatus("Done");
-                this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Done"));
+                this.db.taskDao().deleteAllByStatus("Completed");
+                this.historyRecyclerAdapter.refreshData(this.db.taskDao().getAllByStatus("Completed"));
                 return null;
             default:
                 return null;
@@ -308,7 +308,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
             case DELETE_TASK:
                 this.recyclerAdapter.notifyDataSetChanged();
                 break;
-            case SETDONE_TASK:
+            case SETCOMPLETED_TASK:
                 this.recyclerAdapter.notifyDataSetChanged();
                 break;
             case INFO_TASK:
@@ -323,7 +323,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Task> {
             case DELETE_CATEGORY:
                 this.dbAsyncTaskCallback.onDeleteCategoryCallback();
                 break;
-            case GETDONE_HISTORY:
+            case GETCOMPLETED_HISTORY:
                 this.historyRecyclerAdapter.notifyDataSetChanged();
                 break;
             case DELETE_HISTORY:

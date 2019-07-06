@@ -38,4 +38,7 @@
     <string name="name">Name</string>
     <string name="new_category">New Category</string>
     <string name="cancel">Cancel</string>
+    <string name="task_informations">Task Informations</string>
+    <string name="priority">Priority</string>
+    <string name="priority_value">Priority Value</string>
 </resources>

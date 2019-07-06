@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,6 +20,10 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
     // TODO: 5/10/19 STRINGA_DI_DEBUG
     private static final String TAG = "ReMe_AddTaskActivity";
+
+    // SeekBar Normalization
+    private final int SEEKBAR_MIN = 1;
+    private final int SEEKBAR_MAX = 10;
 
     // AppDatabase
     private AppDatabase db;
@@ -56,6 +61,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         }
     };
 
+    // SeekBar
+    private int seekBarValue;
+
     // Calendar
     private static Calendar newTaskCalendar;
 
@@ -77,6 +85,29 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         // Spinner
         new DbAsyncTask(this.db, dbAction.GETALL_CATEGORY, this.dbAsyncTaskListener).execute();
 
+        // SeekBar
+        SeekBar seekBar = (SeekBar) findViewById(R.id.new_task_priority);
+        final TextView seekBarValueText = (TextView) findViewById(R.id.new_task_priority_value);
+        this.seekBarValue = seekBarNormalization(seekBar.getProgress());
+        seekBarValueText.setText(seekBarValue + "/10");
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                seekBarValue = seekBarNormalization(i);
+                seekBarValueText.setText(seekBarValue + "/10");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         // Buttons
         Button createTask = (Button) findViewById(R.id.create_task);
         createTask.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +117,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
                 Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
                 TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
-                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), "Pending");
+                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
                 new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
             }
         });
@@ -114,6 +145,10 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
+    }
+
+    private int seekBarNormalization(int progress) {
+        return (progress * (this.SEEKBAR_MAX - this.SEEKBAR_MIN) / 100) + this.SEEKBAR_MIN;
     }
 
     private void addTaskActivityFinish() {

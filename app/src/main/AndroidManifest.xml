@@ -10,17 +10,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".TrendActivity"
+            android:label="@string/trend"></activity>
+        <activity
             android:name=".CategoryActivity"
-            android:label="@string/categories"></activity>
+            android:label="@string/categories" />
         <activity
             android:name=".HistoryActivity"
-            android:label="History" />
+            android:label="@string/history" />
         <activity
             android:name=".AddTaskActivity"
-            android:label="Add Task" />
+            android:label="@string/add_task" />
         <activity
             android:name=".TaskInfoActivity"
-            android:label="Task Informations" />
+            android:label="@string/task_informations" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

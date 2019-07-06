@@ -71,7 +71,7 @@ public class HistoryActivity extends AppCompatActivity {
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETDONE_HISTORY).execute();
+        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETCOMPLETED_HISTORY).execute();
     }
 
     private void startTaskInfoActivity(int taskId) {

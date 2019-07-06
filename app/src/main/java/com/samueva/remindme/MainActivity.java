@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onTaskCardDone(int taskId) {
                 calendar = Calendar.getInstance();
-                new DbAsyncTask(db, recyclerAdapter, dbAction.SETDONE_TASK, taskId, "Done", calendar).execute();
+                new DbAsyncTask(db, recyclerAdapter, dbAction.SETCOMPLETED_TASK, taskId, "Completed", calendar).execute();
             }
 
             @Override
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_add) {
             startAddTaskActivity();
         } else if (id == R.id.nav_trend) {
-
+            startTrendActivity();
         } else if (id == R.id.nav_history) {
             startHistoryActivity();
         } else if (id == R.id.nav_categories) {
@@ -204,6 +204,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void startTaskInfoActivity(int taskId) {
         Intent intent = new Intent(this, TaskInfoActivity.class);
         intent.putExtra("taskId", (int) taskId);
+        startActivity(intent);
+    }
+
+    private void startTrendActivity() {
+        Intent intent = new Intent(this, TrendActivity.class);
         startActivity(intent);
     }
 

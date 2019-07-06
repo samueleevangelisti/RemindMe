@@ -7,6 +7,12 @@ import android.os.Parcelable;
 
 import java.util.Calendar;
 
+/* status:
+        Pending,
+        Ongoing,
+        Completed
+ */
+
 @Entity
 public class Task implements Parcelable {
 
@@ -26,9 +32,10 @@ public class Task implements Parcelable {
     private String place;
     private String description;
     private String category;
+    private int priority;
     private String status;
 
-    public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String description, String category, String status) {
+    public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String description, String category, int priority, String status) {
         this.title = title;
         this.year = year;
         this.month = month;
@@ -38,10 +45,11 @@ public class Task implements Parcelable {
         this.place = place;
         this.description = description;
         this.category = category;
+        this.priority = priority;
         this.status = status;
     }
 
-    public Task(String title, Calendar calendar, String place, String description, String category, String status) {
+    public Task(String title, Calendar calendar, String place, String description, String category, int priority, String status) {
         this.title = title;
         this.year = calendar.get(Calendar.YEAR);
         this.month = calendar.get(Calendar.MONTH);
@@ -51,6 +59,7 @@ public class Task implements Parcelable {
         this.place = place;
         this.description = description;
         this.category = category;
+        this.priority = priority;
         this.status = status;
     }
 
@@ -69,6 +78,7 @@ public class Task implements Parcelable {
         this.place = parcel.readString();
         this.description = parcel.readString();
         this.category = parcel.readString();
+        this.priority = parcel.readInt();
         this.status = parcel.readString();
     }
 
@@ -188,6 +198,14 @@ public class Task implements Parcelable {
         return category;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }
@@ -221,6 +239,7 @@ public class Task implements Parcelable {
         dest.writeString(this.place);
         dest.writeString(this.description);
         dest.writeString(this.category);
+        dest.writeInt(this.priority);
         dest.writeString(this.status);
     }
 

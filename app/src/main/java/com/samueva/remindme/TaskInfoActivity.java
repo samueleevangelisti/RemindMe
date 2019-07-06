@@ -26,27 +26,32 @@ public class TaskInfoActivity extends AppCompatActivity {
             calendar.set(task.getYear(), task.getMonth(), task.getDayOfMonth(), task.getHourOfDay(), task.getMinute());
 
             TextView taskTitle = (TextView) findViewById(R.id.task_info_title);
+            TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
+            TextView taskDescription = (TextView) findViewById(R.id.task_info_description);
+            TextView taskPriority = (TextView) findViewById(R.id.task_info_priority);
+            TextView taskCategory = (TextView) findViewById(R.id.task_info_category);
             TextView taskDate = (TextView) findViewById(R.id.task_info_date);
             TextView taskTime = (TextView) findViewById(R.id.task_info_time);
             TextView taskDoneDate = (TextView) findViewById(R.id.task_info_done_date);
             TextView taskDoneTime = (TextView) findViewById(R.id.task_info_done_time);
-            TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
-            TextView taskDescription = (TextView) findViewById(R.id.task_info_description);
-            TextView taskCategory = (TextView) findViewById(R.id.task_info_category);
             TextView taskStatus = (TextView) findViewById(R.id.task_info_status);
             TextView taskId = (TextView) findViewById(R.id.task_info_id);
 
             taskTitle.setText(task.getTitle());
+            taskPlace.setText(task.getPlace());
+            taskDescription.setText(task.getDescription());
+            taskPriority.setText(task.getPriority() + "/10");
+            taskCategory.setText(task.getCategory());
             taskDate.setText(String.format("%1$td/%1$tm/%1$tY", calendar));
             taskTime.setText(String.format("%1$tH:%1$tM", calendar));
-            if (task.getStatus().equals("Done")) {
+            if (task.getStatus().equals("Completed")) {
                 calendar.set(task.getDoneYear(), task.getDoneMonth(), task.getDoneDayOfMonth(), task.getDoneHourOfDay(), task.getDoneMinute());
                 taskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", calendar));
                 taskDoneTime.setText(String.format("%1$tH:%1$tM", calendar));
+            } else {
+                taskDoneDate.setText("");
+                taskDoneTime.setText("");
             }
-            taskPlace.setText(task.getPlace());
-            taskDescription.setText(task.getDescription());
-            taskCategory.setText(task.getCategory());
             taskStatus.setText(task.getStatus());
             taskId.setText(String.valueOf(task.getId()));
         }
