@@ -41,4 +41,6 @@
     <string name="task_informations">Task Informations</string>
     <string name="priority">Priority</string>
     <string name="priority_value">Priority Value</string>
+    <string name="search">Search</string>
+    <string name="delete_forever">Delete Forever</string>
 </resources>

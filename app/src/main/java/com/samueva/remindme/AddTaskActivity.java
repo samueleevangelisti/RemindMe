@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -109,18 +112,6 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         });
 
         // Buttons
-        Button createTask = (Button) findViewById(R.id.create_task);
-        createTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
-                TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
-                Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
-                TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
-                Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
-                new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
-            }
-        });
         ImageButton addTaskCategory = (ImageButton) findViewById(R.id.add_task_category);
         addTaskCategory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +136,35 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.add_task, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.add_task_optionmenu_create) {
+            TextView newTaskTitle = (TextView) findViewById(R.id.new_task_title);
+            TextView newTaskPlace = (TextView) findViewById(R.id.new_task_place);
+            Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
+            TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
+            Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
+            new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
+            Toast.makeText(this, "Task created", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private int seekBarNormalization(int progress) {

@@ -21,7 +21,8 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-//import android.view.Menu;
+import android.view.Menu;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -134,14 +135,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }*/
+    }
 
-    /*@Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -149,12 +150,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.main_optionmenu_search) {
+            Toast.makeText(this, "Filters compare", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     // TODO: 6/20/19 modificare correttamente il navigation drawer
     @SuppressWarnings("StatementWithEmptyBody")
