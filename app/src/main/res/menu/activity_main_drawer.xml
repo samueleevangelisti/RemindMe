@@ -8,6 +8,8 @@
             android:id="@+id/nav_add"
             android:icon="@drawable/ic_add"
             android:title="@string/add_task" />
+    </group>
+    <group android:id="@+id/nav_group_navigation">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
@@ -20,6 +22,8 @@
             android:id="@+id/nav_trend"
             android:icon="@drawable/ic_trend"
             android:title="@string/trend" />
+    </group>
+    <group android:id="@+id/nav_groups_tools">
         <item
             android:id="@+id/nav_categories"
             android:icon="@drawable/ic_category"

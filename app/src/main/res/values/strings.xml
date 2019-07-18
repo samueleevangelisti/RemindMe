@@ -38,4 +38,5 @@
     <string name="priority_value">Priority Value</string>
     <string name="search">Search</string>
     <string name="delete_forever">Delete Forever</string>
+    <string name="navigation">Navigation</string>
 </resources>
