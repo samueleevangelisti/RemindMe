@@ -206,10 +206,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_add) {
             startAddTaskActivity();
-        } else if (id == R.id.nav_trend) {
-            startTrendActivity();
+        } else if (id == R.id.nav_home) {
+
         } else if (id == R.id.nav_history) {
             startHistoryActivity();
+        } else if (id == R.id.nav_trend) {
+            startTrendActivity();
         } else if (id == R.id.nav_categories) {
             startCategoryActivity();
         } else if (id == R.id.nav_settings) {
