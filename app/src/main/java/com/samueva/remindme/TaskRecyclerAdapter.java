@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 // TODO: 5/9/19 implementare le funzione per la gestione rapida dei task 
@@ -21,7 +19,6 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
     private static final String TAG = "ReMe_TaskRecyclerAdapter";
 
     private List<Task> tasks;
-    private static Calendar calendar;
 
     TaskCardClickListener taskCardClickListener;
 
@@ -34,27 +31,11 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     public TaskRecyclerAdapter(List<Task> tasks, TaskCardClickListener taskCardClickListener) {
         this.tasks = tasks;
-        sortData();
         this.taskCardClickListener = taskCardClickListener;
-        this.calendar = Calendar.getInstance();
     }
 
     public void refreshData(List<Task> tasks) {
         this.tasks = tasks;
-        sortData();
-    }
-
-    private void sortData() {
-        this.tasks.sort(new Comparator<Task>() {
-            @Override
-            public int compare(Task o1, Task o2) {
-                calendar.set(o1.getYear(), o1.getMonth(), o1.getDayOfMonth(), o1.getHourOfDay(), o1.getMinute());
-                String s1 = String.format("%1$tY%1$tm%1$td%1$tH%1$tM", calendar);
-                calendar.set(o2.getYear(), o2.getMonth(), o2.getDayOfMonth(), o2.getHourOfDay(), o2.getMinute());
-                String s2 = String.format("%1$tY%1$tm%1$td%1$tH%1$tM", calendar);
-                return s1.compareTo(s2);
-            }
-        });
     }
 
     @NonNull
@@ -92,9 +73,8 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                 taskCardClickListener.onTaskCardDelete((int) viewHolder.taskCard.getTag());
             }
         });
-        this.calendar.set(this.tasks.get(i).getYear(), this.tasks.get(i).getMonth(), this.tasks.get(i).getDayOfMonth(), this.tasks.get(i).getHourOfDay(), this.tasks.get(i).getMinute());
-        viewHolder.itemDate.setText(String.format("%1$td/%1$tm/%1$tY", this.calendar));
-        viewHolder.itemTime.setText(String.format("%1$tH:%1$tM", this.calendar));
+        viewHolder.itemDate.setText(String.format("%02d/%02d/%04d", this.tasks.get(i).getDayOfMonth(), this.tasks.get(i).getMonth() + 1, this.tasks.get(i).getYear()));
+        viewHolder.itemTime.setText(String.format("%02d:%02d", this.tasks.get(i).getHourOfDay(), this.tasks.get(i).getMinute()));
         viewHolder.itemTitle.setText(this.tasks.get(i).getTitle());
         viewHolder.itemPlace.setText(this.tasks.get(i).getPlace());
         viewHolder.itemStatus.setText(this.tasks.get(i).getStatus());

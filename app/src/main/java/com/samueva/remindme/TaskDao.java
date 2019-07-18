@@ -11,14 +11,29 @@ import java.util.List;
 @Dao
 public interface TaskDao {
 
+    //REWORK
+    @Query("SELECT * FROM task WHERE id = :taskId")
+    Task getById(int taskId);
+
+    @Query("SELECT * FROM task WHERE status = :taskStatus")
+    List<Task> getAllByStatus(String taskStatus);
+
+    @Insert
+    void insertAll(Task... tasks);
+
+    @Delete
+    void delete(Task task);
+
+    @Update
+    void update(Task task);
+
+
+
     @Query("SELECT * FROM task")
     List<Task> getAll();
 
     @Query("SELECT * FROM task WHERE id IN (:taskIds)")
     List<Task> getAllByIds(int[] taskIds);
-
-    @Query("SELECT * FROM task WHERE id = :taskId")
-    Task getById(int taskId);
 
     @Query("SELECT * FROM task WHERE year = :taskYear AND month = :taskMonth AND dayOfMonth = :taskDayOfMonth")
     List<Task> getAllByDate(int taskYear, int taskMonth, int taskDayOfMonth);
@@ -29,23 +44,11 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE category = :taskCategory")
     List<Task> getAllByCategory(String taskCategory);
 
-    @Query("SELECT * FROM task WHERE status = :taskStatus")
-    List<Task> getAllByStatus(String taskStatus);
-
-    @Update
-    void updateTask(Task task);
-
     @Query("UPDATE task SET status = :taskStatus WHERE id = :taskId")
     void updateTaskStatus(int taskId, String taskStatus);
 
     @Query("UPDATE task SET doneYear = :taskYear, doneMonth = :taskMonth, doneDayOfMonth = :taskDayOfMonth, doneHourOfDay = :taskHourOfDay, doneMinute = :taskMinute WHERE id = :taskId")
     void updateTaskDoneCalendar(int taskId, int taskYear, int taskMonth, int taskDayOfMonth, int taskHourOfDay, int taskMinute);
-
-    @Insert
-    void insertAll(Task... tasks);
-
-    @Delete
-    void delete(Task task);
 
     @Query("DELETE FROM task WHERE status = :taskStatus")
     void deleteAllByStatus(String taskStatus);

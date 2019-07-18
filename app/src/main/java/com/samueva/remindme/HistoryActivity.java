@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -18,6 +19,49 @@ public class HistoryActivity extends AppCompatActivity {
 
     // AppDatabase
     private AppDatabase db;
+    private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
+        @Override
+        public void onTaskGetAllByStatusCallback(List<Task> taskList) {
+            recyclerAdapter.refreshData(taskList);
+            recyclerAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onTaskInsertAllCallback() {
+
+        }
+
+        @Override
+        public void onTaskDeleteCallback() {
+            Toast.makeText(getApplicationContext(), "Task deleted", Toast.LENGTH_SHORT).show();
+            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Completed", dbAsyncTaskListener).execute();
+        }
+
+        @Override
+        public void onTaskUpdateCallback() {
+
+        }
+
+        @Override
+        public void onInfoTaskCallback(Task task) {
+
+        }
+
+        @Override
+        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+
+        }
+
+        @Override
+        public void onInsertCategoryCallback() {
+
+        }
+
+        @Override
+        public void onDeleteCategoryCallback() {
+
+        }
+    };
 
     // RecyclerView
     RecyclerView recyclerView;
@@ -44,12 +88,12 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onHistoryCardDelete(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.DELETE_HISTORY, taskId).execute();
+                new DbAsyncTask(db, dbAction.TASK_DELETE, taskId, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETCOMPLETED_HISTORY).execute();
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Completed", this.dbAsyncTaskListener).execute();
     }
 
     private void startTaskInfoActivity(int taskId) {

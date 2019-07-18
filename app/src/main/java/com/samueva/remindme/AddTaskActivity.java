@@ -30,10 +30,25 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
     // AppDatabase
     private AppDatabase db;
-    private final DbAsyncTask.DbAsyncTaskCallback dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskCallback() {
+    private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
-        public void onInsertTaskCallback() {
+        public void onTaskGetAllByStatusCallback(List<Task> taskList) {
+
+        }
+
+        @Override
+        public void onTaskInsertAllCallback() {
             addTaskActivityFinish();
+        }
+
+        @Override
+        public void onTaskDeleteCallback() {
+
+        }
+
+        @Override
+        public void onTaskUpdateCallback() {
+
         }
 
         @Override
@@ -159,8 +174,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
             TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
             Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
-            new DbAsyncTask(db, dbAction.INSERT_TASK, task, dbAsyncTaskListener).execute();
-            Toast.makeText(this, "Task created", Toast.LENGTH_SHORT).show();
+            new DbAsyncTask(db, dbAction.TASK_INSERTALL, task, dbAsyncTaskListener).execute();
             return true;
         }
 
@@ -172,6 +186,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     }
 
     private void addTaskActivityFinish() {
+        Toast.makeText(this, "Task added", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra("new", (boolean) true);
         setResult(RESULT_OK, intent);

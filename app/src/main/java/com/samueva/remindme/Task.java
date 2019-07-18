@@ -138,6 +138,14 @@ public class Task implements Parcelable {
         this.minute = minute;
     }
 
+    public void setDoneCalendar(Calendar doneCalendar) {
+        this.doneYear = doneCalendar.get(Calendar.YEAR);
+        this.doneMonth = doneCalendar.get(Calendar.MONTH);
+        this.doneDayOfMonth = doneCalendar.get(Calendar.DAY_OF_MONTH);
+        this.doneHourOfDay = doneCalendar.get(Calendar.HOUR_OF_DAY);
+        this.doneMinute = doneCalendar.get(Calendar.MINUTE);
+    }
+
     public int getDoneYear() {
         return doneYear;
     }

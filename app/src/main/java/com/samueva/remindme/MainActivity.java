@@ -33,11 +33,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Request codes
     private static final int addTaskActivity_requestCode = 101;
 
-    // Calendar
-    private static Calendar calendar;
-
     // AppDatabase
     private AppDatabase db;
+    private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
+        @Override
+        public void onTaskGetAllByStatusCallback(List<Task> taskList) {
+            recyclerAdapter.refreshData(taskList);
+            recyclerAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onTaskInsertAllCallback() {
+
+        }
+
+        @Override
+        public void onTaskDeleteCallback() {
+            Toast.makeText(getApplicationContext(), "Task deleted", Toast.LENGTH_SHORT);
+            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
+        }
+
+        @Override
+        public void onTaskUpdateCallback() {
+            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
+        }
+
+        @Override
+        public void onInfoTaskCallback(Task task) {
+
+        }
+
+        @Override
+        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+
+        }
+
+        @Override
+        public void onInsertCategoryCallback() {
+
+        }
+
+        @Override
+        public void onDeleteCategoryCallback() {
+
+        }
+    };
 
     //RecylerView
     RecyclerView recyclerView;
@@ -111,18 +151,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDone(int taskId) {
-                calendar = Calendar.getInstance();
-                new DbAsyncTask(db, recyclerAdapter, dbAction.SETCOMPLETED_TASK, taskId, "Completed", calendar).execute();
+                new DbAsyncTask(db, dbAction.TASK_UPDATE_DONE, taskId, Calendar.getInstance(), dbAsyncTaskListener).execute();
             }
 
             @Override
             public void onTaskCardDelete(int taskId) {
-                new DbAsyncTask(db, recyclerAdapter, dbAction.DELETE_TASK, taskId).execute();
+                new DbAsyncTask(db, dbAction.TASK_DELETE, taskId, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETPENDING_TASK).execute();
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
     }
 
     @Override
@@ -189,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case addTaskActivity_requestCode:
                     Log.d(TAG, "onActivityResult: " + data.getBooleanExtra("new", false));
                     if (data.getBooleanExtra("new", false)) {
-                        new DbAsyncTask(this.db, this.recyclerAdapter, dbAction.GETPENDING_TASK).execute();
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
                     }
                     break;
                 default:

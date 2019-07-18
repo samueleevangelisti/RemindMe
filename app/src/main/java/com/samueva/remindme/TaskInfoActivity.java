@@ -2,10 +2,8 @@ package com.samueva.remindme;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class TaskInfoActivity extends AppCompatActivity {
@@ -14,17 +12,29 @@ public class TaskInfoActivity extends AppCompatActivity {
     private static final String TAG = "ReMe_TaskInfoActivity";
 
     private AppDatabase db;
-    private final DbAsyncTask.DbAsyncTaskCallback dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskCallback() {
+    private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
-        public void onInsertTaskCallback() {
+        public void onTaskGetAllByStatusCallback(List<Task> taskList) {
+
+        }
+
+        @Override
+        public void onTaskInsertAllCallback() {
+
+        }
+
+        @Override
+        public void onTaskDeleteCallback() {
+
+        }
+
+        @Override
+        public void onTaskUpdateCallback() {
 
         }
 
         @Override
         public void onInfoTaskCallback(Task task) {
-            calendar = Calendar.getInstance();
-            calendar.set(task.getYear(), task.getMonth(), task.getDayOfMonth(), task.getHourOfDay(), task.getMinute());
-
             TextView taskTitle = (TextView) findViewById(R.id.task_info_title);
             TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
             TextView taskDescription = (TextView) findViewById(R.id.task_info_description);
@@ -42,12 +52,11 @@ public class TaskInfoActivity extends AppCompatActivity {
             taskDescription.setText(task.getDescription());
             taskPriority.setText(task.getPriority() + "/10");
             taskCategory.setText(task.getCategory());
-            taskDate.setText(String.format("%1$td/%1$tm/%1$tY", calendar));
-            taskTime.setText(String.format("%1$tH:%1$tM", calendar));
+            taskDate.setText(String.format("%02d/%02d/%04d", task.getDayOfMonth(), task.getMonth() + 1, task.getYear()));
+            taskTime.setText(String.format("%02d:%02d", task.getHourOfDay(), task.getMinute()));
             if (task.getStatus().equals("Completed")) {
-                calendar.set(task.getDoneYear(), task.getDoneMonth(), task.getDoneDayOfMonth(), task.getDoneHourOfDay(), task.getDoneMinute());
-                taskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", calendar));
-                taskDoneTime.setText(String.format("%1$tH:%1$tM", calendar));
+                taskDoneDate.setText(String.format("%02d/%02d/%04d", task.getDoneDayOfMonth(), task.getDoneMonth() + 1, task.getDoneYear()));
+                taskDoneTime.setText(String.format("%02d:%02d", task.getDoneHourOfDay(), task.getDoneMinute()));
             } else {
                 taskDoneDate.setText("");
                 taskDoneTime.setText("");
@@ -71,8 +80,6 @@ public class TaskInfoActivity extends AppCompatActivity {
 
         }
     };
-
-    private static Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
