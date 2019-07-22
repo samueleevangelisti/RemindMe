@@ -24,6 +24,9 @@ public interface TaskDao {
     @Delete
     void delete(Task task);
 
+    @Query("DELETE FROM task WHERE status = 'Completed' OR status = 'Failed'")
+    void deleteHistory();
+
     @Update
     void update(Task... tasks);
 

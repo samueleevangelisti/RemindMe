@@ -43,17 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         @Override
-        public void onTaskInsertAllCallback() {
-
-        }
-
-        @Override
-        public void onTaskDeleteCallback() {
-            Toast.makeText(getApplicationContext(), "Task deleted", Toast.LENGTH_SHORT);
-            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
-        }
-
-        @Override
         public void onTaskUpdateCallback() {
             new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
         }
@@ -151,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDone(int taskId) {
-                new DbAsyncTask(db, dbAction.TASK_UPDATE_DONE, taskId, Calendar.getInstance(), dbAsyncTaskListener).execute();
+                new DbAsyncTask(db, dbAction.TASK_UPDATE_COMPLETE, taskId, Calendar.getInstance(), dbAsyncTaskListener).execute();
             }
 
             @Override

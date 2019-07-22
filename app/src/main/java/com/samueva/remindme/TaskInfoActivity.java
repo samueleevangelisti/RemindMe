@@ -19,16 +19,6 @@ public class TaskInfoActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onTaskInsertAllCallback() {
-
-        }
-
-        @Override
-        public void onTaskDeleteCallback() {
-
-        }
-
-        @Override
         public void onTaskUpdateCallback() {
 
         }

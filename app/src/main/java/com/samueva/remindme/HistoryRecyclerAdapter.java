@@ -24,6 +24,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
 
     public interface HistoryCardClickListener {
         void onTaskCardClick(int taskId);
+        void onHistoryCardRestore(int taskId);
         void onHistoryCardDelete(int taskId);
     }
 
@@ -53,6 +54,12 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
                 historyCardClickListener.onTaskCardClick((int) viewHolder.taskCard.getTag());
             }
         });
+        viewHolder.buttonRestore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                historyCardClickListener.onHistoryCardRestore((int) viewHolder.taskCard.getTag());
+            }
+        });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +71,6 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         viewHolder.itemDoneDate.setText(String.format("%02d/%02d/%04d", this.tasks.get(i).getDoneDayOfMonth(), this.tasks.get(i).getDoneMonth() + 1, this.tasks.get(i).getDoneYear()));
         viewHolder.itemDoneTime.setText(String.format("%02d:%02d", this.tasks.get(i).getDoneHourOfDay(), this.tasks.get(i).getDoneMinute()));
         viewHolder.itemTitle.setText(this.tasks.get(i).getTitle());
-        viewHolder.itemPlace.setText(this.tasks.get(i).getPlace());
         viewHolder.itemStatus.setText(this.tasks.get(i).getStatus());
     }
 
@@ -83,6 +89,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         public TextView itemTitle;
         public TextView itemPlace;
         public TextView itemStatus;
+        public Button buttonRestore;
         public Button buttonDelete;
 
         public ViewHolder(@NonNull View itemView) {
@@ -93,8 +100,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
             this.itemDoneDate = (TextView) itemView.findViewById(R.id.history_card_done_date);
             this.itemDoneTime = (TextView) itemView.findViewById(R.id.history_card_done_time);
             this.itemTitle = (TextView) itemView.findViewById(R.id.history_card_title);
-            this.itemPlace = (TextView) itemView.findViewById(R.id.history_card_place);
             this.itemStatus = (TextView) itemView.findViewById(R.id.history_card_status);
+            this.buttonRestore = (Button) itemView.findViewById(R.id.history_card_restore);
             this.buttonDelete = (Button) itemView.findViewById(R.id.history_card_delete);
         }
     }

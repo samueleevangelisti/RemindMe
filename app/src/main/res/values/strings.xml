@@ -39,4 +39,5 @@
     <string name="search">Search</string>
     <string name="delete_forever">Delete Forever</string>
     <string name="navigation">Navigation</string>
+    <string name="restore">Restore</string>
 </resources>

@@ -24,16 +24,6 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         }
 
         @Override
-        public void onTaskInsertAllCallback() {
-
-        }
-
-        @Override
-        public void onTaskDeleteCallback() {
-
-        }
-
-        @Override
         public void onTaskUpdateCallback() {
 
         }

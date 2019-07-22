@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,18 +36,8 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         }
 
         @Override
-        public void onTaskInsertAllCallback() {
-            addTaskActivityFinish();
-        }
-
-        @Override
-        public void onTaskDeleteCallback() {
-
-        }
-
-        @Override
         public void onTaskUpdateCallback() {
-
+            addTaskActivityFinish();
         }
 
         @Override
@@ -186,7 +175,6 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     }
 
     private void addTaskActivityFinish() {
-        Toast.makeText(this, "Task added", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra("new", (boolean) true);
         setResult(RESULT_OK, intent);

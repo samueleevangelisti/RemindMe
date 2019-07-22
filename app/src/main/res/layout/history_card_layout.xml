@@ -41,16 +41,6 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <TextView
-            android:id="@+id/history_card_place"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/place"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_title" />
-
-        <TextView
             android:id="@+id/history_card_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,15 +54,16 @@
             android:id="@+id/history_card_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
             android:drawableStart="@drawable/ic_delete"
             android:text="@string/delete"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_place" />
+            app:layout_constraintStart_toEndOf="@+id/history_card_restore"
+            app:layout_constraintTop_toBottomOf="@+id/history_card_title" />
 
         <TextView
             android:id="@+id/history_card_done_date"
@@ -105,6 +96,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/history_card_date"
             app:srcCompat="@drawable/ic_chevron_right" />
+
+        <Button
+            android:id="@+id/history_card_restore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:drawableStart="@drawable/ic_restore"
+            android:text="@string/restore"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toStartOf="@+id/history_card_delete"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/history_card_title" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

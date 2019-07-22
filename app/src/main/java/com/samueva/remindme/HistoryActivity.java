@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,19 +26,8 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onTaskInsertAllCallback() {
-
-        }
-
-        @Override
-        public void onTaskDeleteCallback() {
-            Toast.makeText(getApplicationContext(), "Task deleted", Toast.LENGTH_SHORT).show();
-            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Completed", dbAsyncTaskListener).execute();
-        }
-
-        @Override
         public void onTaskUpdateCallback() {
-
+            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Completed", dbAsyncTaskListener).execute();
         }
 
         @Override
@@ -87,6 +75,12 @@ public class HistoryActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onHistoryCardRestore(int taskId) {
+                // TODO: 7/23/19 La main activity non viene notificata del cambiamento quindi è necessario gestire tutto a fragment con un dirty bit
+                new DbAsyncTask(db, dbAction.TASK_UPDATE_UNCOMPLETE, taskId, dbAsyncTaskListener).execute();
+            }
+
+            @Override
             public void onHistoryCardDelete(int taskId) {
                 new DbAsyncTask(db, dbAction.TASK_DELETE, taskId, dbAsyncTaskListener).execute();
             }
@@ -118,7 +112,6 @@ public class HistoryActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.history_optionmenu_deleteforever) {
-            Toast.makeText(this, "History deleted", Toast.LENGTH_SHORT).show();
             new DbAsyncTask(db, recyclerAdapter, dbAction.DELETEALL_HYSTORY).execute();
             return true;
         }
