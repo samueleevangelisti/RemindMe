@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         // RecyclerView
-        this.recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        this.recyclerView = (RecyclerView) findViewById(R.id.home_recycler_view);
         this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
