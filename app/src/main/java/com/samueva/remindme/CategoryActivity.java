@@ -19,6 +19,11 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
+        public void onTaskGetByIdCallback(Task task) {
+
+        }
+
+        @Override
         public void onTaskGetAllByStatusCallback(List<Task> taskList) {
 
         }
@@ -29,24 +34,14 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         }
 
         @Override
-        public void onInfoTaskCallback(Task task) {
-
-        }
-
-        @Override
-        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+        public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
             recyclerAdapter.refreshData(categoryList);
             recyclerAdapter.notifyDataSetChanged();
         }
 
         @Override
-        public void onInsertCategoryCallback() {
-            new DbAsyncTask(db, dbAction.GETALL_CATEGORY, dbAsyncTaskListener).execute();
-        }
-
-        @Override
-        public void onDeleteCategoryCallback() {
-            new DbAsyncTask(db, dbAction.GETALL_CATEGORY, dbAsyncTaskListener).execute();
+        public void onCategoryUpdateCallback() {
+            new DbAsyncTask(db, dbAction.CATEGORY_GETALL, dbAsyncTaskListener).execute();
         }
     };
 
@@ -84,18 +79,19 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         this.recyclerAdapter = new CategoryRecyclerAdapter(new ArrayList<TaskCategory>(), new CategoryRecyclerAdapter.CategoryCardClickListener() {
             @Override
             public void onCategoryCardDelete(String categoryName) {
-                new DbAsyncTask(db, dbAction.DELETE_CATEGORY, dbAsyncTaskListener, categoryName).execute();
+                new DbAsyncTask(db, dbAction.CATEGORY_DELETE_BYNAME, categoryName, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, dbAction.GETALL_CATEGORY, this.dbAsyncTaskListener).execute();
+        new DbAsyncTask(this.db, dbAction.CATEGORY_GETALL, this.dbAsyncTaskListener).execute();
     }
 
     @Override
     public void onDialogPositiveClick(String category) {
-        TaskCategory newCategory = new TaskCategory(category, false, 0);
-        new DbAsyncTask(this.db, dbAction.INSERT_CATEGORY, this.dbAsyncTaskListener, newCategory).execute();
+        List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
+        categoryList.add(new TaskCategory(category, false, 0));
+        new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList, dbAsyncTaskListener).execute();
     }
 
     @Override

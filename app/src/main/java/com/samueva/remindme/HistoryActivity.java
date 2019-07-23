@@ -20,6 +20,11 @@ public class HistoryActivity extends AppCompatActivity {
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
+        public void onTaskGetByIdCallback(Task task) {
+
+        }
+
+        @Override
         public void onTaskGetAllByStatusCallback(List<Task> taskList) {
             recyclerAdapter.refreshData(taskList);
             recyclerAdapter.notifyDataSetChanged();
@@ -31,22 +36,12 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onInfoTaskCallback(Task task) {
+        public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
 
         }
 
         @Override
-        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
-
-        }
-
-        @Override
-        public void onInsertCategoryCallback() {
-
-        }
-
-        @Override
-        public void onDeleteCategoryCallback() {
+        public void onCategoryUpdateCallback() {
 
         }
     };
@@ -112,7 +107,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.history_optionmenu_deleteforever) {
-            new DbAsyncTask(db, recyclerAdapter, dbAction.DELETEALL_HYSTORY).execute();
+            new DbAsyncTask(db, dbAction.TASK_DELETE_HISTORY, dbAsyncTaskListener).execute();
             return true;
         }
 

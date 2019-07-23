@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
+        public void onTaskGetByIdCallback(Task task) {
+
+        }
+
+        @Override
         public void onTaskGetAllByStatusCallback(List<Task> taskList) {
             recyclerAdapter.refreshData(taskList);
             recyclerAdapter.notifyDataSetChanged();
@@ -48,22 +53,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         @Override
-        public void onInfoTaskCallback(Task task) {
+        public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
 
         }
 
         @Override
-        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
-
-        }
-
-        @Override
-        public void onInsertCategoryCallback() {
-
-        }
-
-        @Override
-        public void onDeleteCategoryCallback() {
+        public void onCategoryUpdateCallback() {
 
         }
     };
@@ -90,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for (int i = 0; i < categories.length; i++) {
             categoryList.add(new TaskCategory(categories[i], true, 0));
         }
-        new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categoryList).execute();
+        new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList, this.dbAsyncTaskListener).execute();
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);

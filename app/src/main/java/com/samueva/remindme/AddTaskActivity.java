@@ -31,6 +31,11 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
+        public void onTaskGetByIdCallback(Task task) {
+
+        }
+
+        @Override
         public void onTaskGetAllByStatusCallback(List<Task> taskList) {
 
         }
@@ -41,12 +46,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         }
 
         @Override
-        public void onInfoTaskCallback(Task task) {
-
-        }
-
-        @Override
-        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+        public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
             List<String> categories = new ArrayList<String>();
             for (TaskCategory category : categoryList) {
                 categories.add(category.getName());
@@ -58,13 +58,8 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         }
 
         @Override
-        public void onInsertCategoryCallback() {
-            new DbAsyncTask(db, dbAction.GETALL_CATEGORY, dbAsyncTaskListener).execute();
-        }
-
-        @Override
-        public void onDeleteCategoryCallback() {
-
+        public void onCategoryUpdateCallback() {
+            new DbAsyncTask(db, dbAction.CATEGORY_GETALL, dbAsyncTaskListener).execute();
         }
     };
 
@@ -90,7 +85,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         newTaskTime.setText(String.format("%1$tH : %1$tM", this.newTaskCalendar));
 
         // Spinner
-        new DbAsyncTask(this.db, dbAction.GETALL_CATEGORY, this.dbAsyncTaskListener).execute();
+        new DbAsyncTask(this.db, dbAction.CATEGORY_GETALL, this.dbAsyncTaskListener).execute();
 
         // SeekBar
         SeekBar seekBar = (SeekBar) findViewById(R.id.new_task_priority);
@@ -164,6 +159,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
             Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
             new DbAsyncTask(db, dbAction.TASK_INSERTALL, task, dbAsyncTaskListener).execute();
+            new DbAsyncTask(db, dbAction.CATEGORY_UPDATE_NTASKADD, newTaskCategory.getSelectedItem().toString()).execute();
             return true;
         }
 
@@ -183,8 +179,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
     @Override
     public void onDialogPositiveClick(String category) {
-        TaskCategory newCategory = new TaskCategory(category, false, 0);
-        new DbAsyncTask(this.db, dbAction.INSERT_CATEGORY, this.dbAsyncTaskListener, newCategory).execute();
+        List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
+        categoryList.add(new TaskCategory(category, false, 0));
+        new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList , dbAsyncTaskListener).execute();
     }
 
     @Override

@@ -14,17 +14,7 @@ public class TaskInfoActivity extends AppCompatActivity {
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
         @Override
-        public void onTaskGetAllByStatusCallback(List<Task> taskList) {
-
-        }
-
-        @Override
-        public void onTaskUpdateCallback() {
-
-        }
-
-        @Override
-        public void onInfoTaskCallback(Task task) {
+        public void onTaskGetByIdCallback(Task task) {
             TextView taskTitle = (TextView) findViewById(R.id.task_info_title);
             TextView taskPlace = (TextView) findViewById(R.id.task_info_place);
             TextView taskDescription = (TextView) findViewById(R.id.task_info_description);
@@ -56,17 +46,22 @@ public class TaskInfoActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onGetAllCategoryCallback(List<TaskCategory> categoryList) {
+        public void onTaskGetAllByStatusCallback(List<Task> taskList) {
 
         }
 
         @Override
-        public void onInsertCategoryCallback() {
+        public void onTaskUpdateCallback() {
 
         }
 
         @Override
-        public void onDeleteCategoryCallback() {
+        public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
+
+        }
+
+        @Override
+        public void onCategoryUpdateCallback() {
 
         }
     };
@@ -78,6 +73,6 @@ public class TaskInfoActivity extends AppCompatActivity {
 
         this.db = AppDatabase.getInstance();
 
-        new DbAsyncTask(this.db, dbAction.INFO_TASK, getIntent().getIntExtra("taskId", 0), this.dbAsyncTaskListener).execute();
+        new DbAsyncTask(this.db, dbAction.TASK_GETBYID, getIntent().getIntExtra("taskId", 0), this.dbAsyncTaskListener).execute();
     }
 }
