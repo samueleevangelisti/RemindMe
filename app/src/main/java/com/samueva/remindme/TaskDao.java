@@ -12,17 +12,14 @@ import java.util.List;
 public interface TaskDao {
 
     //REWORK
-    @Query("SELECT * FROM task WHERE id = :taskId")
-    Task getById(int taskId);
-
     @Query("SELECT * FROM task WHERE status = :taskStatus")
     List<Task> getAllByStatus(String taskStatus);
 
     @Insert
     void insertAll(Task... tasks);
 
-    @Delete
-    void delete(Task task);
+    @Query("DELETE FROM task WHERE id = :taskId")
+    void deleteByTaskId(int taskId);
 
     @Query("DELETE FROM task WHERE status = 'Completed' OR status = 'Failed'")
     void deleteHistory();
@@ -34,6 +31,9 @@ public interface TaskDao {
 
     @Query("SELECT * FROM task")
     List<Task> getAll();
+
+    @Query("SELECT * FROM task WHERE id = :taskId")
+    Task getById(int taskId);
 
     @Query("SELECT * FROM task WHERE id IN (:taskIds)")
     List<Task> getAllByIds(int[] taskIds);

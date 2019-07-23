@@ -94,7 +94,7 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
 
     @Override
     public void onDialogPositiveClick(String category) {
-        TaskCategory newCategory = new TaskCategory(category, false);
+        TaskCategory newCategory = new TaskCategory(category, false, 0);
         new DbAsyncTask(this.db, dbAction.INSERT_CATEGORY, this.dbAsyncTaskListener, newCategory).execute();
     }
 

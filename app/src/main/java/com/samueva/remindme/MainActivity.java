@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         String[] categories = getResources().getStringArray(R.array.categories);
         for (int i = 0; i < categories.length; i++) {
-            categoryList.add(new TaskCategory(categories[i], true));
+            categoryList.add(new TaskCategory(categories[i], true, 0));
         }
         new DbAsyncTask(this.db, dbAction.INIT_CATEGORY, categoryList).execute();
 
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTaskCardDelete(int taskId) {
-                new DbAsyncTask(db, dbAction.TASK_DELETE, taskId, dbAsyncTaskListener).execute();
+                new DbAsyncTask(db, dbAction.TASK_DELETE_BYTASKID, taskId, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);

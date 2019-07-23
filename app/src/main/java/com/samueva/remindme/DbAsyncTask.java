@@ -10,10 +10,11 @@ enum dbAction {
     //REWORK
     TASK_GETALLBYSTATUS,
     TASK_INSERTALL,
-    TASK_DELETE,
+    TASK_DELETE_BYTASKID,
     TASK_DELETE_HISTORY,
     TASK_UPDATE_COMPLETE,
     TASK_UPDATE_UNCOMPLETE,
+    CATEGORY_UPDATE_NTASK,
 
     GETALL_TASK,
     SETCOMPLETED_TASK,
@@ -100,6 +101,13 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.taskId = taskId;
         this.calendar = calendar;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
+    //CATEGORY_UPFATE_NTASK
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, String string) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.string = string;
     }
 
     public DbAsyncTask(AppDatabase db, TaskRecyclerAdapter recyclerAdapter, HistoryRecyclerAdapter historyRecyclerAdapter, dbAction myDbAction, int taskId, Task task, String taskStatus, Calendar calendar, List<TaskCategory> categoryList, DbAsyncTaskListener dbAsyncTaskListener, TaskCategory category, String categoryName) {
@@ -263,8 +271,8 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_INSERTALL:
                 this.db.taskDao().insertAll(this.task);
                 break;
-            case TASK_DELETE:
-                this.db.taskDao().delete(this.db.taskDao().getById(this.taskId));
+            case TASK_DELETE_BYTASKID:
+                this.db.taskDao().deleteByTaskId(this.taskId);
                 break;
             case TASK_DELETE_HISTORY:
                 this.db.taskDao().deleteHistory();
@@ -279,6 +287,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.task = this.db.taskDao().getById(this.taskId);
                 task.setStatus("Pending");
                 this.db.taskDao().update(this.task);
+                break;
+            case CATEGORY_UPDATE_NTASK:
+                this.db.taskCategoryDao().updateNTask(this.string);
                 break;
 
             case GETALL_TASK:
@@ -326,7 +337,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_INSERTALL:
                 this.dbAsyncTaskListener.onTaskUpdateCallback();
                 break;
-            case TASK_DELETE:
+            case TASK_DELETE_BYTASKID:
                 this.dbAsyncTaskListener.onTaskUpdateCallback();
                 break;
             case TASK_DELETE_HISTORY:

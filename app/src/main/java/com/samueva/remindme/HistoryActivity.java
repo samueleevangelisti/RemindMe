@@ -82,7 +82,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onHistoryCardDelete(int taskId) {
-                new DbAsyncTask(db, dbAction.TASK_DELETE, taskId, dbAsyncTaskListener).execute();
+                new DbAsyncTask(db, dbAction.TASK_DELETE_BYTASKID, taskId, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
