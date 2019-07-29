@@ -23,6 +23,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     // TODO: 5/10/19 STRINGA_DI_DEBUG
     private static final String TAG = "ReMe_AddTaskActivity";
 
+    // Need for update
+    private boolean update;
+
     // SeekBar Normalization
     private final int SEEKBAR_MIN = 1;
     private final int SEEKBAR_MAX = 10;
@@ -42,7 +45,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
         @Override
         public void onTaskUpdateCallback() {
-            addTaskActivityFinish();
+            finish();
         }
 
         @Override
@@ -73,6 +76,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        // Need for update
+        this.update = false;
 
         // AppDatabase
         this.db = AppDatabase.getInstance();
@@ -158,8 +164,8 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
             TextView newTaskNote = (TextView) findViewById(R.id.new_task_description);
             Task task = new Task(newTaskTitle.getText().toString(), newTaskCalendar, newTaskPlace.getText().toString(), newTaskNote.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
-            new DbAsyncTask(db, dbAction.TASK_INSERTALL, task, dbAsyncTaskListener).execute();
-            new DbAsyncTask(db, dbAction.CATEGORY_UPDATE_NTASKADD, newTaskCategory.getSelectedItem().toString()).execute();
+            this.update = true;
+            new DbAsyncTask(this.db, dbAction.TASK_INSERTALL, task, this.dbAsyncTaskListener).execute();
             return true;
         }
 
@@ -170,17 +176,10 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         return (progress * (this.SEEKBAR_MAX - this.SEEKBAR_MIN) / 100) + this.SEEKBAR_MIN;
     }
 
-    private void addTaskActivityFinish() {
-        Intent intent = new Intent();
-        intent.putExtra("new", (boolean) true);
-        setResult(RESULT_OK, intent);
-        super.finish();
-    }
-
     @Override
     public void onDialogPositiveClick(String category) {
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
-        categoryList.add(new TaskCategory(category, false, 0));
+        categoryList.add(new TaskCategory(category, false, 0, 0));
         new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList , dbAsyncTaskListener).execute();
     }
 
@@ -197,5 +196,13 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         this.newTaskCalendar.set(Calendar.MINUTE, minute);
         TextView newTaskTime = (TextView) findViewById(R.id.new_task_time);
         newTaskTime.setText(String.format("%1$tH:%1$tM", this.newTaskCalendar));
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("update", update);
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 }

@@ -16,6 +16,9 @@ public class HistoryActivity extends AppCompatActivity {
     // TODO: 7/1/19 STRINGA DI DEBUG
     private static final String TAG = "ReMe_HistoryActivity";
 
+    // Need for update
+    private boolean update;
+
     // AppDatabase
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
@@ -56,6 +59,9 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        // Need for update
+        this.update = false;
+
         // Database
         this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");
 
@@ -71,13 +77,13 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onHistoryCardRestore(int taskId) {
-                // TODO: 7/23/19 La main activity non viene notificata del cambiamento quindi è necessario gestire tutto a fragment con un dirty bit
+                update = true;
                 new DbAsyncTask(db, dbAction.TASK_UPDATE_UNCOMPLETE, taskId, dbAsyncTaskListener).execute();
             }
 
             @Override
-            public void onHistoryCardDelete(int taskId) {
-                new DbAsyncTask(db, dbAction.TASK_DELETE_BYTASKID, taskId, dbAsyncTaskListener).execute();
+            public void onHistoryCardDelete(int taskId, String taskCategory) {
+                new DbAsyncTask(db, dbAction.TASK_DELETE_BYID, taskId, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
@@ -112,5 +118,13 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("update", update);
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 }

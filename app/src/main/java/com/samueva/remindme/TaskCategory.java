@@ -11,12 +11,14 @@ public class TaskCategory {
     @NonNull private String name;
     private boolean isDefault;
     private int tasks;
+    private int historyTasks;
 
 
-    public TaskCategory(String name, boolean isDefault, int tasks) {
+    public TaskCategory(String name, boolean isDefault, int tasks, int historyTasks) {
         this.name = name;
         this.isDefault = isDefault;
         this.tasks = tasks;
+        this.historyTasks = historyTasks;
     }
 
     public String getName() {
@@ -41,5 +43,13 @@ public class TaskCategory {
 
     public void setTasks(int tasks) {
         this.tasks = tasks;
+    }
+
+    public int getHistoryTasks() {
+        return historyTasks;
+    }
+
+    public void setHistoryTasks(int historyTasks) {
+        this.historyTasks = historyTasks;
     }
 }

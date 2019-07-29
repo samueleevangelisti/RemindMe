@@ -25,7 +25,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
     public interface HistoryCardClickListener {
         void onTaskCardClick(int taskId);
         void onHistoryCardRestore(int taskId);
-        void onHistoryCardDelete(int taskId);
+        void onHistoryCardDelete(int taskId, String taskCategory);
     }
 
     public HistoryRecyclerAdapter(List<Task> tasks, HistoryCardClickListener historyCardClickListener) {
@@ -47,23 +47,22 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        viewHolder.taskCard.setTag((int) this.tasks.get(i).getId());
         viewHolder.taskCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                historyCardClickListener.onTaskCardClick((int) viewHolder.taskCard.getTag());
+                historyCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()).getId());
             }
         });
         viewHolder.buttonRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                historyCardClickListener.onHistoryCardRestore((int) viewHolder.taskCard.getTag());
+                historyCardClickListener.onHistoryCardRestore(tasks.get(viewHolder.getAdapterPosition()).getId());
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                historyCardClickListener.onHistoryCardDelete((int) viewHolder.taskCard.getTag());
+                historyCardClickListener.onHistoryCardDelete(tasks.get(viewHolder.getAdapterPosition()).getId(), tasks.get(viewHolder.getAdapterPosition()).getCategory());
             }
         });
         viewHolder.itemDate.setText(String.format("%02d/%02d/%04d", this.tasks.get(i).getDayOfMonth(), this.tasks.get(i).getMonth() + 1, this.tasks.get(i).getYear()));

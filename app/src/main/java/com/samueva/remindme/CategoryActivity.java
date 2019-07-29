@@ -73,7 +73,6 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
 
         //RecyclerView
         recyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
-        // TODO: 7/5/19 gestione dello scrolling per far sparire il FloatingActionButton
         this.layoutManager = new LinearLayoutManager(this);
         this.recyclerView.setLayoutManager(layoutManager);
         this.recyclerAdapter = new CategoryRecyclerAdapter(new ArrayList<TaskCategory>(), new CategoryRecyclerAdapter.CategoryCardClickListener() {
@@ -90,7 +89,7 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
     @Override
     public void onDialogPositiveClick(String category) {
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
-        categoryList.add(new TaskCategory(category, false, 0));
+        categoryList.add(new TaskCategory(category, false, 0, 0));
         new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList, dbAsyncTaskListener).execute();
     }
 

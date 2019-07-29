@@ -1,6 +1,7 @@
 package com.samueva.remindme;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
@@ -19,8 +20,8 @@ public interface TaskDao {
     @Insert
     void insertAll(Task... tasks);
 
-    @Query("DELETE FROM task WHERE id = :taskId")
-    void deleteByTaskId(int taskId);
+    @Delete
+    void delete(Task task);
 
     @Query("DELETE FROM task WHERE status = 'Completed' OR status = 'Failed'")
     void deleteHistory();

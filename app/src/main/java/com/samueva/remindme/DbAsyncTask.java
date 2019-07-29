@@ -1,6 +1,7 @@
 package com.samueva.remindme;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Comparator;
@@ -10,15 +11,14 @@ enum dbAction {
     TASK_GETBYID,
     TASK_GETALLBYSTATUS,
     TASK_INSERTALL,
-    TASK_DELETE_BYTASKID,
+    TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
     TASK_UPDATE_COMPLETE,
     TASK_UPDATE_UNCOMPLETE,
 
     CATEGORY_GETALL,
     CATEGORY_INSERTALL,
-    CATEGORY_DELETE_BYNAME,
-    CATEGORY_UPDATE_NTASKADD,
+    CATEGORY_DELETE_BYNAME
 }
 
 public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -30,6 +30,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     private dbAction myDbAction;
     private String string;
     private Task task;
+    private TaskCategory taskCategory;
     private int taskId;
     private Calendar calendar;
     private List<TaskCategory> categoryList;
@@ -38,7 +39,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     DbAsyncTaskListener dbAsyncTaskListener;
 
     public interface DbAsyncTaskListener {
-        //REWORK
         void onTaskGetByIdCallback(Task task);
         void onTaskGetAllByStatusCallback(List<Task> taskList);
         void onTaskUpdateCallback();
@@ -95,7 +95,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //CATEGORY_UPDATE_NTASKADD
+    //CATEGORY_UPDATE_TASKSADD, CATEGORY_UPDATE_TASKSDELETE
     public DbAsyncTask(AppDatabase db, dbAction myDbAction, String string) {
         this.db = db;
         this.myDbAction = myDbAction;
@@ -105,7 +105,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         switch (this.myDbAction) {
-            //REWORK
             case TASK_GETBYID:
                 this.task = this.db.taskDao().getById(this.taskId);
                 break;
@@ -121,24 +120,52 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 });
                 break;
             case TASK_INSERTALL:
+                this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
+                this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
+                Log.d(TAG, "category: " + this.task.getCategory());
+                Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
                 this.db.taskDao().insertAll(this.task);
+                this.db.taskCategoryDao().update(this.taskCategory);
                 break;
-            case TASK_DELETE_BYTASKID:
-                this.db.taskDao().deleteByTaskId(this.taskId);
+            case TASK_DELETE_BYID:
+                this.task = this.db.taskDao().getById(this.taskId);
+                this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
+                this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
+                if (this.task.getStatus().compareTo("Completed") == 0 || this.task.getStatus().compareTo("Failed") == 0) {
+                    this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
+                }
+                Log.d(TAG, "category: " + this.task.getCategory());
+                Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
+                this.db.taskDao().delete(this.task);
+                this.db.taskCategoryDao().update(this.taskCategory);
                 break;
             case TASK_DELETE_HISTORY:
                 this.db.taskDao().deleteHistory();
                 break;
             case TASK_UPDATE_COMPLETE:
                 this.task = this.db.taskDao().getById(this.taskId);
-                task.setStatus("Completed");
-                task.setDoneCalendar(calendar);
+                this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
+                this.task.setStatus("Completed");
+                this.task.setDoneCalendar(calendar);
+                this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() + 1);
+                Log.d(TAG, "category: " + this.task.getCategory());
+                Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
                 this.db.taskDao().update(this.task);
+                this.db.taskCategoryDao().update(this.taskCategory);
                 break;
             case TASK_UPDATE_UNCOMPLETE:
                 this.task = this.db.taskDao().getById(this.taskId);
-                task.setStatus("Pending");
+                this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
+                this.task.setStatus("Pending");
+                this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
+                Log.d(TAG, "category: " + this.task.getCategory());
+                Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
                 this.db.taskDao().update(this.task);
+                this.db.taskCategoryDao().update(this.taskCategory);
                 break;
 
             case CATEGORY_GETALL:
@@ -151,9 +178,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 break;
             case CATEGORY_DELETE_BYNAME:
                 this.db.taskCategoryDao().deleteByName(this.string);
-                break;
-            case CATEGORY_UPDATE_NTASKADD:
-                this.db.taskCategoryDao().updateNTaskAdd(this.string);
                 break;
 
             default:
@@ -175,7 +199,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_INSERTALL:
                 this.dbAsyncTaskListener.onTaskUpdateCallback();
                 break;
-            case TASK_DELETE_BYTASKID:
+            case TASK_DELETE_BYID:
                 this.dbAsyncTaskListener.onTaskUpdateCallback();
                 break;
             case TASK_DELETE_HISTORY:

@@ -25,8 +25,8 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
     public interface TaskCardClickListener {
         void onTaskCardClick(int taskId);
         void onTaskCardLater(int taskId);
-        void onTaskCardDone(int taskId);
-        void onTaskCardDelete(int taskId);
+        void onTaskCardComplete(int taskId);
+        void onTaskCardDelete(int taskId, String taskCategoty);
     }
 
     public TaskRecyclerAdapter(List<Task> tasks, TaskCardClickListener taskCardClickListener) {
@@ -48,29 +48,28 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        viewHolder.taskCard.setTag((int) this.tasks.get(i).getId());
         viewHolder.taskCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardClick((int) viewHolder.taskCard.getTag());
+                taskCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()).getId());
             }
         });
         viewHolder.buttonLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardLater((int) viewHolder.taskCard.getTag());
+                taskCardClickListener.onTaskCardLater(tasks.get(viewHolder.getAdapterPosition()).getId());
             }
         });
         viewHolder.buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardDone((int) viewHolder.taskCard.getTag());
+                taskCardClickListener.onTaskCardComplete(tasks.get(viewHolder.getAdapterPosition()).getId());
             }
         });
         viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardDelete((int) viewHolder.taskCard.getTag());
+                taskCardClickListener.onTaskCardDelete(tasks.get(viewHolder.getAdapterPosition()).getId(), tasks.get(viewHolder.getAdapterPosition()).getCategory());
             }
         });
         viewHolder.itemDate.setText(String.format("%02d/%02d/%04d", this.tasks.get(i).getDayOfMonth(), this.tasks.get(i).getMonth() + 1, this.tasks.get(i).getYear()));

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "ReMe_MainActivity";
 
     // Request codes
-    private static final int addTaskActivity_requestCode = 101;
+    private final int addTaskActivity_requestCode = 101;
+    private final int historyActivity_requestCode = 102;
 
     // AppDatabase
     private AppDatabase db;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         String[] categories = getResources().getStringArray(R.array.categories);
         for (int i = 0; i < categories.length; i++) {
-            categoryList.add(new TaskCategory(categories[i], true, 0));
+            categoryList.add(new TaskCategory(categories[i], true, 0, 0));
         }
         new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList, this.dbAsyncTaskListener).execute();
 
@@ -134,13 +134,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onTaskCardDone(int taskId) {
+            public void onTaskCardComplete(int taskId) {
                 new DbAsyncTask(db, dbAction.TASK_UPDATE_COMPLETE, taskId, Calendar.getInstance(), dbAsyncTaskListener).execute();
             }
 
             @Override
-            public void onTaskCardDelete(int taskId) {
-                new DbAsyncTask(db, dbAction.TASK_DELETE_BYTASKID, taskId, dbAsyncTaskListener).execute();
+            public void onTaskCardDelete(int taskId, String taskCategory) {
+                new DbAsyncTask(db, dbAction.TASK_DELETE_BYID, taskId, dbAsyncTaskListener).execute();
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO: 6/20/19 modificare correttamente il navigation drawer
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -190,15 +189,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_add) {
             startAddTaskActivity();
-        } else if (id == R.id.nav_home) {
-
         } else if (id == R.id.nav_history) {
             startHistoryActivity();
         } else if (id == R.id.nav_trend) {
             startTrendActivity();
         } else if (id == R.id.nav_categories) {
             startCategoryActivity();
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_info) {
 
         }
 
@@ -212,9 +209,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case addTaskActivity_requestCode:
-                    Log.d(TAG, "onActivityResult: " + data.getBooleanExtra("new", false));
-                    if (data.getBooleanExtra("new", false)) {
-                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
+                    if (data.getBooleanExtra("update", false)) {
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                    }
+                    break;
+                case historyActivity_requestCode:
+                    if (data.getBooleanExtra("update", false)) {
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
                     }
                     break;
                 default:
@@ -225,7 +226,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startAddTaskActivity() {
         Intent intent = new Intent(this, AddTaskActivity.class);
-        startActivityForResult(intent, addTaskActivity_requestCode);
+        startActivityForResult(intent, this.addTaskActivity_requestCode);
+    }
+
+    private void startHistoryActivity() {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivityForResult(intent, this.historyActivity_requestCode);
     }
 
     private void startTaskInfoActivity(int taskId) {
@@ -236,11 +242,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startTrendActivity() {
         Intent intent = new Intent(this, TrendActivity.class);
-        startActivity(intent);
-    }
-
-    private void startHistoryActivity() {
-        Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
