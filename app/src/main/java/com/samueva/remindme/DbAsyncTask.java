@@ -21,6 +21,7 @@ enum dbAction {
     CATEGORY_DELETE_BYNAME
 }
 
+// TODO: 7/30/19 Eliminare tutte i Log di debug per vedere il corretto funzionamento del database
 public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
 
     // TODO: 6/23/19 STRINGA DI DEBUG
