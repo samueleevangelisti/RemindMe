@@ -29,14 +29,15 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     private AppDatabase db;
     private dbAction myDbAction;
     private String string;
+    private Calendar calendar;
     private Task task;
     private TaskCategory taskCategory;
     private int taskId;
-    private Calendar calendar;
-    private List<TaskCategory> categoryList;
     private List<Task> taskList;
+    private List<TaskCategory> categoryList;
 
-    DbAsyncTaskListener dbAsyncTaskListener;
+
+    private DbAsyncTaskListener dbAsyncTaskListener;
 
     public interface DbAsyncTaskListener {
         void onTaskGetByIdCallback(Task task);
@@ -142,6 +143,15 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.db.taskCategoryDao().update(this.taskCategory);
                 break;
             case TASK_DELETE_HISTORY:
+                this.categoryList = this.db.taskCategoryDao().getAllInHistory();
+                for (TaskCategory category : this.categoryList) {
+                    category.setTasks(category.getTasks() - category.getHistoryTasks());
+                    category.setHistoryTasks(0);
+                    Log.d(TAG, "category: " + category.getName());
+                    Log.d(TAG, "tasks: " + category.getTasks());
+                    Log.d(TAG, "historyTasks: " + category.getHistoryTasks());
+                    this.db.taskCategoryDao().update(category);
+                }
                 this.db.taskDao().deleteHistory();
                 break;
             case TASK_UPDATE_COMPLETE:

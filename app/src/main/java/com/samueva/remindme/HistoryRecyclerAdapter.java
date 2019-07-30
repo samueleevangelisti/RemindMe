@@ -20,7 +20,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
 
     private List<Task> tasks;
 
-    HistoryCardClickListener historyCardClickListener;
+    private HistoryCardClickListener historyCardClickListener;
 
     public interface HistoryCardClickListener {
         void onTaskCardClick(int taskId);
@@ -86,7 +86,6 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         public TextView itemDoneDate;
         public TextView itemDoneTime;
         public TextView itemTitle;
-        public TextView itemPlace;
         public TextView itemStatus;
         public Button buttonRestore;
         public Button buttonDelete;

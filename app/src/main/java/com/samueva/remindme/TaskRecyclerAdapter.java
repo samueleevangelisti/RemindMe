@@ -20,7 +20,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     private List<Task> tasks;
 
-    TaskCardClickListener taskCardClickListener;
+    private TaskCardClickListener taskCardClickListener;
 
     public interface TaskCardClickListener {
         void onTaskCardClick(int taskId);

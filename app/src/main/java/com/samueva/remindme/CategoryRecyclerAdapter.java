@@ -23,7 +23,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     private List<TaskCategory> categories;
 
-    CategoryCardClickListener categoryCardClickListener;
+    private CategoryCardClickListener categoryCardClickListener;
 
     public interface CategoryCardClickListener {
         void onCategoryCardDelete(String categoryName);

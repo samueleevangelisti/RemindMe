@@ -17,6 +17,9 @@ public interface TaskCategoryDao {
     @Query("SELECT * FROM taskcategory")
     List<TaskCategory> getAll();
 
+    @Query("SELECT * FROM taskcategory WHERE historyTasks > 0")
+    List<TaskCategory> getAllInHistory();
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskCategory... taskCategories);
 
