@@ -1,5 +1,6 @@
 package com.samueva.remindme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -13,7 +14,13 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryActivity extends AppCompatActivity implements AddCategoryDialogFragment.AddCategoryDialogListener, GestureDetector.OnGestureListener {
+public class CategoryActivity extends AppCompatActivity implements AddCategoryDialogFragment.AddCategoryDialogListener, DeleteCategoryDialogFragment.DeleteCategoryDialogListener {
+
+    // Need for update
+    private boolean update;
+
+    // TaskCategory
+    TaskCategory taskCategory;
 
     // AppDatabase
     private AppDatabase db;
@@ -58,6 +65,9 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
+        // Need for update
+        this.update = false;
+
         // Database
         this.db = AppDatabase.getInstance();
 
@@ -77,8 +87,14 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         this.recyclerView.setLayoutManager(layoutManager);
         this.recyclerAdapter = new CategoryRecyclerAdapter(new ArrayList<TaskCategory>(), new CategoryRecyclerAdapter.CategoryCardClickListener() {
             @Override
-            public void onCategoryCardDelete(String categoryName) {
-                new DbAsyncTask(db, dbAction.CATEGORY_DELETE_BYNAME, categoryName, dbAsyncTaskListener).execute();
+            public void onCategoryCardDelete(TaskCategory category) {
+                if (category.getTasks() > 0) {
+                    taskCategory = category;
+                    DialogFragment deleteCategoryDialogFragment = new DeleteCategoryDialogFragment();
+                    deleteCategoryDialogFragment.show(getSupportFragmentManager(), "dcdfmanagerfromca");
+                } else {
+                    new DbAsyncTask(db, dbAction.CATEGORY_DELETE, category, dbAsyncTaskListener).execute();
+                }
             }
         });
         this.recyclerView.setAdapter(recyclerAdapter);
@@ -87,39 +103,23 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
     }
 
     @Override
-    public void onDialogPositiveClick(String category) {
+    public void onAddCategoryDialogPositiveClick(String category) {
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         categoryList.add(new TaskCategory(category, false, 0, 0));
         new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList, dbAsyncTaskListener).execute();
     }
 
     @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        return false;
+    public void onDeleteCategoryDialogPositiveClick() {
+        this.update = true;
+        new DbAsyncTask(this.db, dbAction.CATEGORY_DELETE, this.taskCategory, this.dbAsyncTaskListener).execute();
     }
 
     @Override
-    public void onShowPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("update", this.update);
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 }

@@ -123,7 +123,7 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra("update", update);
+        intent.putExtra("update", this.update);
         setResult(RESULT_OK, intent);
         super.finish();
     }

@@ -18,7 +18,7 @@ enum dbAction {
 
     CATEGORY_GETALL,
     CATEGORY_INSERTALL,
-    CATEGORY_DELETE_BYNAME
+    CATEGORY_DELETE
 }
 
 // TODO: 7/30/19 Eliminare tutte i Log di debug per vedere il corretto funzionamento del database
@@ -57,7 +57,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //TASK_GETALLBYSTATUS, CATEGORY_DELETE_BYNAME
+    //TASK_GETALLBYSTATUS
     public DbAsyncTask(AppDatabase db, dbAction myDbAction, String string, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
@@ -97,11 +97,12 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //CATEGORY_UPDATE_TASKSADD, CATEGORY_UPDATE_TASKSDELETE
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, String string) {
+    //CATEGORY_DELETE
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, TaskCategory taskCategory, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
-        this.string = string;
+        this.taskCategory = taskCategory;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
     @Override
@@ -197,8 +198,11 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                     this.db.taskCategoryDao().insertAll(category);
                 }
                 break;
-            case CATEGORY_DELETE_BYNAME:
-                this.db.taskCategoryDao().deleteByName(this.string);
+            case CATEGORY_DELETE:
+                if (this.taskCategory.getTasks() > 0) {
+                    this.db.taskDao().deleteByCategory(this.taskCategory.getName());
+                }
+                this.db.taskCategoryDao().delete(this.taskCategory);
                 break;
 
             default:
@@ -239,7 +243,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case CATEGORY_INSERTALL:
                 this.dbAsyncTaskListener.onCategoryUpdateCallback();
                 break;
-            case CATEGORY_DELETE_BYNAME:
+            case CATEGORY_DELETE:
                 this.dbAsyncTaskListener.onCategoryUpdateCallback();
                 break;
 

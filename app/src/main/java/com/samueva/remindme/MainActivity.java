@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Request codes
     private final int addTaskActivity_requestCode = 101;
     private final int historyActivity_requestCode = 102;
+    private final int categoryActivity_requestCode = 103;
 
     // AppDatabase
     private AppDatabase db;
@@ -218,6 +219,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
                     }
                     break;
+                case categoryActivity_requestCode:
+                    if (data.getBooleanExtra("update", false)) {
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -247,6 +253,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void startCategoryActivity() {
         Intent intent = new Intent(this, CategoryActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, this.categoryActivity_requestCode);
     }
 }

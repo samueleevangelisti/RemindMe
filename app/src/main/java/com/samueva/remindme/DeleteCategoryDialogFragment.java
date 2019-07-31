@@ -9,14 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.widget.TextView;
 
-public class AddCategoryDialogFragment extends DialogFragment {
+public class DeleteCategoryDialogFragment extends DialogFragment {
 
-    AddCategoryDialogListener addCategoryDialogListener;
+    DeleteCategoryDialogListener deleteCategoryDialogListener;
 
-    public interface AddCategoryDialogListener {
-        void onAddCategoryDialogPositiveClick(String category);
+    public interface DeleteCategoryDialogListener {
+        void onDeleteCategoryDialogPositiveClick();
     }
 
     @NonNull
@@ -24,16 +23,15 @@ public class AddCategoryDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        builder.setTitle(R.string.new_category)
-                .setView(inflater.inflate(R.layout.add_category_dialog_layout, null))
-                .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+        builder.setTitle("Warning")
+                .setView(inflater.inflate(R.layout.delete_category_dialog_layout, null))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        TextView categoryName = (TextView) getDialog().findViewById(R.id.new_category_name);
-                        addCategoryDialogListener.onAddCategoryDialogPositiveClick(categoryName.getText().toString());
+                        deleteCategoryDialogListener.onDeleteCategoryDialogPositiveClick();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -48,9 +46,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
         super.onAttach(context);
 
         try {
-            addCategoryDialogListener = (AddCategoryDialogListener) context;
+            deleteCategoryDialogListener = (DeleteCategoryDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement AddCategoryDialogListener");
+            throw new ClassCastException(getActivity().toString() + " must implement DeleteCategoryDialogListener");
         }
     }
 }

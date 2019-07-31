@@ -1,6 +1,7 @@
 package com.samueva.remindme;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -23,8 +24,8 @@ public interface TaskCategoryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskCategory... taskCategories);
 
-    @Query("DELETE FROM taskcategory WHERE name = :categoryName")
-    void deleteByName(String categoryName);
+    @Delete
+    void delete(TaskCategory category);
 
     @Update
     void update(TaskCategory... taskCategories);

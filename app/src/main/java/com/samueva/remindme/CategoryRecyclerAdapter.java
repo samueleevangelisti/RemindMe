@@ -26,7 +26,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     private CategoryCardClickListener categoryCardClickListener;
 
     public interface CategoryCardClickListener {
-        void onCategoryCardDelete(String categoryName);
+        void onCategoryCardDelete(TaskCategory category);
     }
 
     public CategoryRecyclerAdapter(List<TaskCategory> categories, CategoryCardClickListener categoryCardClickListener) {
@@ -55,7 +55,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    categoryCardClickListener.onCategoryCardDelete(categories.get(viewHolder.getAdapterPosition()).getName());
+                    categoryCardClickListener.onCategoryCardDelete(categories.get(viewHolder.getAdapterPosition()));
                 }
             });
         }

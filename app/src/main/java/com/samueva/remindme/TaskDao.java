@@ -23,6 +23,9 @@ public interface TaskDao {
     @Delete
     void delete(Task task);
 
+    @Query("DELETE FROM task WHERE category = :taskCategory")
+    void deleteByCategory(String taskCategory);
+
     @Query("DELETE FROM task WHERE status = 'Completed' OR status = 'Failed'")
     void deleteHistory();
 

@@ -177,7 +177,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     }
 
     @Override
-    public void onDialogPositiveClick(String category) {
+    public void onAddCategoryDialogPositiveClick(String category) {
         List<TaskCategory> categoryList = new ArrayList<TaskCategory>();
         categoryList.add(new TaskCategory(category, false, 0, 0));
         new DbAsyncTask(this.db, dbAction.CATEGORY_INSERTALL, categoryList , dbAsyncTaskListener).execute();
@@ -201,7 +201,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra("update", update);
+        intent.putExtra("update", this.update);
         setResult(RESULT_OK, intent);
         super.finish();
     }
