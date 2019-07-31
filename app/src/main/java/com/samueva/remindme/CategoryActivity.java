@@ -59,7 +59,7 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         setContentView(R.layout.activity_category);
 
         // Database
-        this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");
+        this.db = AppDatabase.getInstance();
 
         // FloatingActionButton
         fab = findViewById(R.id.fab3);

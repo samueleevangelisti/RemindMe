@@ -63,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity {
         this.update = false;
 
         // Database
-        this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");
+        this.db = AppDatabase.getInstance();
 
         // RecyclerView
         this.recyclerView = (RecyclerView) findViewById(R.id.history_recycler_view);
