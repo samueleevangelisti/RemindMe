@@ -31,26 +31,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     public CategoryRecyclerAdapter(List<TaskCategory> categories, CategoryCardClickListener categoryCardClickListener) {
         this.categories = categories;
-        sortData();
         this.categoryCardClickListener = categoryCardClickListener;
     }
 
     public void refreshData(List<TaskCategory> categories) {
         this.categories = categories;
-        sortData();
-    }
-
-    private void sortData() {
-        this.categories.sort(new Comparator<TaskCategory>() {
-            @Override
-            public int compare(TaskCategory o1, TaskCategory o2) {
-                if (o1.getIsDefault()) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }
-        });
     }
 
     @NonNull
@@ -63,7 +48,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        viewHolder.categoryCard.setTag((String) this.categories.get(i).getName());
         if (this.categories.get(i).getIsDefault()) {
             viewHolder.buttonDelete.setEnabled(false);
             viewHolder.buttonDelete.setAlpha((float) 0.5);
@@ -71,7 +55,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             viewHolder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    categoryCardClickListener.onCategoryCardDelete((String) viewHolder.categoryCard.getTag());
+                    categoryCardClickListener.onCategoryCardDelete(categories.get(viewHolder.getAdapterPosition()).getName());
                 }
             });
         }

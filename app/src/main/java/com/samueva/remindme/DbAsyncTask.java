@@ -181,6 +181,16 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
 
             case CATEGORY_GETALL:
                 this.categoryList = this.db.taskCategoryDao().getAll();
+                this.categoryList.sort(new Comparator<TaskCategory>() {
+                    @Override
+                    public int compare(TaskCategory taskCategory, TaskCategory t1) {
+                        if (taskCategory.getIsDefault()) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
                 break;
             case CATEGORY_INSERTALL:
                 for (TaskCategory category : this.categoryList) {
