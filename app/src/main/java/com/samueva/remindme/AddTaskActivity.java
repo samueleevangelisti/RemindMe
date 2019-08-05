@@ -26,10 +26,6 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     // Need for update
     private boolean update;
 
-    // SeekBar Normalization
-    private final int SEEKBAR_MIN = 1;
-    private final int SEEKBAR_MAX = 10;
-
     // AppDatabase
     private AppDatabase db;
     private final DbAsyncTask.DbAsyncTaskListener dbAsyncTaskListener = new DbAsyncTask.DbAsyncTaskListener() {
@@ -70,7 +66,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     private int seekBarValue;
 
     // Calendar
-    private static Calendar newTaskCalendar;
+    private Calendar newTaskCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +84,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         TextView newTaskDate = (TextView) findViewById(R.id.new_task_date);
         newTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.newTaskCalendar));
         TextView newTaskTime = (TextView) findViewById(R.id.new_task_time);
-        newTaskTime.setText(String.format("%1$tH : %1$tM", this.newTaskCalendar));
+        newTaskTime.setText(String.format("%1$tH:%1$tM", this.newTaskCalendar));
 
         // Spinner
         new DbAsyncTask(this.db, dbAction.CATEGORY_GETALL, this.dbAsyncTaskListener).execute();
@@ -173,7 +169,10 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
     }
 
     private int seekBarNormalization(int progress) {
-        return (progress * (this.SEEKBAR_MAX - this.SEEKBAR_MIN) / 100) + this.SEEKBAR_MIN;
+        // SeekBar Normalization
+        int SEEKBAR_MIN = 1;
+        int SEEKBAR_MAX = 10;
+        return (progress * (SEEKBAR_MAX - SEEKBAR_MIN) / 100) + SEEKBAR_MIN;
     }
 
     @Override

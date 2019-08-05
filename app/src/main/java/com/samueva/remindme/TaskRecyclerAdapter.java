@@ -23,7 +23,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
     private TaskCardClickListener taskCardClickListener;
 
     public interface TaskCardClickListener {
-        void onTaskCardClick(int taskId);
+        void onTaskCardClick(Task task);
         void onTaskCardLater(int taskId);
         void onTaskCardComplete(int taskId);
         void onTaskCardDelete(int taskId, String taskCategoty);
@@ -51,7 +51,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         viewHolder.taskCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()).getId());
+                taskCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()));
             }
         });
         viewHolder.buttonLater.setOnClickListener(new View.OnClickListener() {

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final int addTaskActivity_requestCode = 101;
     private final int historyActivity_requestCode = 102;
     private final int categoryActivity_requestCode = 103;
+    private final int taskInfoActivity_requestCode = 104;
 
     // AppDatabase
     private AppDatabase db;
@@ -125,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.recyclerView.setLayoutManager(layoutManager);
         this.recyclerAdapter = new TaskRecyclerAdapter(new ArrayList<Task>(), new TaskRecyclerAdapter.TaskCardClickListener() {
             @Override
-            public void onTaskCardClick(int taskId) {
-                startTaskInfoActivity(taskId);
+            public void onTaskCardClick(Task task) {
+                startTaskInfoActivity(task);
             }
 
             @Override
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case addTaskActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
@@ -220,6 +221,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     break;
                 case categoryActivity_requestCode:
+                    if (data.getBooleanExtra("update", false)) {
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                    }
+                    break;
+                case taskInfoActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
                         new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
                     }
@@ -240,10 +246,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(intent, this.historyActivity_requestCode);
     }
 
-    private void startTaskInfoActivity(int taskId) {
+    private void startTaskInfoActivity(Task task) {
         Intent intent = new Intent(this, TaskInfoActivity.class);
-        intent.putExtra("taskId", (int) taskId);
-        startActivity(intent);
+        intent.putExtra("task", (Task) task);
+        startActivityForResult(intent, this.taskInfoActivity_requestCode);
     }
 
     private void startTrendActivity() {

@@ -1,5 +1,6 @@
 package com.samueva.remindme;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
@@ -19,21 +20,37 @@ public class Task implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "year")
     private int year;
+    @ColumnInfo(name = "month")
     private int month;
+    @ColumnInfo(name = "day_of_month")
     private int dayOfMonth;
+    @ColumnInfo(name = "hour_of_day")
     private int hourOfDay;
+    @ColumnInfo(name = "minute")
     private int minute;
+    @ColumnInfo(name = "done_year")
     private int doneYear;
+    @ColumnInfo(name = "done_month")
     private int doneMonth;
+    @ColumnInfo(name = "done_day_of_month")
     private int doneDayOfMonth;
+    @ColumnInfo(name = "done_hour_of_day")
     private int doneHourOfDay;
+    @ColumnInfo(name = "done_minute")
     private int doneMinute;
+    @ColumnInfo(name = "place")
     private String place;
+    @ColumnInfo(name = "description")
     private String description;
+    @ColumnInfo(name = "category")
     private String category;
+    @ColumnInfo(name = "priority")
     private int priority;
+    @ColumnInfo(name = "status")
     private String status;
 
     public Task(String title, int year, int month, int dayOfMonth, int hourOfDay, int minute, String place, String description, String category, int priority, String status) {
