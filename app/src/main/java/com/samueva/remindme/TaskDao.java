@@ -17,6 +17,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE status = :taskStatus")
     List<Task> getAllByStatus(String taskStatus);
 
+    @Query("SELECT * FROM task WHERE status = 'Completed' OR status = 'Failed'")
+    List<Task> getAllHistory();
+
     @Insert
     void insertAll(Task... tasks);
 

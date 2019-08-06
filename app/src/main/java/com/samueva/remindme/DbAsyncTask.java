@@ -10,6 +10,7 @@ import java.util.List;
 enum dbAction {
     TASK_GETBYID,
     TASK_GETALLBYSTATUS,
+    TASK_GETALL_HISTORY,
     TASK_INSERTALL,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
@@ -51,7 +52,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //TASK_GETBYID, TASK_DELETE, TASK_UPDATE_UNCOMPLETE
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
@@ -59,30 +60,30 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //TASK_GETALLBYSTATUS
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, String string, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.string = string;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
+    //TASK_GETALL_HISTORY, TASK_DELETE_HISTORY, CATEGORY_GETALL
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
     //TASK_INSERTALL
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.task = task;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //TASK_DELETE_HISTORY, CATEGORY_GETALL
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
-        this.db = db;
-        this.myDbAction = myDbAction;
-        this.dbAsyncTaskListener = dbAsyncTaskListener;
-    }
-
     //TASK_UPDATE
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, String string, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.task = task;
@@ -91,7 +92,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //TASK_UPDATE_COMPLETE
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, Calendar calendar, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, Calendar calendar, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
@@ -100,7 +101,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //CATEGORY_INSERTALL
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, List<TaskCategory> categoryList, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, List<TaskCategory> categoryList, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.categoryList = categoryList;
@@ -108,7 +109,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //CATEGORY_DELETE
-    public DbAsyncTask(AppDatabase db, dbAction myDbAction, TaskCategory taskCategory, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, TaskCategory taskCategory, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskCategory = taskCategory;
@@ -123,6 +124,17 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 break;
             case TASK_GETALLBYSTATUS:
                 this.taskList = this.db.taskDao().getAllByStatus(this.string);
+                this.taskList.sort(new Comparator<Task>() {
+                    @Override
+                    public int compare(Task task, Task t1) {
+                        String s1 = String.format("%04d%02d%02d%02d%02d", task.getYear(), task.getMonth(), task.getDayOfMonth(), task.getHourOfDay(), task.getMinute());
+                        String s2 = String.format("%04d%02d%02d%02d%02d", t1.getYear(), t1.getMonth(), t1.getDayOfMonth(), t1.getHourOfDay(), t1.getMinute());
+                        return s1.compareTo(s2);
+                    }
+                });
+                break;
+            case TASK_GETALL_HISTORY:
+                this.taskList = this.db.taskDao().getAllHistory();
                 this.taskList.sort(new Comparator<Task>() {
                     @Override
                     public int compare(Task task, Task t1) {
@@ -253,6 +265,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.dbAsyncTaskListener.onTaskGetByIdCallback(this.task);
                 break;
             case TASK_GETALLBYSTATUS:
+                this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
+                break;
+            case TASK_GETALL_HISTORY:
                 this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
                 break;
             case TASK_INSERTALL:
