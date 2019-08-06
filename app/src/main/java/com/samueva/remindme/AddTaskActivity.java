@@ -113,7 +113,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         newTaskTime.setText(String.format("%1$tH:%1$tM", this.newTaskCalendar));
 
         // Buttons
-        ImageButton addTaskCategory = (ImageButton) findViewById(R.id.add_task_category);
+        ImageButton addTaskCategory = (ImageButton) findViewById(R.id.add_task_add_category);
         addTaskCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,7 +121,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 addCategoryDialogFragment.show(getSupportFragmentManager(), "acdfmanagerfromata");
             }
         });
-        ImageButton setTaskDate = (ImageButton) findViewById(R.id.set_task_date);
+        ImageButton setTaskDate = (ImageButton) findViewById(R.id.new_task_set_date);
         setTaskDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +129,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 newFragment.show(getSupportFragmentManager(), "datePickerata");
             }
         });
-        ImageButton setTaskTime = (ImageButton) findViewById(R.id.set_task_time);
+        ImageButton setTaskTime = (ImageButton) findViewById(R.id.new_task_set_time);
         setTaskTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
