@@ -21,7 +21,7 @@ public interface TaskDao {
     void insertAll(Task... tasks);
 
     @Delete
-    void delete(Task task);
+    void delete(Task... tasks);
 
     @Query("DELETE FROM task WHERE category = :taskCategory")
     void deleteByCategory(String taskCategory);

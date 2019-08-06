@@ -82,6 +82,7 @@ public class Task implements Parcelable {
     }
 
     public Task(Parcel parcel) {
+        this.id = parcel.readInt();
         this.title = parcel.readString();
         this.year = parcel.readInt();
         this.month = parcel.readInt();
@@ -114,6 +115,14 @@ public class Task implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.year = calendar.get(Calendar.YEAR);
+        this.month = calendar.get(Calendar.MONTH);
+        this.dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        this.hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        this.minute = calendar.get(Calendar.MINUTE);
     }
 
     public int getYear() {
@@ -251,6 +260,7 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.title);
         dest.writeInt(this.year);
         dest.writeInt(this.month);

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarSize="4dp"
@@ -49,22 +49,6 @@
                 android:hint="@string/place"
                 android:inputType="textCapSentences" />
         </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/set_task_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_edit"
-            android:text="@string/edit"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@+id/new_task_date"
-            app:layout_constraintTop_toBottomOf="@+id/new_task_category" />
 
         <TextView
             android:id="@+id/textView8"
@@ -118,22 +102,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/textView9"
-            app:layout_constraintTop_toBottomOf="@+id/new_task_date" />
-
-        <Button
-            android:id="@+id/set_task_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_edit"
-            android:text="@string/edit"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@+id/new_task_time"
             app:layout_constraintTop_toBottomOf="@+id/new_task_date" />
 
         <TextView
@@ -191,6 +159,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/colorPrimary"
+            android:contentDescription="@string/add_task_category"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -233,6 +202,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/new_task_priority_value" />
+
+        <ImageButton
+            android:id="@+id/set_task_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:contentDescription="@string/set_task_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@+id/new_task_date"
+            app:layout_constraintTop_toBottomOf="@+id/new_task_category"
+            app:srcCompat="@drawable/ic_edit" />
+
+        <ImageButton
+            android:id="@+id/set_task_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:contentDescription="@string/set_task_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@+id/new_task_time"
+            app:layout_constraintTop_toBottomOf="@+id/new_task_date"
+            app:srcCompat="@drawable/ic_edit" />
 
     </android.support.constraint.ConstraintLayout>
 

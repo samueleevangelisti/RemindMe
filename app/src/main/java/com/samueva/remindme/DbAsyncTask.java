@@ -13,6 +13,7 @@ enum dbAction {
     TASK_INSERTALL,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
+    TASK_UPDATE,
     TASK_UPDATE_COMPLETE,
     TASK_UPDATE_UNCOMPLETE,
 
@@ -77,6 +78,15 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     public DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
+    //TASK_UPDATE
+    public DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.task = task;
+        this.string = string;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -156,6 +166,29 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
                 this.db.taskDao().deleteHistory();
                 break;
+            case TASK_UPDATE:
+                this.db.taskDao().update(this.task);
+                if(this.task.getCategory().compareTo(this.string) != 0) {
+                    this.taskCategory = this.db.taskCategoryDao().getByName(this.string);
+                    this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
+                    if (this.task.getStatus().compareTo("Completed") == 0 || this.task.getStatus().compareTo("Failed") == 0) {
+                        this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
+                    }
+                    Log.d(TAG, "category: " + this.task.getCategory());
+                    Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                    Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
+                    this.db.taskCategoryDao().update(this.taskCategory);
+                    this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
+                    this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
+                    if (this.task.getStatus().compareTo("Completed") == 0 || this.task.getStatus().compareTo("Failed") == 0) {
+                        this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() + 1);
+                    }
+                    Log.d(TAG, "category: " + this.task.getCategory());
+                    Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                    Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
+                    this.db.taskCategoryDao().update(this.taskCategory);
+                }
+                break;
             case TASK_UPDATE_COMPLETE:
                 this.task = this.db.taskDao().getById(this.taskId);
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
@@ -228,6 +261,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.dbAsyncTaskListener.onTaskUpdateCallback();
                 break;
             case TASK_DELETE_HISTORY:
+                this.dbAsyncTaskListener.onTaskUpdateCallback();
+                break;
+            case TASK_UPDATE:
                 this.dbAsyncTaskListener.onTaskUpdateCallback();
                 break;
             case TASK_UPDATE_COMPLETE:

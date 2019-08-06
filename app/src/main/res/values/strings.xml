@@ -41,6 +41,9 @@
     <string name="navigation">Navigation</string>
     <string name="restore">Restore</string>
     <string name="info">Info</string>
-    <string name="delete_category_message">Some tasks are still linked to this category. Do you want to delete the category and the respective tasks?</string>
+    <string name="delete_category_message">Some tasks are still linked to this category.\nDo you want to delete the category and the respective tasks?</string>
     <string name="modify">Modify</string>
+    <string name="add_task_category">Add task category</string>
+    <string name="set_task_date">Set task date</string>
+    <string name="set_task_time">Set task time</string>
 </resources>

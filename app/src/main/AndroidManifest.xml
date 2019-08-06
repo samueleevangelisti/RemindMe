@@ -10,8 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".UpdateTaskActivity"
+            android:label="@string/modify"/>
+        <activity
             android:name=".TrendActivity"
-            android:label="@string/trend"></activity>
+            android:label="@string/trend" />
         <activity
             android:name=".CategoryActivity"
             android:label="@string/categories" />
