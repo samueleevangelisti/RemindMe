@@ -61,11 +61,11 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
             for (TaskCategory category : categoryList) {
                 categories.add(category.getName());
             }
-            Spinner newTaskCategory = (Spinner) findViewById(R.id.update_task_category);
+            Spinner updateTaskCategory = (Spinner) findViewById(R.id.update_task_category);
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, categories);
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            newTaskCategory.setAdapter(spinnerAdapter);
-            newTaskCategory.setSelection(spinnerAdapter.getPosition(task.getCategory()));
+            updateTaskCategory.setAdapter(spinnerAdapter);
+            updateTaskCategory.setSelection(spinnerAdapter.getPosition(task.getCategory()));
         }
 
         @Override

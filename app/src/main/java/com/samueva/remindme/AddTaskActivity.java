@@ -54,6 +54,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, categories);
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             newTaskCategory.setAdapter(spinnerAdapter);
+            newTaskCategory.setSelection(spinnerAdapter.getCount() - 1);
         }
 
         @Override
