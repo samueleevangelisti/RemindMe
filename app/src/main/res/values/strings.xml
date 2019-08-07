@@ -46,4 +46,7 @@
     <string name="add_task_category">Add task category</string>
     <string name="set_task_date">Set task date</string>
     <string name="set_task_time">Set task time</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
+    <string name="failed">Failed</string>
 </resources>

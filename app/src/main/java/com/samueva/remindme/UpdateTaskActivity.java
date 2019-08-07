@@ -9,8 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -76,6 +79,12 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
     // SeekBar
     private int seekBarValue;
+
+    // DoneDate and DoneTime
+    private ImageButton setTaskDoneDate;
+    private ImageButton setTaskDoneTime;
+    private TextView updateTaskDoneDate;
+    private TextView updateTaskDoneTime;
 
     // Calendar
     private Calendar taskCalendar;
@@ -154,8 +163,8 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 newFragment.show(getSupportFragmentManager(), "timePickeruta");
             }
         });
-        ImageButton setTaskDoneDate = (ImageButton) findViewById(R.id.update_task_set_done_date);
-        setTaskDoneDate.setOnClickListener(new View.OnClickListener() {
+        this.setTaskDoneDate = (ImageButton) findViewById(R.id.update_task_set_done_date);
+        this.setTaskDoneDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 myCalendarType = calendarType.TASKDONECALENDAR;
@@ -163,8 +172,8 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 newFragment.show(getSupportFragmentManager(), "doneDatePickeruta");
             }
         });
-        ImageButton setTaskDoneTime = (ImageButton) findViewById(R.id.update_task_set_done_time);
-        setTaskDoneTime.setOnClickListener(new View.OnClickListener() {
+        this.setTaskDoneTime = (ImageButton) findViewById(R.id.update_task_set_done_time);
+        this.setTaskDoneTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 myCalendarType = calendarType.TASKDONECALENDAR;
@@ -181,21 +190,57 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         EditText taskDescription = (EditText) findViewById(R.id.update_task_description);
         taskDescription.setText(this.task.getDescription());
 
+        // Radio Buttons
+        RadioButton radioPending = (RadioButton) findViewById(R.id.update_task_radio_pending);
+        radioPending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRadioClicked(view);
+            }
+        });
+        RadioButton radioCompleted = (RadioButton) findViewById(R.id.update_task_radio_completed);
+        radioCompleted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRadioClicked(view);
+            }
+        });
+        RadioButton radioFailed = (RadioButton) findViewById(R.id.update_task_radio_failed);
+        radioFailed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRadioClicked(view);
+            }
+        });
+        switch (this.task.getStatus()) {
+            case "Pending":
+                radioPending.setChecked(true);
+                break;
+            case "Completed":
+                radioCompleted.setChecked(true);
+                break;
+            case "Failed":
+                radioFailed.setChecked(true);
+                break;
+            default:
+                break;
+        }
+
         // DoneDate and DoneTime
-        TextView updateTaskDoneDate = (TextView) findViewById(R.id.update_task_done_date);
-        TextView updateTaskDoneTime = (TextView) findViewById(R.id.update_task_done_time);
+        this.taskDoneCalendar = Calendar.getInstance();
+        this.updateTaskDoneDate = (TextView) findViewById(R.id.update_task_done_date);
+        this.updateTaskDoneTime = (TextView) findViewById(R.id.update_task_done_time);
         if (!(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
-            updateTaskDoneDate.setText("");
-            setTaskDoneDate.setEnabled(false);
-            setTaskDoneDate.setAlpha((float) 0.5);
-            updateTaskDoneTime.setText("");
-            setTaskDoneTime.setEnabled(false);
-            setTaskDoneTime.setAlpha((float) 0.5);
+            this.updateTaskDoneDate.setText("");
+            this.setTaskDoneDate.setEnabled(false);
+            this.setTaskDoneDate.setAlpha((float) 0.5);
+            this.updateTaskDoneTime.setText("");
+            this.setTaskDoneTime.setEnabled(false);
+            this.setTaskDoneTime.setAlpha((float) 0.5);
         } else {
-            this.taskDoneCalendar = Calendar.getInstance();
             this.taskDoneCalendar.set(this.task.getDoneYear(), this.task.getDoneMonth(), this.task.getDoneDayOfMonth(), this.task.getDoneHourOfDay(), this.task.getDoneMinute());
-            updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
-            updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
+            this.updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+            this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
         }
     }
 
@@ -220,12 +265,25 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
             EditText taskPlace = (EditText) findViewById(R.id.update_task_place);
             Spinner taskCategory = (Spinner) findViewById(R.id.update_task_category);
             EditText taskDescription = (EditText) findViewById(R.id.update_task_description);
+            RadioGroup radioGroup = (RadioGroup) findViewById(R.id.update_task_radio_group);
             this.task.setTitle(taskTitle.getText().toString());
             this.task.setPlace(taskPlace.getText().toString());
             this.task.setDescription(taskDescription.getText().toString());
             this.task.setCategory(taskCategory.getSelectedItem().toString());
             this.task.setPriority(this.seekBarValue);
-            // TODO: 8/6/19 status
+            switch (radioGroup.getCheckedRadioButtonId()) {
+                case R.id.update_task_radio_pending:
+                    this.task.setStatus("Pending");
+                    break;
+                case R.id.update_task_radio_completed:
+                    this.task.setStatus("Completed");
+                    break;
+                case R.id.update_task_radio_failed:
+                    this.task.setStatus("Failed");
+                    break;
+                default:
+                    break;
+            }
             if (this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
                 // TODO: 8/7/19 dialog di errore perchè le due date non sono cronologicamente corrette
                 Log.d(TAG, "Il task viene terminato prima di iniziare, impossibile");
@@ -245,6 +303,44 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         int SEEKBAR_MIN = 1;
         int SEEKBAR_MAX = 10;
         return (progress * (SEEKBAR_MAX - SEEKBAR_MIN) / 100) + SEEKBAR_MIN;
+    }
+
+    private void onRadioClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.update_task_radio_pending:
+                if (checked) {
+                    this.updateTaskDoneDate.setText("");
+                    this.setTaskDoneDate.setEnabled(false);
+                    this.setTaskDoneDate.setAlpha((float) 0.5);
+                    this.updateTaskDoneTime.setText("");
+                    this.setTaskDoneTime.setEnabled(false);
+                    this.setTaskDoneTime.setAlpha((float) 0.5);
+                }
+                break;
+            case R.id.update_task_radio_completed:
+                if (checked) {
+                    this.updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+                    this.setTaskDoneDate.setEnabled(true);
+                    this.setTaskDoneDate.setAlpha((float) 1);
+                    this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
+                    this.setTaskDoneTime.setEnabled(true);
+                    this.setTaskDoneTime.setAlpha((float) 1);
+                }
+                break;
+            case R.id.update_task_radio_failed:
+                if (checked) {
+                    this.updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+                    this.setTaskDoneDate.setEnabled(true);
+                    this.setTaskDoneDate.setAlpha((float) 1);
+                    this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
+                    this.setTaskDoneTime.setEnabled(true);
+                    this.setTaskDoneTime.setAlpha((float) 1);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

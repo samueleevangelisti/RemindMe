@@ -240,7 +240,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/update_task_time" />
+            app:layout_constraintTop_toBottomOf="@+id/update_task_radio_group" />
 
         <TextView
             android:id="@+id/textView10"
@@ -267,7 +267,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/update_task_time" />
+            app:layout_constraintTop_toBottomOf="@+id/update_task_radio_group" />
 
         <ImageButton
             android:id="@+id/update_task_set_done_date"
@@ -280,7 +280,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/update_task_done_date"
-            app:layout_constraintTop_toBottomOf="@+id/update_task_time"
+            app:layout_constraintTop_toBottomOf="@+id/update_task_radio_group"
             app:srcCompat="@drawable/ic_edit" />
 
         <TextView
@@ -309,6 +309,54 @@
             app:layout_constraintStart_toEndOf="@+id/update_task_done_time"
             app:layout_constraintTop_toBottomOf="@+id/update_task_done_date"
             app:srcCompat="@drawable/ic_edit" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/status"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_task_time" />
+
+        <RadioGroup
+            android:id="@+id/update_task_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView12"
+            app:layout_constraintTop_toBottomOf="@+id/update_task_time">
+
+            <RadioButton
+                android:id="@+id/update_task_radio_pending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/pending"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/update_task_radio_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/completed"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/update_task_radio_failed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/failed"
+                android:textSize="18sp" />
+        </RadioGroup>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

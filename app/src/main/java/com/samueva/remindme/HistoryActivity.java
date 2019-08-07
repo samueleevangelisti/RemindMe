@@ -124,6 +124,7 @@ public class HistoryActivity extends AppCompatActivity {
             switch (requestCode) {
                 case taskInfoActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
+                        this.update = true;
                         new DbAsyncTask(this.db, dbAction.TASK_GETALL_HISTORY, this.dbAsyncTaskListener).execute();
                     }
                     break;
