@@ -1,6 +1,7 @@
 package com.samueva.remindme;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,9 @@ public class HistoryActivity extends AppCompatActivity {
 
     // TODO: 7/1/19 STRINGA DI DEBUG
     private static final String TAG = "ReMe_HistoryActivity";
+
+    // Request codes
+    private final int taskInfoActivity_requestCode = 301;
 
     // Need for update
     private boolean update;
@@ -71,8 +75,8 @@ public class HistoryActivity extends AppCompatActivity {
         this.recyclerView.setLayoutManager(layoutManager);
         this.recyclerAdapter = new HistoryRecyclerAdapter(new ArrayList<Task>(), new HistoryRecyclerAdapter.HistoryCardClickListener() {
             @Override
-            public void onTaskCardClick(int taskId) {
-                startTaskInfoActivity(taskId);
+            public void onTaskCardClick(Task task) {
+                startTaskInfoActivity(task);
             }
 
             @Override
@@ -89,12 +93,6 @@ public class HistoryActivity extends AppCompatActivity {
         this.recyclerView.setAdapter(recyclerAdapter);
 
         new DbAsyncTask(this.db, dbAction.TASK_GETALL_HISTORY, this.dbAsyncTaskListener).execute();
-    }
-
-    private void startTaskInfoActivity(int taskId) {
-        Intent intent = new Intent(this, TaskInfoActivity.class);
-        intent.putExtra("taskId", (int) taskId);
-        startActivity(intent);
     }
 
     @Override
@@ -118,6 +116,27 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
+                case taskInfoActivity_requestCode:
+                    if (data.getBooleanExtra("update", false)) {
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALL_HISTORY, this.dbAsyncTaskListener).execute();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void startTaskInfoActivity(Task task) {
+        Intent intent = new Intent(this, TaskInfoActivity.class);
+        intent.putExtra("task", (Task) task);
+        startActivityForResult(intent, this.taskInfoActivity_requestCode);
     }
 
     @Override

@@ -27,8 +27,8 @@
     <string name="add_task">Add Task</string>
     <string name="categories">Categories</string>
     <string name="trend">Trend</string>
-    <string name="done_date">Done Date</string>
-    <string name="done_time">Done Time</string>
+    <string name="end_date">End Date</string>
+    <string name="end_time">EndTime</string>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="name">Name</string>
     <string name="new_category">New Category</string>

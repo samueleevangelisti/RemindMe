@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/done_date"
+            android:text="@string/end_date"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/history_card_time" />
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/done_time"
+            android:text="@string/end_time"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/history_card_done_date"
             app:layout_constraintTop_toBottomOf="@+id/history_card_time" />

@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TaskInfoActivity extends AppCompatActivity {
@@ -70,6 +72,8 @@ public class TaskInfoActivity extends AppCompatActivity {
         TextView taskDoneDate = (TextView) findViewById(R.id.task_info_done_date);
         TextView taskDoneTime = (TextView) findViewById(R.id.task_info_done_time);
         TextView taskStatus = (TextView) findViewById(R.id.task_info_status);
+        ImageView arrow1 = (ImageView) findViewById(R.id.task_info_arrow1);
+        ImageView arrow2 = (ImageView) findViewById(R.id.task_info_arrow2);
 
         taskTitle.setText(this.task.getTitle());
         taskPlace.setText(this.task.getPlace());
@@ -78,11 +82,13 @@ public class TaskInfoActivity extends AppCompatActivity {
         taskCategory.setText(getString(R.string.category) + ": " + this.task.getCategory());
         taskDate.setText(String.format("%02d/%02d/%04d", task.getDayOfMonth(), task.getMonth() + 1, this.task.getYear()));
         taskTime.setText(String.format("%02d:%02d", this.task.getHourOfDay(), this.task.getMinute()));
-        if (this.task.getStatus().equals("Completed")) {
+        if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
             taskDoneDate.setText(String.format("%02d/%02d/%04d", this.task.getDoneDayOfMonth(), this.task.getDoneMonth() + 1, this.task.getDoneYear()));
             taskDoneTime.setText(String.format("%02d:%02d", this.task.getDoneHourOfDay(), this.task.getDoneMinute()));
         } else {
+            arrow1.setVisibility(View.INVISIBLE);
             taskDoneDate.setText("");
+            arrow2.setVisibility(View.INVISIBLE);
             taskDoneTime.setText("");
         }
         taskStatus.setText(this.task.getStatus());

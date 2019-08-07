@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+enum calendarType {
+    TASKCALENDAR,
+    TASKDONECALENDAR
+}
+
 public class UpdateTaskActivity extends AppCompatActivity implements AddCategoryDialogFragment.AddCategoryDialogListener, DatePickerFragment.TaskDatePickerListener, TimePickerFragment.TaskTimePickerListener {
 
     // TODO: 8/5/19 STRINGA DI DEBUG
@@ -25,6 +31,9 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
     // Need for update
     private Boolean update;
+
+    // Calendar modified
+    private calendarType myCalendarType;
 
     // Task
     private Task task;
@@ -70,6 +79,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
     // Calendar
     private Calendar taskCalendar;
+    private Calendar taskDoneCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +122,10 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         // Date and Time
         this.taskCalendar = Calendar.getInstance();
         this.taskCalendar.set(this.task.getYear(), this.task.getMonth(), this.task.getDayOfMonth(), this.task.getHourOfDay(), this.task.getMinute());
-        TextView newTaskDate = (TextView) findViewById(R.id.update_task_date);
-        newTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
-        TextView newTaskTime = (TextView) findViewById(R.id.update_task_time);
-        newTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
+        TextView updateTaskDate = (TextView) findViewById(R.id.update_task_date);
+        updateTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
+        TextView updateTaskTime = (TextView) findViewById(R.id.update_task_time);
+        updateTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
 
         // Buttons
         ImageButton addTaskCategory = (ImageButton) findViewById(R.id.update_task_add_category);
@@ -130,6 +140,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         setTaskDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                myCalendarType = calendarType.TASKCALENDAR;
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "datePickeruta");
             }
@@ -138,8 +149,27 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         setTaskTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                myCalendarType = calendarType.TASKCALENDAR;
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePickeruta");
+            }
+        });
+        ImageButton setTaskDoneDate = (ImageButton) findViewById(R.id.update_task_set_done_date);
+        setTaskDoneDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myCalendarType = calendarType.TASKDONECALENDAR;
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "doneDatePickeruta");
+            }
+        });
+        ImageButton setTaskDoneTime = (ImageButton) findViewById(R.id.update_task_set_done_time);
+        setTaskDoneTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myCalendarType = calendarType.TASKDONECALENDAR;
+                DialogFragment newFragment = new TimePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "DoneTimePickeruta");
             }
         });
 
@@ -150,6 +180,23 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         taskPlace.setText(this.task.getPlace());
         EditText taskDescription = (EditText) findViewById(R.id.update_task_description);
         taskDescription.setText(this.task.getDescription());
+
+        // DoneDate and DoneTime
+        TextView updateTaskDoneDate = (TextView) findViewById(R.id.update_task_done_date);
+        TextView updateTaskDoneTime = (TextView) findViewById(R.id.update_task_done_time);
+        if (!(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
+            updateTaskDoneDate.setText("");
+            setTaskDoneDate.setEnabled(false);
+            setTaskDoneDate.setAlpha((float) 0.5);
+            updateTaskDoneTime.setText("");
+            setTaskDoneTime.setEnabled(false);
+            setTaskDoneTime.setAlpha((float) 0.5);
+        } else {
+            this.taskDoneCalendar = Calendar.getInstance();
+            this.taskDoneCalendar.set(this.task.getDoneYear(), this.task.getDoneMonth(), this.task.getDoneDayOfMonth(), this.task.getDoneHourOfDay(), this.task.getDoneMinute());
+            updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+            updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
+        }
     }
 
     @Override
@@ -174,15 +221,20 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
             Spinner taskCategory = (Spinner) findViewById(R.id.update_task_category);
             EditText taskDescription = (EditText) findViewById(R.id.update_task_description);
             this.task.setTitle(taskTitle.getText().toString());
-            this.task.setCalendar(this.taskCalendar);
-            // TODO: 8/6/19 doneCalendar
             this.task.setPlace(taskPlace.getText().toString());
             this.task.setDescription(taskDescription.getText().toString());
             this.task.setCategory(taskCategory.getSelectedItem().toString());
             this.task.setPriority(this.seekBarValue);
             // TODO: 8/6/19 status
-            this.update = true;
-            new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_UPDATE, this.task, categoryOld, this.dbAsyncTaskListener).execute();
+            if (this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
+                // TODO: 8/7/19 dialog di errore perchè le due date non sono cronologicamente corrette
+                Log.d(TAG, "Il task viene terminato prima di iniziare, impossibile");
+            } else {
+                this.task.setCalendar(this.taskCalendar);
+                this.task.setDoneCalendar(this.taskDoneCalendar);
+                this.update = true;
+                new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_UPDATE, this.task, categoryOld, this.dbAsyncTaskListener).execute();
+            }
             return true;
         }
 
@@ -204,17 +256,42 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
     @Override
     public void onDateSetReady(int year, int month, int dayOfMonth) {
-        this.taskCalendar.set(year, month, dayOfMonth);
-        TextView newTaskDate = (TextView) findViewById(R.id.update_task_date);
-        newTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
+        TextView taskDate;
+        switch (this.myCalendarType) {
+            case TASKCALENDAR:
+                this.taskCalendar.set(year, month, dayOfMonth);
+                taskDate = (TextView) findViewById(R.id.update_task_date);
+                taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
+                break;
+            case TASKDONECALENDAR:
+                this.taskDoneCalendar.set(year, month, dayOfMonth);
+                taskDate = (TextView) findViewById(R.id.update_task_done_date);
+                taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void onTimeSetReady(int hourOfDay, int minute) {
-        this.taskCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        this.taskCalendar.set(Calendar.MINUTE, minute);
-        TextView newTaskTime = (TextView) findViewById(R.id.update_task_time);
-        newTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
+        TextView taskTime;
+        switch (this.myCalendarType) {
+            case TASKCALENDAR:
+                this.taskCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                this.taskCalendar.set(Calendar.MINUTE, minute);
+                taskTime = (TextView) findViewById(R.id.update_task_time);
+                taskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
+                break;
+            case TASKDONECALENDAR:
+                this.taskDoneCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                this.taskDoneCalendar.set(Calendar.MINUTE, minute);
+                taskTime = (TextView) findViewById(R.id.update_task_done_time);
+                taskTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

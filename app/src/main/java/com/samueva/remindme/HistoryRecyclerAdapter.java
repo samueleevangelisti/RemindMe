@@ -23,7 +23,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
     private HistoryCardClickListener historyCardClickListener;
 
     public interface HistoryCardClickListener {
-        void onTaskCardClick(int taskId);
+        void onTaskCardClick(Task task);
         void onHistoryCardRestore(int taskId);
         void onHistoryCardDelete(int taskId, String taskCategory);
     }
@@ -50,7 +50,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         viewHolder.taskCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                historyCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()).getId());
+                historyCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()));
             }
         });
         viewHolder.buttonRestore.setOnClickListener(new View.OnClickListener() {

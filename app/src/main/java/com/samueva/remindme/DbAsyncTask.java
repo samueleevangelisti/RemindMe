@@ -157,7 +157,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.task = this.db.taskDao().getById(this.taskId);
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                 this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
-                if (this.task.getStatus().compareTo("Completed") == 0 || this.task.getStatus().compareTo("Failed") == 0) {
+                if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
                     this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
                 }
                 Log.d(TAG, "category: " + this.task.getCategory());
@@ -179,12 +179,11 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.db.taskDao().deleteHistory();
                 break;
             case TASK_UPDATE:
-                Log.d(TAG, "TASK_UPDATE");
                 this.db.taskDao().update(this.task);
-                if(this.task.getCategory().compareTo(this.string) != 0) {
+                if(!(this.task.getCategory().equals(this.string))) {
                     this.taskCategory = this.db.taskCategoryDao().getByName(this.string);
                     this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
-                    if (this.task.getStatus().compareTo("Completed") == 0 || this.task.getStatus().compareTo("Failed") == 0) {
+                    if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
                     }
                     Log.d(TAG, "category: " + this.taskCategory.getName());
@@ -193,7 +192,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                     this.db.taskCategoryDao().update(this.taskCategory);
                     this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                     this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
-                    if (this.task.getStatus().compareTo("Completed") == 0 || this.task.getStatus().compareTo("Failed") == 0) {
+                    if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() + 1);
                     }
                     Log.d(TAG, "category: " + this.taskCategory.getName());
