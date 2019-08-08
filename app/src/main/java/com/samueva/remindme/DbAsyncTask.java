@@ -32,6 +32,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     private AppDatabase db;
     private dbAction myDbAction;
     private String string;
+    private String string2;
     private Calendar calendar;
     private Task task;
     private TaskCategory taskCategory;
@@ -83,11 +84,12 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //TASK_UPDATE
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, String string, String string2, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.task = task;
         this.string = string;
+        this.string2 = string2;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -180,8 +182,22 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 break;
             case TASK_UPDATE:
                 this.db.taskDao().update(this.task);
-                if(!(this.task.getCategory().equals(this.string))) {
-                    this.taskCategory = this.db.taskCategoryDao().getByName(this.string);
+                this.taskCategory = this.db.taskCategoryDao().getByName(this.string);
+                // Aggiustamento della category riguardante il cambiamento di status del task
+                if (!(this.task.getStatus().equals(this.string2))) {
+                    if (this.string2.equals("Completed") || this.string2.equals("Failed")) {
+                        this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
+                    }
+                    if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
+                        this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() + 1);
+                    }
+                    Log.d(TAG, "category: " + this.taskCategory.getName());
+                    Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
+                    Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
+                    this.db.taskCategoryDao().update(this.taskCategory);
+                }
+                // Aggiustamento delle category riguardante il cambiamento di category
+                if (!(this.task.getCategory().equals(this.string))) {
                     this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
                     if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);

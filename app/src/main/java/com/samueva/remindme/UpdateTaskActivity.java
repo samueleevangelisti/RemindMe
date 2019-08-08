@@ -261,6 +261,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_task_optionmenu_create) {
             String categoryOld = this.task.getCategory();
+            String statusOld = this.task.getStatus();
             EditText taskTitle = (EditText) findViewById(R.id.update_task_title);
             EditText taskPlace = (EditText) findViewById(R.id.update_task_place);
             Spinner taskCategory = (Spinner) findViewById(R.id.update_task_category);
@@ -291,7 +292,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 this.task.setCalendar(this.taskCalendar);
                 this.task.setDoneCalendar(this.taskDoneCalendar);
                 this.update = true;
-                new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_UPDATE, this.task, categoryOld, this.dbAsyncTaskListener).execute();
+                new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_UPDATE, this.task, categoryOld, statusOld, this.dbAsyncTaskListener).execute();
             }
             return true;
         }
