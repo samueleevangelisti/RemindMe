@@ -61,25 +61,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/task_card_later"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_watch_later"
-            android:text="@string/later"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toStartOf="@+id/task_card_done"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_place" />
-
-        <Button
             android:id="@+id/history_card_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
             android:drawableStart="@drawable/ic_delete"
             android:text="@string/delete"
@@ -94,15 +79,14 @@
             android:id="@+id/task_card_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
             android:drawableStart="@drawable/ic_done"
             android:text="@string/done"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toStartOf="@+id/history_card_delete"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/task_card_later"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/history_card_place" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

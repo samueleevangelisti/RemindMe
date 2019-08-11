@@ -11,7 +11,7 @@ enum dbAction {
     TASK_GETBYID,
     TASK_GETALLBYSTATUS,
     TASK_GETALL_HISTORY,
-    TASK_INSERTALL,
+    TASK_INSERT,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
     TASK_UPDATE,
@@ -36,7 +36,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     private Calendar calendar;
     private Task task;
     private TaskCategory taskCategory;
-    private int taskId;
+    private long taskId;
     private List<Task> taskList;
     private List<TaskCategory> categoryList;
 
@@ -46,14 +46,14 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     public interface DbAsyncTaskListener {
         void onTaskGetByIdCallback(Task task);
         void onTaskGetAllByStatusCallback(List<Task> taskList);
-        void onTaskUpdateCallback();
+        void onTaskUpdateCallback(long taskId);
 
         void onCategoryGetAllCallback(List<TaskCategory> categoryList);
         void onCategoryUpdateCallback();
     }
 
     //TASK_GETBYID, TASK_DELETE, TASK_UPDATE_UNCOMPLETE
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, long taskId, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
@@ -75,7 +75,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //TASK_INSERTALL
+    //TASK_INSERT
     DbAsyncTask(AppDatabase db, dbAction myDbAction, Task task, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
@@ -94,7 +94,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //TASK_UPDATE_COMPLETE
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, Calendar calendar, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, long taskId, Calendar calendar, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
@@ -146,13 +146,13 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                     }
                 });
                 break;
-            case TASK_INSERTALL:
+            case TASK_INSERT:
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                 this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
                 Log.d(TAG, "category: " + this.task.getCategory());
                 Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
                 Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
-                this.db.taskDao().insertAll(this.task);
+                this.taskId = this.db.taskDao().insert(this.task);
                 this.db.taskCategoryDao().update(this.taskCategory);
                 break;
             case TASK_DELETE_BYID:
@@ -275,7 +275,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         switch (this.myDbAction) {
-            //REWORK
             case TASK_GETBYID:
                 this.dbAsyncTaskListener.onTaskGetByIdCallback(this.task);
                 break;
@@ -285,23 +284,23 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_GETALL_HISTORY:
                 this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
                 break;
-            case TASK_INSERTALL:
-                this.dbAsyncTaskListener.onTaskUpdateCallback();
+            case TASK_INSERT:
+                this.dbAsyncTaskListener.onTaskUpdateCallback(this.taskId);
                 break;
             case TASK_DELETE_BYID:
-                this.dbAsyncTaskListener.onTaskUpdateCallback();
+                this.dbAsyncTaskListener.onTaskUpdateCallback(-1);
                 break;
             case TASK_DELETE_HISTORY:
-                this.dbAsyncTaskListener.onTaskUpdateCallback();
+                this.dbAsyncTaskListener.onTaskUpdateCallback(-1);
                 break;
             case TASK_UPDATE:
-                this.dbAsyncTaskListener.onTaskUpdateCallback();
+                this.dbAsyncTaskListener.onTaskUpdateCallback(-1);
                 break;
             case TASK_UPDATE_COMPLETE:
-                this.dbAsyncTaskListener.onTaskUpdateCallback();
+                this.dbAsyncTaskListener.onTaskUpdateCallback(-1);
                 break;
             case TASK_UPDATE_UNCOMPLETE:
-                this.dbAsyncTaskListener.onTaskUpdateCallback();
+                this.dbAsyncTaskListener.onTaskUpdateCallback(-1);
                 break;
 
             case CATEGORY_GETALL:

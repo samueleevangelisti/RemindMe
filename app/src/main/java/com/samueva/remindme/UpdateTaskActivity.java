@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -54,7 +53,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         }
 
         @Override
-        public void onTaskUpdateCallback() {
+        public void onTaskUpdateCallback(long taskId) {
             finish();
         }
 

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         @Override
-        public void onTaskUpdateCallback() {
+        public void onTaskUpdateCallback(long taskId) {
             new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
         }
 
@@ -132,17 +131,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onTaskCardLater(int taskId) {
-                // TODO: 6/13/19 Implementare il rimando del task
-            }
-
-            @Override
-            public void onTaskCardComplete(int taskId) {
+            public void onTaskCardComplete(long taskId) {
                 new DbAsyncTask(db, dbAction.TASK_UPDATE_COMPLETE, taskId, Calendar.getInstance(), dbAsyncTaskListener).execute();
             }
 
             @Override
-            public void onTaskCardDelete(int taskId, String taskCategory) {
+            public void onTaskCardDelete(long taskId, String taskCategory) {
                 new DbAsyncTask(db, dbAction.TASK_DELETE_BYID, taskId, dbAsyncTaskListener).execute();
             }
         });

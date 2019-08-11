@@ -24,9 +24,8 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     public interface TaskCardClickListener {
         void onTaskCardClick(Task task);
-        void onTaskCardLater(int taskId);
-        void onTaskCardComplete(int taskId);
-        void onTaskCardDelete(int taskId, String taskCategoty);
+        void onTaskCardComplete(long taskId);
+        void onTaskCardDelete(long taskId, String taskCategoty);
     }
 
     public TaskRecyclerAdapter(List<Task> tasks, TaskCardClickListener taskCardClickListener) {
@@ -52,12 +51,6 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
             @Override
             public void onClick(View v) {
                 taskCardClickListener.onTaskCardClick(tasks.get(viewHolder.getAdapterPosition()));
-            }
-        });
-        viewHolder.buttonLater.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskCardClickListener.onTaskCardLater(tasks.get(viewHolder.getAdapterPosition()).getId());
             }
         });
         viewHolder.buttonDone.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +85,6 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         public TextView itemTitle;
         public TextView itemPlace;
         public TextView itemStatus;
-        public Button buttonLater;
         public Button buttonDone;
         public Button buttonDelete;
 
@@ -104,7 +96,6 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
             this.itemTitle = (TextView) itemView.findViewById(R.id.history_card_title);
             this.itemPlace = (TextView) itemView.findViewById(R.id.history_card_place);
             this.itemStatus = (TextView) itemView.findViewById(R.id.history_card_status);
-            this.buttonLater = (Button) itemView.findViewById(R.id.task_card_later);
             this.buttonDone = (Button) itemView.findViewById(R.id.task_card_done);
             this.buttonDelete = (Button) itemView.findViewById(R.id.history_card_delete);
         }

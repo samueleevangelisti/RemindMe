@@ -12,7 +12,7 @@ import java.util.List;
 public interface TaskDao {
 
     @Query("SELECT * FROM task WHERE id = :taskId")
-    Task getById(int taskId);
+    Task getById(long taskId);
 
     @Query("SELECT * FROM task WHERE status = :taskStatus")
     List<Task> getAllByStatus(String taskStatus);
@@ -21,7 +21,7 @@ public interface TaskDao {
     List<Task> getAllHistory();
 
     @Insert
-    void insertAll(Task... tasks);
+    long insert(Task tasks);
 
     @Delete
     void delete(Task... tasks);

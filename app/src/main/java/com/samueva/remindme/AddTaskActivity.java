@@ -1,9 +1,12 @@
 package com.samueva.remindme;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +43,16 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         }
 
         @Override
-        public void onTaskUpdateCallback() {
+        public void onTaskUpdateCallback(long taskId) {
+            Intent intent = new Intent();
+            intent.setAction("com.samueva.remindme.broadcast");
+            intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), (int) taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, newTaskCalendar.getTimeInMillis(), pendingIntent);
+
             finish();
         }
 
@@ -65,6 +77,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
     // SeekBar
     private int seekBarValue;
+
+    // New Task
+    private Task newTask;
 
     // Calendar
     private Calendar newTaskCalendar;
@@ -160,9 +175,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             EditText newTaskPlace = (EditText) findViewById(R.id.new_task_place);
             Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
             EditText newTaskDescription = (EditText) findViewById(R.id.new_task_description);
-            Task task = new Task(newTaskTitle.getText().toString(), this.newTaskCalendar, newTaskPlace.getText().toString(), newTaskDescription.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
+            this.newTask = new Task(newTaskTitle.getText().toString(), this.newTaskCalendar, newTaskPlace.getText().toString(), newTaskDescription.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
             this.update = true;
-            new DbAsyncTask(this.db, dbAction.TASK_INSERTALL, task, this.dbAsyncTaskListener).execute();
+            new DbAsyncTask(this.db, dbAction.TASK_INSERT, this.newTask, this.dbAsyncTaskListener).execute();
             return true;
         }
 

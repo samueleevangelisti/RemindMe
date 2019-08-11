@@ -19,7 +19,7 @@ import java.util.Calendar;
 public class Task implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     @ColumnInfo(name = "title")
     private String title;
     @ColumnInfo(name = "year")
@@ -82,7 +82,7 @@ public class Task implements Parcelable {
     }
 
     public Task(Parcel parcel) {
-        this.id = parcel.readInt();
+        this.id = parcel.readLong();
         this.title = parcel.readString();
         this.year = parcel.readInt();
         this.month = parcel.readInt();
@@ -101,11 +101,11 @@ public class Task implements Parcelable {
         this.status = parcel.readString();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -260,7 +260,7 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.title);
         dest.writeInt(this.year);
         dest.writeInt(this.month);
