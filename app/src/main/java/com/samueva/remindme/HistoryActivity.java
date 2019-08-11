@@ -38,7 +38,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onTaskUpdateCallback(long taskId) {
+        public void onTaskUpdateCallback(int taskId) {
             new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Completed", dbAsyncTaskListener).execute();
         }
 
@@ -80,13 +80,13 @@ public class HistoryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onHistoryCardRestore(long taskId) {
+            public void onHistoryCardRestore(int taskId) {
                 update = true;
                 new DbAsyncTask(db, dbAction.TASK_UPDATE_UNCOMPLETE, taskId, dbAsyncTaskListener).execute();
             }
 
             @Override
-            public void onHistoryCardDelete(long taskId, String taskCategory) {
+            public void onHistoryCardDelete(int taskId, String taskCategory) {
                 new DbAsyncTask(db, dbAction.TASK_DELETE_BYID, taskId, dbAsyncTaskListener).execute();
             }
         });

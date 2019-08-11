@@ -24,8 +24,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
 
     public interface HistoryCardClickListener {
         void onTaskCardClick(Task task);
-        void onHistoryCardRestore(long taskId);
-        void onHistoryCardDelete(long taskId, String taskCategory);
+        void onHistoryCardRestore(int taskId);
+        void onHistoryCardDelete(int taskId, String taskCategory);
     }
 
     public HistoryRecyclerAdapter(List<Task> tasks, HistoryCardClickListener historyCardClickListener) {

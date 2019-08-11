@@ -24,8 +24,8 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     public interface TaskCardClickListener {
         void onTaskCardClick(Task task);
-        void onTaskCardComplete(long taskId);
-        void onTaskCardDelete(long taskId, String taskCategoty);
+        void onTaskCardComplete(int taskId);
+        void onTaskCardDelete(int taskId, String taskCategoty);
     }
 
     public TaskRecyclerAdapter(List<Task> tasks, TaskCardClickListener taskCardClickListener) {

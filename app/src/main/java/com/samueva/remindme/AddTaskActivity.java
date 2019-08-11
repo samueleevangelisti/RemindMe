@@ -44,7 +44,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         }
 
         @Override
-        public void onTaskUpdateCallback(long taskId) {
+        public void onTaskUpdateCallback(int taskId) {
             Log.d(TAG, "newTask id : " + taskId);
 
             Notification notification = new Notification.Builder(getApplicationContext())
@@ -59,7 +59,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             intent.putExtra("task_id", taskId);
             intent.putExtra("notification", notification);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), (int) taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, newTaskCalendar.getTimeInMillis(), pendingIntent);

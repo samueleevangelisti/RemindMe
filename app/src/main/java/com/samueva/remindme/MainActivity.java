@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         @Override
-        public void onTaskUpdateCallback(long taskId) {
+        public void onTaskUpdateCallback(int taskId) {
             new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
         }
 
@@ -131,12 +131,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onTaskCardComplete(long taskId) {
+            public void onTaskCardComplete(int taskId) {
                 new DbAsyncTask(db, dbAction.TASK_UPDATE_COMPLETE, taskId, Calendar.getInstance(), dbAsyncTaskListener).execute();
             }
 
             @Override
-            public void onTaskCardDelete(long taskId, String taskCategory) {
+            public void onTaskCardDelete(int taskId, String taskCategory) {
                 new DbAsyncTask(db, dbAction.TASK_DELETE_BYID, taskId, dbAsyncTaskListener).execute();
             }
         });

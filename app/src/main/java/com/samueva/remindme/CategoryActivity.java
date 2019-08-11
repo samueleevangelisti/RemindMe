@@ -34,7 +34,7 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         }
 
         @Override
-        public void onTaskUpdateCallback(long taskId) {
+        public void onTaskUpdateCallback(int taskId) {
 
         }
 
@@ -55,9 +55,6 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
     RecyclerView.LayoutManager layoutManager;
     CategoryRecyclerAdapter recyclerAdapter;
 
-    // FloatingActionButton
-    private FloatingActionButton fab;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +67,7 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         this.db = AppDatabase.getInstance();
 
         // FloatingActionButton
-        fab = findViewById(R.id.fab3);
+        FloatingActionButton fab = findViewById(R.id.fab3);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

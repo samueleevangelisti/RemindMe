@@ -36,7 +36,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     private Calendar calendar;
     private Task task;
     private TaskCategory taskCategory;
-    private long taskId;
+    private int taskId;
     private List<Task> taskList;
     private List<TaskCategory> categoryList;
 
@@ -46,14 +46,14 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     public interface DbAsyncTaskListener {
         void onTaskGetByIdCallback(Task task);
         void onTaskGetAllByStatusCallback(List<Task> taskList);
-        void onTaskUpdateCallback(long taskId);
+        void onTaskUpdateCallback(int taskId);
 
         void onCategoryGetAllCallback(List<TaskCategory> categoryList);
         void onCategoryUpdateCallback();
     }
 
     //TASK_GETBYID, TASK_DELETE, TASK_UPDATE_UNCOMPLETE
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, long taskId, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
@@ -94,7 +94,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     //TASK_UPDATE_COMPLETE
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, long taskId, Calendar calendar, DbAsyncTaskListener dbAsyncTaskListener) {
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int taskId, Calendar calendar, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
         this.taskId = taskId;
@@ -152,7 +152,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 Log.d(TAG, "category: " + this.task.getCategory());
                 Log.d(TAG, "tasks: " + this.taskCategory.getTasks());
                 Log.d(TAG, "historyTasks: " + this.taskCategory.getHistoryTasks());
-                this.taskId = this.db.taskDao().insert(this.task);
+                this.taskId = (int) this.db.taskDao().insert(this.task);
                 this.db.taskCategoryDao().update(this.taskCategory);
                 break;
             case TASK_DELETE_BYID:

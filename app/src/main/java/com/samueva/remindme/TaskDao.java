@@ -12,7 +12,7 @@ import java.util.List;
 public interface TaskDao {
 
     @Query("SELECT * FROM task WHERE id = :taskId")
-    Task getById(long taskId);
+    Task getById(int taskId);
 
     @Query("SELECT * FROM task WHERE status = :taskStatus")
     List<Task> getAllByStatus(String taskStatus);

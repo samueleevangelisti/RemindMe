@@ -53,7 +53,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         }
 
         @Override
-        public void onTaskUpdateCallback(long taskId) {
+        public void onTaskUpdateCallback(int taskId) {
             finish();
         }
 
