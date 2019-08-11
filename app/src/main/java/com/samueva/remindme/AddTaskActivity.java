@@ -1,6 +1,7 @@
 package com.samueva.remindme;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,9 +45,19 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
         @Override
         public void onTaskUpdateCallback(long taskId) {
+            Log.d(TAG, "newTask id : " + taskId);
+
+            Notification notification = new Notification.Builder(getApplicationContext())
+                    .setContentTitle(newTask.getTitle())
+                    .setContentText(newTask.getHourOfDay() + ":" + newTask.getMinute() + " - " + newTask.getPlace())
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .build();
+
             Intent intent = new Intent();
             intent.setAction("com.samueva.remindme.broadcast");
             intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.putExtra("task_id", taskId);
+            intent.putExtra("notification", notification);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), (int) taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
