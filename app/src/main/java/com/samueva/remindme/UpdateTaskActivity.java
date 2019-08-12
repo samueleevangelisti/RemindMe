@@ -21,11 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-enum calendarType {
-    TASKCALENDAR,
-    TASKDONECALENDAR
-}
-
 public class UpdateTaskActivity extends AppCompatActivity implements AddCategoryDialogFragment.AddCategoryDialogListener, DatePickerFragment.TaskDatePickerListener, TimePickerFragment.TaskTimePickerListener {
 
     // TODO: 8/5/19 STRINGA DI DEBUG
@@ -284,7 +279,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 default:
                     break;
             }
-            if (this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
+            if (this.taskCalendar.compareTo(this.taskDoneCalendar) > 0) {
                 // TODO: 8/7/19 dialog di errore perchè le due date non sono cronologicamente corrette
                 Log.d(TAG, "Il task viene terminato prima di iniziare, impossibile");
             } else {

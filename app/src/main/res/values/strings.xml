@@ -49,4 +49,6 @@
     <string name="pending">Pending</string>
     <string name="completed">Completed</string>
     <string name="failed">Failed</string>
+    <string name="notification_status">Notification Status</string>
+    <string name="notification">Notification</string>
 </resources>

@@ -32,6 +32,16 @@ public class Task implements Parcelable {
     private int hourOfDay;
     @ColumnInfo(name = "minute")
     private int minute;
+    @ColumnInfo(name = "notification_year")
+    private int notificationYear;
+    @ColumnInfo(name = "notification_month")
+    private int notificationMonth;
+    @ColumnInfo(name = "notification_day_of_month")
+    private int notificationDayOfMonth;
+    @ColumnInfo(name = "notification_hour_of_day")
+    private int notificationHourOfDay;
+    @ColumnInfo(name = "notification_minute")
+    private int notificationMinute;
     @ColumnInfo(name = "done_year")
     private int doneYear;
     @ColumnInfo(name = "done_month")
@@ -89,6 +99,11 @@ public class Task implements Parcelable {
         this.dayOfMonth = parcel.readInt();
         this.hourOfDay = parcel.readInt();
         this.minute = parcel.readInt();
+        this.notificationYear = parcel.readInt();
+        this.notificationMonth = parcel.readInt();
+        this.notificationDayOfMonth = parcel.readInt();
+        this.notificationHourOfDay = parcel.readInt();
+        this.notificationMinute = parcel.readInt();
         this.doneYear = parcel.readInt();
         this.doneMonth = parcel.readInt();
         this.doneDayOfMonth = parcel.readInt();
@@ -163,6 +178,54 @@ public class Task implements Parcelable {
 
     public void setMinute(int minute) {
         this.minute = minute;
+    }
+
+    public void setNotificationCalendar(Calendar calendar) {
+        this.notificationYear = calendar.get(Calendar.YEAR);
+        this.notificationMonth = calendar.get(Calendar.MONTH);
+        this.notificationDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        this.notificationHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        this.notificationMinute = calendar.get(Calendar.MINUTE);
+    }
+
+    public int getNotificationYear() {
+        return notificationYear;
+    }
+
+    public void setNotificationYear(int notificationYear) {
+        this.notificationYear = notificationYear;
+    }
+
+    public int getNotificationMonth() {
+        return notificationMonth;
+    }
+
+    public void setNotificationMonth(int notificationMonth) {
+        this.notificationMonth = notificationMonth;
+    }
+
+    public int getNotificationDayOfMonth() {
+        return notificationDayOfMonth;
+    }
+
+    public void setNotificationDayOfMonth(int notificationDayOfMonth) {
+        this.notificationDayOfMonth = notificationDayOfMonth;
+    }
+
+    public int getNotificationHourOfDay() {
+        return notificationHourOfDay;
+    }
+
+    public void setNotificationHourOfDay(int notificationHourOfDay) {
+        this.notificationHourOfDay = notificationHourOfDay;
+    }
+
+    public int getNotificationMinute() {
+        return notificationMinute;
+    }
+
+    public void setNotificationMinute(int notificationMinute) {
+        this.notificationMinute = notificationMinute;
     }
 
     public void setDoneCalendar(Calendar doneCalendar) {
@@ -267,6 +330,11 @@ public class Task implements Parcelable {
         dest.writeInt(this.dayOfMonth);
         dest.writeInt(this.hourOfDay);
         dest.writeInt(this.minute);
+        dest.writeInt(this.notificationYear);
+        dest.writeInt(this.notificationMonth);
+        dest.writeInt(this.notificationDayOfMonth);
+        dest.writeInt(this.notificationHourOfDay);
+        dest.writeInt(this.notificationMinute);
         dest.writeInt(this.doneYear);
         dest.writeInt(this.doneMonth);
         dest.writeInt(this.doneDayOfMonth);
