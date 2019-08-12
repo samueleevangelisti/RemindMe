@@ -58,7 +58,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
             if (newTask.getPriority() >= 6) {
                 Log.d(TAG, "Setting Notification");
-                Log.d(TAG, newTaskNotificationCalendar.get(Calendar.YEAR) + " " + (newTaskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + newTaskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + newTaskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + newTaskNotificationCalendar.get(Calendar.MINUTE));
+                Log.d(TAG, newTaskNotificationCalendar.get(Calendar.YEAR) + " " + (newTaskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + newTaskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + newTaskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + newTaskNotificationCalendar.get(Calendar.MINUTE) + " " + newTaskNotificationCalendar.get(Calendar.SECOND));
                 Notification notification = new Notification.Builder(getApplicationContext())
                         .setContentTitle(newTask.getTitle())
                         .setContentText(newTask.getHourOfDay() + ":" + newTask.getMinute() + " - " + newTask.getPlace())
@@ -131,7 +131,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
 
         // Date and Time
         this.newTaskCalendar = Calendar.getInstance();
+        this.newTaskCalendar.set(Calendar.SECOND, 0);
         this.newTaskNotificationCalendar = Calendar.getInstance();
+        this.newTaskNotificationCalendar.set(Calendar.SECOND, 0);
         TextView newTaskDate = (TextView) findViewById(R.id.new_task_date);
         newTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.newTaskCalendar));
         TextView newTaskTime = (TextView) findViewById(R.id.new_task_time);
@@ -296,8 +298,8 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 this.newTaskCalendar.set(year, month, dayOfMonth);
                 TextView taskDate = (TextView) findViewById(R.id.new_task_date);
                 taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.newTaskCalendar));
+                this.newTaskNotificationCalendar.set(year, month, dayOfMonth);
                 if (this.seekBarValue >= 6) {
-                    this.newTaskNotificationCalendar.set(year, month, dayOfMonth);
                     this.newTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.newTaskNotificationCalendar));
                 }
                 break;
@@ -319,9 +321,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 this.newTaskCalendar.set(Calendar.MINUTE, minute);
                 TextView taskTime = (TextView) findViewById(R.id.new_task_time);
                 taskTime.setText(String.format("%1$tH:%1$tM", this.newTaskCalendar));
+                this.newTaskNotificationCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                this.newTaskNotificationCalendar.set(Calendar.MINUTE, minute);
                 if (this.seekBarValue >= 6) {
-                    this.newTaskNotificationCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    this.newTaskNotificationCalendar.set(Calendar.MINUTE, minute);
                     this.newTaskNotificationTime.setText(String.format("%1$tH:%1$tM", this.newTaskNotificationCalendar));
                 }
                 break;

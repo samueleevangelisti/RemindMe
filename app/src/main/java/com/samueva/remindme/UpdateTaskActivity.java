@@ -124,6 +124,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
         // Date and Time
         this.taskCalendar = Calendar.getInstance();
+        this.taskCalendar.set(Calendar.SECOND, 0);
         this.taskCalendar.set(this.task.getYear(), this.task.getMonth(), this.task.getDayOfMonth(), this.task.getHourOfDay(), this.task.getMinute());
         TextView updateTaskDate = (TextView) findViewById(R.id.update_task_date);
         updateTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
@@ -222,6 +223,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
         // DoneDate and DoneTime
         this.taskDoneCalendar = Calendar.getInstance();
+        this.taskDoneCalendar.set(Calendar.SECOND, 0);
         this.updateTaskDoneDate = (TextView) findViewById(R.id.update_task_done_date);
         this.updateTaskDoneTime = (TextView) findViewById(R.id.update_task_done_time);
         if (!(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
@@ -279,7 +281,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 default:
                     break;
             }
-            if (this.taskCalendar.compareTo(this.taskDoneCalendar) > 0) {
+            if (this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
                 // TODO: 8/7/19 dialog di errore perchè le due date non sono cronologicamente corrette
                 Log.d(TAG, "Il task viene terminato prima di iniziare, impossibile");
             } else {
