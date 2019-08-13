@@ -80,6 +80,8 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
     private TextView updateTaskDoneDate;
     private TextView updateTaskDoneTime;
 
+    // NotificationDate and NotificationTime
+
     // Calendar
     private Calendar taskCalendar;
     private Calendar taskDoneCalendar;
