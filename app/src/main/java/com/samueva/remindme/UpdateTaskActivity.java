@@ -144,6 +144,8 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         TextView updateTaskTime = (TextView) findViewById(R.id.update_task_time);
         updateTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
 
+        // TODO: 8/16/19 bisogna settare il calendar di notifica dell'activity se questo è previsto per la priority
+        // TODO: 8/16/19 bisogna gestire le interazioni tra conclusione del task e le notifiche se non è concluso
         // NotificationDate and NotificationTime
         this.updateTaskNotificationDate = (TextView) findViewById(R.id.update_task_notification_date);
         this.updateTaskNotificationTime = (TextView) findViewById(R.id.update_task_notification_time);
@@ -374,8 +376,8 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                     break;
             }
             if (this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
-                // TODO: 8/7/19 dialog di errore perchè le due date non sono cronologicamente corrette
-                Log.d(TAG, "Il task viene terminato prima di iniziare, impossibile");
+                DialogFragment wrongDateDialogFragment = new WrongDateDialogFragment();
+                wrongDateDialogFragment.show(getSupportFragmentManager(), "wddfmanagerfromuta");
             } else {
                 this.task.setCalendar(this.taskCalendar);
                 this.task.setDoneCalendar(this.taskDoneCalendar);
