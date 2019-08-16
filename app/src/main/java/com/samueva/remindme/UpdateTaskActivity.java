@@ -54,25 +54,31 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         public void onTaskUpdateCallback(int taskId) {
             Log.d(TAG, "newTask id : " + task.getId());
 
-            if (task.getPriority() >= 6 && !(task.getStatus().equals("Completed")) && !(task.getStatus().equals("Failed"))) {
-                Log.d(TAG, "Setting Notification");
-                Log.d(TAG, taskNotificationCalendar.get(Calendar.YEAR) + " " + (taskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + taskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + taskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + taskNotificationCalendar.get(Calendar.MINUTE) + " " + taskNotificationCalendar.get(Calendar.SECOND));
-                Notification notification = new Notification.Builder(getApplicationContext())
-                        .setContentTitle(task.getTitle())
-                        .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())
-                        .setSmallIcon(android.R.drawable.ic_dialog_info)
-                        .build();
+            Notification notification = new Notification.Builder(getApplicationContext())
+                    .setContentTitle(task.getTitle())
+                    .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .build();
 
-                Intent intent = new Intent();
-                intent.setAction("com.samueva.remindme.broadcast");
-                intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.putExtra("task_id", task.getId());
-                intent.putExtra("notification", notification);
+            Intent intent = new Intent();
+            intent.setAction("com.samueva.remindme.broadcast");
+            intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.putExtra("task_id", task.getId());
+            intent.putExtra("notification", notification);
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, taskNotificationCalendar.getTimeInMillis(), pendingIntent);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            if (task.getPriority() >= 6 && task.getStatus().equals("Pending")) {
+                    Log.d(TAG, "Setting Notification");
+                    Log.d(TAG, taskNotificationCalendar.get(Calendar.YEAR) + " " + (taskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + taskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + taskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + taskNotificationCalendar.get(Calendar.MINUTE) + " " + taskNotificationCalendar.get(Calendar.SECOND));
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, taskNotificationCalendar.getTimeInMillis(), pendingIntent);
+            }
+
+            if (task.getStatus().equals("Completed") || task.getStatus().equals("Failed")) {
+                Log.d(TAG, "Deleting Notification");
+                alarmManager.cancel(pendingIntent);
             }
 
             finish();
