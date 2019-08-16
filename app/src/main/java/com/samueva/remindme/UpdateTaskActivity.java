@@ -54,8 +54,9 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         public void onTaskUpdateCallback(int taskId) {
             Log.d(TAG, "newTask id : " + task.getId());
 
-            Intent taskInfoIntent = new Intent(getApplicationContext(), MainActivity.class);
-            PendingIntent notificationActionIntent = PendingIntent.getActivity(getApplicationContext(), taskId, taskInfoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+            mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            PendingIntent notificationActionIntent = PendingIntent.getActivity(getApplicationContext(), taskId, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             Notification notification = new Notification.Builder(getApplicationContext())
                     .setContentTitle(task.getTitle())
                     .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())

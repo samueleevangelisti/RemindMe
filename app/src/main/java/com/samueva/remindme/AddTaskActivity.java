@@ -60,8 +60,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
                 Log.d(TAG, "Setting Notification");
                 Log.d(TAG, newTaskNotificationCalendar.get(Calendar.YEAR) + " " + (newTaskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + newTaskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + newTaskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + newTaskNotificationCalendar.get(Calendar.MINUTE) + " " + newTaskNotificationCalendar.get(Calendar.SECOND));
 
-                Intent taskInfoIntent = new Intent(getApplicationContext(), MainActivity.class);
-                PendingIntent notificationActionIntent = PendingIntent.getActivity(getApplicationContext(), taskId, taskInfoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                PendingIntent notificationActionIntent = PendingIntent.getActivity(getApplicationContext(), taskId, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 Notification notification = new Notification.Builder(getApplicationContext())
                         .setContentTitle(newTask.getTitle())
                         .setContentText(newTask.getHourOfDay() + ":" + newTask.getMinute() + " - " + newTask.getPlace())
