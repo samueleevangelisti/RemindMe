@@ -2,6 +2,7 @@ package com.samueva.remindme;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,9 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
     RecyclerView.LayoutManager layoutManager;
     CategoryRecyclerAdapter recyclerAdapter;
 
+    // FloatingActionButton
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +71,8 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         this.db = AppDatabase.getInstance();
 
         // FloatingActionButton
-        FloatingActionButton fab = findViewById(R.id.fab3);
-        fab.setOnClickListener(new View.OnClickListener() {
+        this.fab = findViewById(R.id.fab3);
+        this.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment addCategoryDialogFragment = new AddCategoryDialogFragment();
@@ -77,7 +81,17 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         });
 
         //RecyclerView
-        recyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
+        this.recyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0) {
+                    fab.hide();
+                } else {
+                    fab.show();
+                }
+            }
+        });
         this.layoutManager = new LinearLayoutManager(this);
         this.recyclerView.setLayoutManager(layoutManager);
         this.recyclerAdapter = new CategoryRecyclerAdapter(new ArrayList<TaskCategory>(), new CategoryRecyclerAdapter.CategoryCardClickListener() {

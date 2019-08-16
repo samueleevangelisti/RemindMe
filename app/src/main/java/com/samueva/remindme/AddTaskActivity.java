@@ -167,7 +167,7 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
         final TextView notificationStatus = (TextView) findViewById(R.id.new_task_notification_status);
         this.seekBarValue = seekBarNormalization(seekBar.getProgress());
         seekBarValueText.setText(seekBarValue + "/10");
-        if (seekBarValue >= 6) {
+        if (this.seekBarValue >= 6) {
             notificationStatus.setText("Notification Enabled");
             this.newTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.newTaskNotificationCalendar));
             this.newTaskSetNotificationDate.setEnabled(true);

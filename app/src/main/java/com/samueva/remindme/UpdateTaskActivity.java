@@ -1,5 +1,8 @@
 package com.samueva.remindme;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +52,29 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
         @Override
         public void onTaskUpdateCallback(int taskId) {
+            Log.d(TAG, "newTask id : " + task.getId());
+
+            if (task.getPriority() >= 6) {
+                Log.d(TAG, "Setting Notification");
+                Log.d(TAG, taskNotificationCalendar.get(Calendar.YEAR) + " " + (taskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + taskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + taskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + taskNotificationCalendar.get(Calendar.MINUTE) + " " + taskNotificationCalendar.get(Calendar.SECOND));
+                Notification notification = new Notification.Builder(getApplicationContext())
+                        .setContentTitle(task.getTitle())
+                        .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .build();
+
+                Intent intent = new Intent();
+                intent.setAction("com.samueva.remindme.broadcast");
+                intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                intent.putExtra("task_id", task.getId());
+                intent.putExtra("notification", notification);
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, taskNotificationCalendar.getTimeInMillis(), pendingIntent);
+            }
+
             finish();
         }
 
@@ -81,10 +107,15 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
     private TextView updateTaskDoneTime;
 
     // NotificationDate and NotificationTime
+    private ImageButton setTaskNotificationDate;
+    private ImageButton setTaskNotificationTime;
+    private TextView updateTaskNotificationDate;
+    private TextView updateTaskNotificationTime;
 
     // Calendar
     private Calendar taskCalendar;
     private Calendar taskDoneCalendar;
+    private Calendar taskNotificationCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,17 +131,87 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         // Spinner
         new DbAsyncTask(AppDatabase.getInstance(), dbAction.CATEGORY_GETALL, this.dbAsyncTaskListener).execute();
 
+        // Date and Time
+        this.taskCalendar = Calendar.getInstance();
+        this.taskCalendar.set(Calendar.SECOND, 0);
+        this.taskDoneCalendar = Calendar.getInstance();
+        this.taskDoneCalendar.set(Calendar.SECOND, 0);
+        this.taskNotificationCalendar = Calendar.getInstance();
+        this.taskNotificationCalendar.set(Calendar.SECOND, 0);
+        this.taskCalendar.set(this.task.getYear(), this.task.getMonth(), this.task.getDayOfMonth(), this.task.getHourOfDay(), this.task.getMinute());
+        TextView updateTaskDate = (TextView) findViewById(R.id.update_task_date);
+        updateTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
+        TextView updateTaskTime = (TextView) findViewById(R.id.update_task_time);
+        updateTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
+
+        // NotificationDate and NotificationTime
+        this.updateTaskNotificationDate = (TextView) findViewById(R.id.update_task_notification_date);
+        this.updateTaskNotificationTime = (TextView) findViewById(R.id.update_task_notification_time);
+        this.setTaskNotificationDate = (ImageButton) findViewById(R.id.update_task_set_notification_date);
+        this.setTaskNotificationDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myCalendarType = calendarType.TASKNOTIFICATIONCALENDAR;
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "notificationDatePickeruta");
+            }
+        });
+        this.setTaskNotificationTime = (ImageButton) findViewById(R.id.update_task_set_notification_time);
+        this.setTaskNotificationTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myCalendarType = calendarType.TASKCALENDAR;
+                DialogFragment newFragment = new TimePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "notificationTimePickeruta");
+            }
+        });
+
         // SeekBar
         SeekBar seekBar = (SeekBar) findViewById(R.id.update_task_priority);
         seekBar.setProgress(this.task.getPriority() * 10);
         final TextView seekBarValueText = (TextView) findViewById(R.id.update_task_priority_value);
+        final TextView notificationStatus = (TextView) findViewById(R.id.update_task_notification_status);
         this.seekBarValue = seekBarNormalization(seekBar.getProgress());
         seekBarValueText.setText(seekBarValue + "/10");
+        if (this.seekBarValue >= 6) {
+            notificationStatus.setText("Notification Enabled");
+            this.updateTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskNotificationCalendar));
+            this.setTaskNotificationDate.setEnabled(true);
+            this.setTaskNotificationDate.setAlpha((float) 1);
+            this.updateTaskNotificationTime.setText(String.format("%1$tH:%1$tM", this.taskNotificationCalendar));
+            this.setTaskNotificationTime.setEnabled(true);
+            this.setTaskNotificationTime.setAlpha((float) 1);
+        } else {
+            notificationStatus.setText("Notification Disabled");
+            this.updateTaskNotificationDate.setText("");
+            this.setTaskNotificationDate.setEnabled(false);
+            this.setTaskNotificationDate.setAlpha((float) 0.5);
+            this.updateTaskNotificationTime.setText("");
+            this.setTaskNotificationTime.setEnabled(false);
+            this.setTaskNotificationTime.setAlpha((float) 0.5);
+        }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 seekBarValue = seekBarNormalization(i);
                 seekBarValueText.setText(seekBarValue + "/10");
+                if (seekBarValue >= 6) {
+                    notificationStatus.setText("Notification Enabled");
+                    updateTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", taskNotificationCalendar));
+                    setTaskNotificationDate.setEnabled(true);
+                    setTaskNotificationDate.setAlpha((float) 1);
+                    updateTaskNotificationTime.setText(String.format("%1$tH:%1$tM", taskNotificationCalendar));
+                    setTaskNotificationTime.setEnabled(true);
+                    setTaskNotificationTime.setAlpha((float) 1);
+                } else {
+                    notificationStatus.setText("Notification Disabled");
+                    updateTaskNotificationDate.setText("");
+                    setTaskNotificationDate.setEnabled(false);
+                    setTaskNotificationDate.setAlpha((float) 0.5);
+                    updateTaskNotificationTime.setText("");
+                    setTaskNotificationTime.setEnabled(false);
+                    setTaskNotificationTime.setAlpha((float) 0.5);
+                }
             }
 
             @Override
@@ -123,15 +224,6 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
             }
         });
-
-        // Date and Time
-        this.taskCalendar = Calendar.getInstance();
-        this.taskCalendar.set(Calendar.SECOND, 0);
-        this.taskCalendar.set(this.task.getYear(), this.task.getMonth(), this.task.getDayOfMonth(), this.task.getHourOfDay(), this.task.getMinute());
-        TextView updateTaskDate = (TextView) findViewById(R.id.update_task_date);
-        updateTaskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
-        TextView updateTaskTime = (TextView) findViewById(R.id.update_task_time);
-        updateTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
 
         // Buttons
         ImageButton addTaskCategory = (ImageButton) findViewById(R.id.update_task_add_category);
@@ -175,7 +267,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
             public void onClick(View view) {
                 myCalendarType = calendarType.TASKDONECALENDAR;
                 DialogFragment newFragment = new TimePickerFragment();
-                newFragment.show(getSupportFragmentManager(), "DoneTimePickeruta");
+                newFragment.show(getSupportFragmentManager(), "doneTimePickeruta");
             }
         });
 
@@ -224,8 +316,6 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         }
 
         // DoneDate and DoneTime
-        this.taskDoneCalendar = Calendar.getInstance();
-        this.taskDoneCalendar.set(Calendar.SECOND, 0);
         this.updateTaskDoneDate = (TextView) findViewById(R.id.update_task_done_date);
         this.updateTaskDoneTime = (TextView) findViewById(R.id.update_task_done_time);
         if (!(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
@@ -351,17 +441,23 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
     @Override
     public void onDateSetReady(int year, int month, int dayOfMonth) {
-        TextView taskDate;
         switch (this.myCalendarType) {
             case TASKCALENDAR:
                 this.taskCalendar.set(year, month, dayOfMonth);
-                taskDate = (TextView) findViewById(R.id.update_task_date);
+                TextView taskDate = (TextView) findViewById(R.id.update_task_date);
                 taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskCalendar));
+                this.taskNotificationCalendar.set(year, month, dayOfMonth);
+                if (this.seekBarValue >= 6) {
+                    this.updateTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskNotificationCalendar));
+                }
                 break;
             case TASKDONECALENDAR:
                 this.taskDoneCalendar.set(year, month, dayOfMonth);
-                taskDate = (TextView) findViewById(R.id.update_task_done_date);
-                taskDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+                this.updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
+                break;
+            case TASKNOTIFICATIONCALENDAR:
+                this.taskNotificationCalendar.set(year, month, dayOfMonth);
+                this.updateTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskNotificationCalendar));
                 break;
             default:
                 break;
@@ -370,20 +466,27 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
     @Override
     public void onTimeSetReady(int hourOfDay, int minute) {
-        TextView taskTime;
         switch (this.myCalendarType) {
             case TASKCALENDAR:
                 this.taskCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 this.taskCalendar.set(Calendar.MINUTE, minute);
-                taskTime = (TextView) findViewById(R.id.update_task_time);
+                TextView taskTime = (TextView) findViewById(R.id.update_task_time);
                 taskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
+                this.taskNotificationCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                this.taskNotificationCalendar.set(Calendar.MINUTE, minute);
+                if (this.seekBarValue >= 6) {
+                    this.updateTaskNotificationTime.setText(String.format("%1$tH:%1$tM", this.taskNotificationCalendar));
+                }
                 break;
             case TASKDONECALENDAR:
                 this.taskDoneCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 this.taskDoneCalendar.set(Calendar.MINUTE, minute);
-                taskTime = (TextView) findViewById(R.id.update_task_done_time);
-                taskTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
+                this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
                 break;
+            case TASKNOTIFICATIONCALENDAR:
+                this.taskNotificationCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                this.taskNotificationCalendar.set(Calendar.MINUTE, minute);
+                this.updateTaskNotificationTime.setText(String.format("%1$tH:%1$tM", this.taskNotificationCalendar));
             default:
                 break;
         }

@@ -75,6 +75,9 @@
             android:layout_marginTop="32dp"
             android:text="@string/priority"
             android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/update_task_priority_value"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
 
@@ -82,12 +85,12 @@
             android:id="@+id/update_task_priority_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
             android:text="@string/priority_value"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/update_task_notification_status"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
 
@@ -450,6 +453,19 @@
             app:layout_constraintStart_toEndOf="@+id/update_task_notification_time"
             app:layout_constraintTop_toBottomOf="@+id/update_task_notification_date"
             app:srcCompat="@drawable/ic_edit" />
+
+        <TextView
+            android:id="@+id/update_task_notification_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/notification_status"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@+id/update_task_priority_value"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
