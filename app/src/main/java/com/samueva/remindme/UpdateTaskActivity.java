@@ -54,7 +54,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         public void onTaskUpdateCallback(int taskId) {
             Log.d(TAG, "newTask id : " + task.getId());
 
-            if (task.getPriority() >= 6) {
+            if (task.getPriority() >= 6 && !(task.getStatus().equals("Completed")) && !(task.getStatus().equals("Failed"))) {
                 Log.d(TAG, "Setting Notification");
                 Log.d(TAG, taskNotificationCalendar.get(Calendar.YEAR) + " " + (taskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + taskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + taskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + taskNotificationCalendar.get(Calendar.MINUTE) + " " + taskNotificationCalendar.get(Calendar.SECOND));
                 Notification notification = new Notification.Builder(getApplicationContext())
@@ -111,6 +111,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
     private ImageButton setTaskNotificationTime;
     private TextView updateTaskNotificationDate;
     private TextView updateTaskNotificationTime;
+    private TextView notificationStatus;
 
     // Calendar
     private Calendar taskCalendar;
@@ -144,8 +145,6 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         TextView updateTaskTime = (TextView) findViewById(R.id.update_task_time);
         updateTaskTime.setText(String.format("%1$tH:%1$tM", this.taskCalendar));
 
-        // TODO: 8/16/19 bisogna settare il calendar di notifica dell'activity se questo è previsto per la priority
-        // TODO: 8/16/19 bisogna gestire le interazioni tra conclusione del task e le notifiche se non è concluso
         // NotificationDate and NotificationTime
         this.updateTaskNotificationDate = (TextView) findViewById(R.id.update_task_notification_date);
         this.updateTaskNotificationTime = (TextView) findViewById(R.id.update_task_notification_time);
@@ -162,7 +161,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         this.setTaskNotificationTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myCalendarType = calendarType.TASKCALENDAR;
+                myCalendarType = calendarType.TASKNOTIFICATIONCALENDAR;
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "notificationTimePickeruta");
             }
@@ -172,11 +171,12 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         SeekBar seekBar = (SeekBar) findViewById(R.id.update_task_priority);
         seekBar.setProgress(this.task.getPriority() * 10);
         final TextView seekBarValueText = (TextView) findViewById(R.id.update_task_priority_value);
-        final TextView notificationStatus = (TextView) findViewById(R.id.update_task_notification_status);
+        this.notificationStatus = (TextView) findViewById(R.id.update_task_notification_status);
         this.seekBarValue = seekBarNormalization(seekBar.getProgress());
         seekBarValueText.setText(seekBarValue + "/10");
-        if (this.seekBarValue >= 6) {
-            notificationStatus.setText("Notification Enabled");
+        if (this.task.getPriority() >= 6) {
+            this.taskNotificationCalendar.set(this.task.getNotificationYear(), this.task.getNotificationMonth(), this.task.getNotificationDayOfMonth(), this.task.getNotificationHourOfDay(), this.task.getNotificationMinute());
+            this.notificationStatus.setText("Notification Enabled");
             this.updateTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskNotificationCalendar));
             this.setTaskNotificationDate.setEnabled(true);
             this.setTaskNotificationDate.setAlpha((float) 1);
@@ -184,7 +184,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
             this.setTaskNotificationTime.setEnabled(true);
             this.setTaskNotificationTime.setAlpha((float) 1);
         } else {
-            notificationStatus.setText("Notification Disabled");
+            this.notificationStatus.setText("Notification Disabled");
             this.updateTaskNotificationDate.setText("");
             this.setTaskNotificationDate.setEnabled(false);
             this.setTaskNotificationDate.setAlpha((float) 0.5);
@@ -375,12 +375,15 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 default:
                     break;
             }
-            if (this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
+            if ((this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) && this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
                 DialogFragment wrongDateDialogFragment = new WrongDateDialogFragment();
                 wrongDateDialogFragment.show(getSupportFragmentManager(), "wddfmanagerfromuta");
             } else {
                 this.task.setCalendar(this.taskCalendar);
                 this.task.setDoneCalendar(this.taskDoneCalendar);
+                if (this.task.getPriority() >= 6 && !(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
+                    this.task.setNotificationCalendar(this.taskNotificationCalendar);
+                }
                 this.update = true;
                 new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_UPDATE, this.task, categoryOld, statusOld, this.dbAsyncTaskListener).execute();
             }
@@ -407,6 +410,13 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                     this.updateTaskDoneTime.setText("");
                     this.setTaskDoneTime.setEnabled(false);
                     this.setTaskDoneTime.setAlpha((float) 0.5);
+                    this.notificationStatus.setText("Notification Enabled");
+                    this.updateTaskNotificationDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskNotificationCalendar));
+                    this.setTaskNotificationDate.setEnabled(true);
+                    this.setTaskNotificationDate.setAlpha((float) 1);
+                    this.updateTaskNotificationTime.setText(String.format("%1$tH:%1$tM", this.taskNotificationCalendar));
+                    this.setTaskNotificationTime.setEnabled(true);
+                    this.setTaskNotificationTime.setAlpha((float) 1);
                 }
                 break;
             case R.id.update_task_radio_completed:
@@ -417,6 +427,13 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                     this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
                     this.setTaskDoneTime.setEnabled(true);
                     this.setTaskDoneTime.setAlpha((float) 1);
+                    this.notificationStatus.setText("Notification Disabled");
+                    this.updateTaskNotificationDate.setText("");
+                    this.setTaskNotificationDate.setEnabled(false);
+                    this.setTaskNotificationDate.setAlpha((float) 0.5);
+                    this.updateTaskNotificationTime.setText("");
+                    this.setTaskNotificationTime.setEnabled(false);
+                    this.setTaskNotificationTime.setAlpha((float) 0.5);
                 }
                 break;
             case R.id.update_task_radio_failed:
@@ -427,6 +444,13 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                     this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
                     this.setTaskDoneTime.setEnabled(true);
                     this.setTaskDoneTime.setAlpha((float) 1);
+                    this.notificationStatus.setText("Notification Disabled");
+                    this.updateTaskNotificationDate.setText("");
+                    this.setTaskNotificationDate.setEnabled(false);
+                    this.setTaskNotificationDate.setAlpha((float) 0.5);
+                    this.updateTaskNotificationTime.setText("");
+                    this.setTaskNotificationTime.setEnabled(false);
+                    this.setTaskNotificationTime.setAlpha((float) 0.5);
                 }
                 break;
             default:

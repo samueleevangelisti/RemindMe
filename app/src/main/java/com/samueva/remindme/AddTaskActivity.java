@@ -270,6 +270,9 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             Spinner newTaskCategory = (Spinner) findViewById(R.id.new_task_category);
             EditText newTaskDescription = (EditText) findViewById(R.id.new_task_description);
             this.newTask = new Task(newTaskTitle.getText().toString(), this.newTaskCalendar, newTaskPlace.getText().toString(), newTaskDescription.getText().toString(), newTaskCategory.getSelectedItem().toString(), seekBarValue, "Pending");
+            if (this.newTask.getPriority() >= 6) {
+                this.newTask.setNotificationCalendar(this.newTaskNotificationCalendar);
+            }
             this.update = true;
             new DbAsyncTask(this.db, dbAction.TASK_INSERT, this.newTask, this.dbAsyncTaskListener).execute();
             return true;
