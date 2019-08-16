@@ -54,10 +54,14 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         public void onTaskUpdateCallback(int taskId) {
             Log.d(TAG, "newTask id : " + task.getId());
 
+            Intent taskInfoIntent = new Intent(getApplicationContext(), MainActivity.class);
+            PendingIntent notificationActionIntent = PendingIntent.getActivity(getApplicationContext(), taskId, taskInfoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             Notification notification = new Notification.Builder(getApplicationContext())
                     .setContentTitle(task.getTitle())
                     .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentIntent(notificationActionIntent)
+                    .setAutoCancel(true)
                     .build();
 
             Intent intent = new Intent();
@@ -326,7 +330,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         // DoneDate and DoneTime
         this.updateTaskDoneDate = (TextView) findViewById(R.id.update_task_done_date);
         this.updateTaskDoneTime = (TextView) findViewById(R.id.update_task_done_time);
-        if (!(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
+        if (!(this.task.getStatus().equals("Completed"))) {
             this.updateTaskDoneDate.setText("");
             this.setTaskDoneDate.setEnabled(false);
             this.setTaskDoneDate.setAlpha((float) 0.5);
@@ -381,13 +385,13 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 default:
                     break;
             }
-            if ((this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) && this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
+            if ((this.task.getStatus().equals("Completed")) && this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
                 DialogFragment wrongDateDialogFragment = new WrongDateDialogFragment();
                 wrongDateDialogFragment.show(getSupportFragmentManager(), "wddfmanagerfromuta");
             } else {
                 this.task.setCalendar(this.taskCalendar);
                 this.task.setDoneCalendar(this.taskDoneCalendar);
-                if (this.task.getPriority() >= 6 && !(this.task.getStatus().equals("Completed")) && !(this.task.getStatus().equals("Failed"))) {
+                if (this.task.getPriority() >= 6 && this.task.getStatus().equals("Pending")) {
                     this.task.setNotificationCalendar(this.taskNotificationCalendar);
                 }
                 this.update = true;
@@ -444,12 +448,12 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 break;
             case R.id.update_task_radio_failed:
                 if (checked) {
-                    this.updateTaskDoneDate.setText(String.format("%1$td/%1$tm/%1$tY", this.taskDoneCalendar));
-                    this.setTaskDoneDate.setEnabled(true);
-                    this.setTaskDoneDate.setAlpha((float) 1);
-                    this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
-                    this.setTaskDoneTime.setEnabled(true);
-                    this.setTaskDoneTime.setAlpha((float) 1);
+                    this.updateTaskDoneDate.setText("");
+                    this.setTaskDoneDate.setEnabled(false);
+                    this.setTaskDoneDate.setAlpha((float) 0.5);
+                    this.updateTaskDoneTime.setText("");
+                    this.setTaskDoneTime.setEnabled(false);
+                    this.setTaskDoneTime.setAlpha((float) 0.5);
                     this.notificationStatus.setText("Notification Disabled");
                     this.updateTaskNotificationDate.setText("");
                     this.setTaskNotificationDate.setEnabled(false);

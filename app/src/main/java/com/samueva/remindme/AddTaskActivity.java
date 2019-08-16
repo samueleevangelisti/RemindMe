@@ -59,10 +59,15 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             if (newTask.getPriority() >= 6) {
                 Log.d(TAG, "Setting Notification");
                 Log.d(TAG, newTaskNotificationCalendar.get(Calendar.YEAR) + " " + (newTaskNotificationCalendar.get(Calendar.MONTH) + 1) + " " + newTaskNotificationCalendar.get(Calendar.DAY_OF_MONTH) + " " + newTaskNotificationCalendar.get(Calendar.HOUR_OF_DAY) + " " + newTaskNotificationCalendar.get(Calendar.MINUTE) + " " + newTaskNotificationCalendar.get(Calendar.SECOND));
+
+                Intent taskInfoIntent = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent notificationActionIntent = PendingIntent.getActivity(getApplicationContext(), taskId, taskInfoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 Notification notification = new Notification.Builder(getApplicationContext())
                         .setContentTitle(newTask.getTitle())
                         .setContentText(newTask.getHourOfDay() + ":" + newTask.getMinute() + " - " + newTask.getPlace())
                         .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .setContentIntent(notificationActionIntent)
+                        .setAutoCancel(true)
                         .build();
 
                 Intent intent = new Intent();
