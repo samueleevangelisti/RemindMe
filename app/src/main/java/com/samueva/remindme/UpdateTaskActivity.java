@@ -52,9 +52,9 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
 
         @Override
         public void onTaskUpdateCallback(int taskId) {
-            Log.d(TAG, "newTask id : " + taskId);
+            Log.d(TAG, "newTask id : " + task.getId());
 
-            PendingIntent pendingIntent = NotificationBuilder.build(getApplicationContext(), taskId, task);
+            PendingIntent pendingIntent = NotificationBuilder.build(getApplicationContext(), task.getId(), task);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
