@@ -1,7 +1,6 @@
 package com.samueva.remindme;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,6 +66,11 @@ public class AddTaskActivity extends AppCompatActivity implements AddCategoryDia
             }
 
             finish();
+        }
+
+        @Override
+        public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
+
         }
 
         @Override

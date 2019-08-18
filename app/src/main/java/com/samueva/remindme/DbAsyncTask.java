@@ -10,6 +10,7 @@ import java.util.List;
 enum dbAction {
     TASK_GETBYID,
     TASK_GETALLBYSTATUS,
+    TASK_GETALLBYFILTERS,
     TASK_INSERT,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
@@ -46,6 +47,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         void onTaskGetByIdCallback(Task task);
         void onTaskGetAllByStatusCallback(List<Task> taskList);
         void onTaskUpdateCallback(int taskId);
+        void onTaskGetAllByFiltersCallback(List<Task> taskList);
 
         void onCategoryGetAllCallback(List<TaskCategory> categoryList);
         void onCategoryUpdateCallback();
@@ -64,6 +66,15 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.db = db;
         this.myDbAction = myDbAction;
         this.string = string;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
+    //TASK_GETALLBYFILTERS
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, String string, String string2, DbAsyncTaskListener dbAsyncTaskListener) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.string = string;
+        this.string2 = string2;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -133,6 +144,20 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                         return s1.compareTo(s2);
                     }
                 });
+                break;
+            case TASK_GETALLBYFILTERS:
+                if (this.string.equals("")) {
+                    this.string = "%";
+                } else {
+                    this.string = "%" + this.string + "%";
+                }
+                if (this.string2.equals("")) {
+                    this.string2 = "%";
+                } else {
+                    this.string2 = "%" + this.string2 + "%";
+                }
+                Log.d(TAG, "TASK_GETALLBYFILTERS\ntitle : " + this.string + "\nplace : " + this.string2);
+                this.taskList = this.db.taskDao().getAllByFilters(this.string, this.string2);
                 break;
             case TASK_INSERT:
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
@@ -268,6 +293,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 break;
             case TASK_GETALLBYSTATUS:
                 this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
+                break;
+            case TASK_GETALLBYFILTERS:
+                this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
                 break;
             case TASK_INSERT:
                 this.dbAsyncTaskListener.onTaskUpdateCallback(this.taskId);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,10 +22,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import android.view.Menu;
-import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FiltersDialogFragment.FiltersDialogListener {
 
     // TODO: 6/23/19 STRINGA DI DEBUG
     private static final String TAG = "ReMe_MainActivity";
@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onTaskUpdateCallback(int taskId) {
             new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
+        }
+
+        @Override
+        public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
+            recyclerAdapter.refreshData(taskList);
+            recyclerAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -171,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.main_optionmenu_search) {
-            Toast.makeText(this, "Filters compare", Toast.LENGTH_SHORT).show();
+            DialogFragment dialogFragment = new FiltersDialogFragment();
+            dialogFragment.show(getSupportFragmentManager(), "fdfmanagerfromma");
             return true;
         }
 
@@ -199,6 +206,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFiltersDialogPositiveClick(String taskTitle, String taskPlace) {
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYFILTERS, taskTitle, taskPlace, this.dbAsyncTaskListener).execute();
+    }
+
+    @Override
+    public void onFiltersDialogNeutralClick() {
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
     }
 
     @Override

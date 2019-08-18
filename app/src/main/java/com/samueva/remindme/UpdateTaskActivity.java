@@ -71,6 +71,11 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
         }
 
         @Override
+        public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
+
+        }
+
+        @Override
         public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
             List<String> categories = new ArrayList<String>();
             for (TaskCategory category : categoryList) {

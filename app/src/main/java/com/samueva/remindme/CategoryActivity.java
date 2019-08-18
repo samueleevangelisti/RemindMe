@@ -40,6 +40,11 @@ public class CategoryActivity extends AppCompatActivity implements AddCategoryDi
         }
 
         @Override
+        public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
+
+        }
+
+        @Override
         public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
             recyclerAdapter.refreshData(categoryList);
             recyclerAdapter.notifyDataSetChanged();

@@ -43,6 +43,11 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
+
+        }
+
+        @Override
         public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
 
         }

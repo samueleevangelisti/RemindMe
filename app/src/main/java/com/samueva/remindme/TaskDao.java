@@ -17,6 +17,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE status = :taskStatus")
     List<Task> getAllByStatus(String taskStatus);
 
+    @Query("SELECT * FROM task WHERE title LIKE :taskTitle AND place LIKE :taskPlace")
+    List<Task> getAllByFilters(String taskTitle, String taskPlace);
+
     @Insert
     long insert(Task tasks);
 
