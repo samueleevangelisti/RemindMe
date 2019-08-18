@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -87,8 +88,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         public TextView itemDoneTime;
         public TextView itemTitle;
         public TextView itemStatus;
-        public Button buttonRestore;
-        public Button buttonDelete;
+        public ImageButton buttonRestore;
+        public ImageButton buttonDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,8 +100,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
             this.itemDoneTime = (TextView) itemView.findViewById(R.id.history_card_done_time);
             this.itemTitle = (TextView) itemView.findViewById(R.id.history_card_title);
             this.itemStatus = (TextView) itemView.findViewById(R.id.history_card_status);
-            this.buttonRestore = (Button) itemView.findViewById(R.id.history_card_restore);
-            this.buttonDelete = (Button) itemView.findViewById(R.id.history_card_delete);
+            this.buttonRestore = (ImageButton) itemView.findViewById(R.id.history_card_restore);
+            this.buttonDelete = (ImageButton) itemView.findViewById(R.id.history_card_delete);
         }
     }
 }

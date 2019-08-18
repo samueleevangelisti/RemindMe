@@ -24,7 +24,7 @@ import java.util.List;
 import android.view.Menu;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FiltersDialogFragment.FiltersDialogListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FiltersDialogFragment.FiltersDialogListener, DatePickerFragment.TaskDatePickerListener {
 
     // TODO: 6/23/19 STRINGA DI DEBUG
     private static final String TAG = "ReMe_MainActivity";
@@ -176,10 +176,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.main_optionmenu_search) {
-            DialogFragment dialogFragment = new FiltersDialogFragment();
-            dialogFragment.show(getSupportFragmentManager(), "fdfmanagerfromma");
-            return true;
+        switch (id) {
+            case R.id.main_optionmenu_search:
+                DialogFragment dialogFragment = new FiltersDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(), "fdfmanagerfromma");
+                return true;
+            case R.id.main_optionmenu_date:
+                DialogFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(getSupportFragmentManager(), "dpfmanagerfromma");
+                return true;
+            case R.id.main_optionmenu_restore:
+                new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                return true;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -214,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onFiltersDialogNeutralClick() {
-        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+    public void onDateSetReady(int year, int month, int dayOfMonth) {
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYDATE, year, month, dayOfMonth, this.dbAsyncTaskListener).execute();
     }
 
     @Override

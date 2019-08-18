@@ -20,6 +20,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE title LIKE :taskTitle AND place LIKE :taskPlace")
     List<Task> getAllByFilters(String taskTitle, String taskPlace);
 
+    @Query("SELECT * FROM task WHERE year = :taskYear AND month = :taskMonth AND day_of_month = :taskDayOfMonth")
+    List<Task> getAllByDate(int taskYear, int taskMonth, int taskDayOfMonth);
+
     @Insert
     long insert(Task tasks);
 

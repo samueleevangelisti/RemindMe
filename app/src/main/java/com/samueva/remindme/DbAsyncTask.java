@@ -11,6 +11,7 @@ enum dbAction {
     TASK_GETBYID,
     TASK_GETALLBYSTATUS,
     TASK_GETALLBYFILTERS,
+    TASK_GETALLBYDATE,
     TASK_INSERT,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
@@ -37,6 +38,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
     private Task task;
     private TaskCategory taskCategory;
     private int taskId;
+    private int year;
+    private int month;
+    private int dayOfMonth;
     private List<Task> taskList;
     private List<TaskCategory> categoryList;
 
@@ -75,6 +79,16 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.myDbAction = myDbAction;
         this.string = string;
         this.string2 = string2;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
+    //TASK_GETALLBYDATE
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int year, int month, int dayOfMonth, DbAsyncTaskListener dbAsyncTaskListener) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.year = year;
+        this.month = month;
+        this.dayOfMonth = dayOfMonth;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -158,6 +172,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
                 Log.d(TAG, "TASK_GETALLBYFILTERS\ntitle : " + this.string + "\nplace : " + this.string2);
                 this.taskList = this.db.taskDao().getAllByFilters(this.string, this.string2);
+                break;
+            case TASK_GETALLBYDATE:
+                this.taskList = this.db.taskDao().getAllByDate(this.year, this.month, this.dayOfMonth);
                 break;
             case TASK_INSERT:
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
@@ -295,6 +312,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
                 break;
             case TASK_GETALLBYFILTERS:
+                this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
+                break;
+            case TASK_GETALLBYDATE:
                 this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
                 break;
             case TASK_INSERT:

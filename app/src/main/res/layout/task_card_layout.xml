@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/history_card"
+    android:id="@+id/task_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardPreventCornerOverlap="true"
@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/history_card_date"
+            android:id="@+id/task_card_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/date"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/history_card_status"
+            android:id="@+id/task_card_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/status"
@@ -31,62 +31,56 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/history_card_title"
+            android:id="@+id/task_card_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/title"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_date" />
+            app:layout_constraintTop_toBottomOf="@+id/task_card_date" />
 
         <TextView
-            android:id="@+id/history_card_place"
+            android:id="@+id/task_card_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/place"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_title" />
+            app:layout_constraintTop_toBottomOf="@+id/task_card_title" />
 
         <TextView
-            android:id="@+id/history_card_time"
+            android:id="@+id/task_card_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/time"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/history_card_date"
+            app:layout_constraintStart_toEndOf="@+id/task_card_date"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/history_card_delete"
+        <ImageButton
+            android:id="@+id/task_card_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_delete"
-            android:text="@string/delete"
-            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/task_card_done"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_place" />
+            app:layout_constraintTop_toBottomOf="@+id/task_card_place"
+            app:srcCompat="@drawable/ic_delete" />
 
-        <Button
+        <ImageButton
             android:id="@+id/task_card_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:backgroundTint="@color/colorPrimary"
-            android:drawableStart="@drawable/ic_done"
-            android:text="@string/done"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toStartOf="@+id/history_card_delete"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/history_card_place" />
+            app:layout_constraintTop_toBottomOf="@+id/task_card_place"
+            app:srcCompat="@drawable/ic_done" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

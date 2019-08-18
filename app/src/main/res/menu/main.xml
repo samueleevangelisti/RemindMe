@@ -6,4 +6,14 @@
         android:icon="@drawable/ic_search"
         android:title="@string/search"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/main_optionmenu_date"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/date"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/main_optionmenu_restore"
+        android:icon="@drawable/ic_find_reset"
+        android:title="@string/restore"
+        app:showAsAction="always" />
 </menu>

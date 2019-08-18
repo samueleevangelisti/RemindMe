@@ -17,7 +17,6 @@ public class FiltersDialogFragment extends DialogFragment {
 
     public interface FiltersDialogListener {
         void onFiltersDialogPositiveClick(String taskTitle, String taskPlace);
-        void onFiltersDialogNeutralClick();
     }
 
     @NonNull
@@ -25,7 +24,7 @@ public class FiltersDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        builder.setTitle("Warning")
+        builder.setTitle("Filters")
                 .setView(inflater.inflate(R.layout.filters_dialog_layout, null))
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -39,12 +38,6 @@ public class FiltersDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                    }
-                })
-                .setNeutralButton("Restore", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        filtersDialogListener.onFiltersDialogNeutralClick();
                     }
                 });
 

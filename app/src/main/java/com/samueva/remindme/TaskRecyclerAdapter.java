@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -85,19 +86,19 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         public TextView itemTitle;
         public TextView itemPlace;
         public TextView itemStatus;
-        public Button buttonDone;
-        public Button buttonDelete;
+        public ImageButton buttonDone;
+        public ImageButton buttonDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.taskCard = (CardView) itemView.findViewById(R.id.history_card);
-            this.itemDate = (TextView) itemView.findViewById(R.id.history_card_date);
-            this.itemTime = (TextView) itemView.findViewById(R.id.history_card_time);
-            this.itemTitle = (TextView) itemView.findViewById(R.id.history_card_title);
-            this.itemPlace = (TextView) itemView.findViewById(R.id.history_card_place);
-            this.itemStatus = (TextView) itemView.findViewById(R.id.history_card_status);
-            this.buttonDone = (Button) itemView.findViewById(R.id.task_card_done);
-            this.buttonDelete = (Button) itemView.findViewById(R.id.history_card_delete);
+            this.taskCard = (CardView) itemView.findViewById(R.id.task_card);
+            this.itemDate = (TextView) itemView.findViewById(R.id.task_card_date);
+            this.itemTime = (TextView) itemView.findViewById(R.id.task_card_time);
+            this.itemTitle = (TextView) itemView.findViewById(R.id.task_card_title);
+            this.itemPlace = (TextView) itemView.findViewById(R.id.task_card_place);
+            this.itemStatus = (TextView) itemView.findViewById(R.id.task_card_status);
+            this.buttonDone = (ImageButton) itemView.findViewById(R.id.task_card_done);
+            this.buttonDelete = (ImageButton) itemView.findViewById(R.id.task_card_delete);
         }
     }
 }
