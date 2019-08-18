@@ -352,13 +352,6 @@
                 android:text="@string/completed"
                 android:textSize="18sp" />
 
-            <RadioButton
-                android:id="@+id/update_task_radio_failed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/failed"
-                android:textSize="18sp" />
         </RadioGroup>
 
         <TextView

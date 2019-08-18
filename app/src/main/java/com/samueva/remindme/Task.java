@@ -10,9 +10,7 @@ import java.util.Calendar;
 
 /* status:
         Pending,
-        Ongoing,
-        Completed,
-        Failed
+        Completed
  */
 
 @Entity

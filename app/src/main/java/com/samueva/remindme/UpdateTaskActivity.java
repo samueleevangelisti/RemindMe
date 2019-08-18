@@ -288,22 +288,12 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 onRadioClicked(view);
             }
         });
-        RadioButton radioFailed = (RadioButton) findViewById(R.id.update_task_radio_failed);
-        radioFailed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRadioClicked(view);
-            }
-        });
         switch (this.task.getStatus()) {
             case "Pending":
                 radioPending.setChecked(true);
                 break;
             case "Completed":
                 radioCompleted.setChecked(true);
-                break;
-            case "Failed":
-                radioFailed.setChecked(true);
                 break;
             default:
                 break;
@@ -361,9 +351,6 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                 case R.id.update_task_radio_completed:
                     this.task.setStatus("Completed");
                     break;
-                case R.id.update_task_radio_failed:
-                    this.task.setStatus("Failed");
-                    break;
                 default:
                     break;
             }
@@ -419,23 +406,6 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
                     this.updateTaskDoneTime.setText(String.format("%1$tH:%1$tM", this.taskDoneCalendar));
                     this.setTaskDoneTime.setEnabled(true);
                     this.setTaskDoneTime.setAlpha((float) 1);
-                    this.notificationStatus.setText("Notification Disabled");
-                    this.updateTaskNotificationDate.setText("");
-                    this.setTaskNotificationDate.setEnabled(false);
-                    this.setTaskNotificationDate.setAlpha((float) 0.5);
-                    this.updateTaskNotificationTime.setText("");
-                    this.setTaskNotificationTime.setEnabled(false);
-                    this.setTaskNotificationTime.setAlpha((float) 0.5);
-                }
-                break;
-            case R.id.update_task_radio_failed:
-                if (checked) {
-                    this.updateTaskDoneDate.setText("");
-                    this.setTaskDoneDate.setEnabled(false);
-                    this.setTaskDoneDate.setAlpha((float) 0.5);
-                    this.updateTaskDoneTime.setText("");
-                    this.setTaskDoneTime.setEnabled(false);
-                    this.setTaskDoneTime.setAlpha((float) 0.5);
                     this.notificationStatus.setText("Notification Disabled");
                     this.updateTaskNotificationDate.setText("");
                     this.setTaskNotificationDate.setEnabled(false);

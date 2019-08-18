@@ -159,7 +159,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.task = this.db.taskDao().getById(this.taskId);
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                 this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
-                if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
+                if (this.task.getStatus().equals("Completed")) {
                     this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
                 }
                 Log.d(TAG, "category: " + this.task.getCategory());
@@ -185,10 +185,10 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.string);
                 // Aggiustamento della category riguardante il cambiamento di status del task
                 if (!(this.task.getStatus().equals(this.string2))) {
-                    if (this.string2.equals("Completed") || this.string2.equals("Failed")) {
+                    if (this.string2.equals("Completed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
                     }
-                    if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
+                    if (this.task.getStatus().equals("Completed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() + 1);
                     }
                     Log.d(TAG, "category: " + this.taskCategory.getName());
@@ -199,7 +199,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 // Aggiustamento delle category riguardante il cambiamento di category
                 if (!(this.task.getCategory().equals(this.string))) {
                     this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
-                    if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
+                    if (this.task.getStatus().equals("Completed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
                     }
                     Log.d(TAG, "category: " + this.taskCategory.getName());
@@ -208,7 +208,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                     this.db.taskCategoryDao().update(this.taskCategory);
                     this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                     this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
-                    if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
+                    if (this.task.getStatus().equals("Completed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() + 1);
                     }
                     Log.d(TAG, "category: " + this.taskCategory.getName());

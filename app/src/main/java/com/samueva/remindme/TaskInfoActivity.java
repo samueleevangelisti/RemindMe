@@ -82,7 +82,7 @@ public class TaskInfoActivity extends AppCompatActivity {
         taskCategory.setText(getString(R.string.category) + ": " + this.task.getCategory());
         taskDate.setText(String.format("%02d/%02d/%04d", task.getDayOfMonth(), task.getMonth() + 1, this.task.getYear()));
         taskTime.setText(String.format("%02d:%02d", this.task.getHourOfDay(), this.task.getMinute()));
-        if (this.task.getStatus().equals("Completed") || this.task.getStatus().equals("Failed")) {
+        if (this.task.getStatus().equals("Completed")) {
             taskDoneDate.setText(String.format("%02d/%02d/%04d", this.task.getDoneDayOfMonth(), this.task.getDoneMonth() + 1, this.task.getDoneYear()));
             taskDoneTime.setText(String.format("%02d:%02d", this.task.getDoneHourOfDay(), this.task.getDoneMinute()));
         } else {
