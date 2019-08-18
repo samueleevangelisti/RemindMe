@@ -10,7 +10,6 @@ import java.util.List;
 enum dbAction {
     TASK_GETBYID,
     TASK_GETALLBYSTATUS,
-    TASK_GETALL_HISTORY,
     TASK_INSERT,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
@@ -68,7 +67,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //TASK_GETALL_HISTORY, TASK_DELETE_HISTORY, CATEGORY_GETALL
+    //TASK_DELETE_HISTORY, CATEGORY_GETALL
     DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
@@ -135,17 +134,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                     }
                 });
                 break;
-            case TASK_GETALL_HISTORY:
-                this.taskList = this.db.taskDao().getAllHistory();
-                this.taskList.sort(new Comparator<Task>() {
-                    @Override
-                    public int compare(Task task, Task t1) {
-                        String s1 = String.format("%04d%02d%02d%02d%02d", task.getYear(), task.getMonth(), task.getDayOfMonth(), task.getHourOfDay(), task.getMinute());
-                        String s2 = String.format("%04d%02d%02d%02d%02d", t1.getYear(), t1.getMonth(), t1.getDayOfMonth(), t1.getHourOfDay(), t1.getMinute());
-                        return s1.compareTo(s2);
-                    }
-                });
-                break;
             case TASK_INSERT:
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                 this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
@@ -178,7 +166,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                     Log.d(TAG, "historyTasks: " + category.getHistoryTasks());
                     this.db.taskCategoryDao().update(category);
                 }
-                this.db.taskDao().deleteHistory();
+                this.db.taskDao().deleteByStatus("Completed");
                 break;
             case TASK_UPDATE:
                 this.db.taskDao().update(this.task);
@@ -279,9 +267,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.dbAsyncTaskListener.onTaskGetByIdCallback(this.task);
                 break;
             case TASK_GETALLBYSTATUS:
-                this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
-                break;
-            case TASK_GETALL_HISTORY:
                 this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
                 break;
             case TASK_INSERT:

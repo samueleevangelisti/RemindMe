@@ -17,9 +17,6 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE status = :taskStatus")
     List<Task> getAllByStatus(String taskStatus);
 
-    @Query("SELECT * FROM task WHERE status = 'Completed'")
-    List<Task> getAllHistory();
-
     @Insert
     long insert(Task tasks);
 
@@ -29,8 +26,8 @@ public interface TaskDao {
     @Query("DELETE FROM task WHERE category = :taskCategory")
     void deleteByCategory(String taskCategory);
 
-    @Query("DELETE FROM task WHERE status = 'Completed'")
-    void deleteHistory();
+    @Query("DELETE FROM task WHERE status = :taskStatus")
+    void deleteByStatus(String taskStatus);
 
     @Update
     void update(Task... tasks);
