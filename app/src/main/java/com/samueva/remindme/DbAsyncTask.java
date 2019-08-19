@@ -12,6 +12,7 @@ enum dbAction {
     TASK_GETALLBYSTATUS,
     TASK_GETALLBYFILTERS,
     TASK_GETALLBYDATE,
+    TASK_GETALLBYDATESTATUS,
     TASK_INSERT,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
@@ -89,6 +90,17 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.year = year;
         this.month = month;
         this.dayOfMonth = dayOfMonth;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
+    //TASK_GETALLBYDATESTATUS
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int year, int month, int dayOfMont, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.year = year;
+        this.month = month;
+        this.dayOfMonth = dayOfMont;
+        this.string = string;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -176,6 +188,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_GETALLBYDATE:
                 this.taskList = this.db.taskDao().getAllByDate(this.year, this.month, this.dayOfMonth);
                 break;
+            case TASK_GETALLBYDATESTATUS:
+                this.taskList = this.db.taskDao().getAllByDateStatus(this.year, this.month, this.dayOfMonth, this.string);
+                break;
             case TASK_INSERT:
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
                 this.taskCategory.setTasks(this.taskCategory.getTasks() + 1);
@@ -211,10 +226,12 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.db.taskDao().deleteByStatus("Completed");
                 break;
             case TASK_UPDATE:
+                Log.d(TAG, "TASK_UPDATE");
                 this.db.taskDao().update(this.task);
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.string);
                 // Aggiustamento della category riguardante il cambiamento di status del task
                 if (!(this.task.getStatus().equals(this.string2))) {
+                    Log.d(TAG, "Status Change");
                     if (this.string2.equals("Completed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
                     }
@@ -228,6 +245,7 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
                 // Aggiustamento delle category riguardante il cambiamento di category
                 if (!(this.task.getCategory().equals(this.string))) {
+                    Log.d(TAG, "Category Change");
                     this.taskCategory.setTasks(this.taskCategory.getTasks() - 1);
                     if (this.task.getStatus().equals("Completed")) {
                         this.taskCategory.setHistoryTasks(this.taskCategory.getHistoryTasks() - 1);
@@ -315,6 +333,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
                 break;
             case TASK_GETALLBYDATE:
+                this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
+                break;
+            case TASK_GETALLBYDATESTATUS:
                 this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
                 break;
             case TASK_INSERT:
