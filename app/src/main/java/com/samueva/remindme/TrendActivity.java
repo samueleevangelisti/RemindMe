@@ -3,6 +3,7 @@ package com.samueva.remindme;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -78,29 +79,33 @@ public class TrendActivity extends AppCompatActivity {
                     }
                 }
 
-                PieDataSet dataSetTasks = new PieDataSet(yValuesTasks, "");
-                dataSetTasks.setSliceSpace(3f);
-                dataSetTasks.setColors(ColorTemplate.MATERIAL_COLORS);
+                if (yValuesTasks.size() > 0) {
+                    PieDataSet dataSetTasks = new PieDataSet(yValuesTasks, "");
+                    dataSetTasks.setSliceSpace(3f);
+                    dataSetTasks.setColors(ColorTemplate.MATERIAL_COLORS);
 
-                PieData dataTasks = new PieData(dataSetTasks);
-                dataTasks.setValueTextSize(15f);
-                dataTasks.setValueTextColor(Color.WHITE);
+                    PieData dataTasks = new PieData(dataSetTasks);
+                    dataTasks.setValueTextSize(15f);
+                    dataTasks.setValueTextColor(Color.WHITE);
 
-                pieChartTasks.setData(dataTasks);
-                pieChartDoneTasks.notifyDataSetChanged();
-                pieChartTasks.invalidate();
+                    pieChartTasks.setData(dataTasks);
+                    pieChartDoneTasks.notifyDataSetChanged();
+                    pieChartTasks.invalidate();
+                }
 
-                PieDataSet dataSetDoneTasks = new PieDataSet(yValuesDoneTasks, "");
-                dataSetDoneTasks.setSliceSpace(3f);
-                dataSetDoneTasks.setColors(ColorTemplate.MATERIAL_COLORS);
+                if (yValuesDoneTasks.size() > 0) {
+                    PieDataSet dataSetDoneTasks = new PieDataSet(yValuesDoneTasks, "");
+                    dataSetDoneTasks.setSliceSpace(3f);
+                    dataSetDoneTasks.setColors(ColorTemplate.MATERIAL_COLORS);
 
-                PieData dataDoneTasks = new PieData(dataSetDoneTasks);
-                dataDoneTasks.setValueTextSize(15f);
-                dataDoneTasks.setValueTextColor(Color.WHITE);
+                    PieData dataDoneTasks = new PieData(dataSetDoneTasks);
+                    dataDoneTasks.setValueTextSize(15f);
+                    dataDoneTasks.setValueTextColor(Color.WHITE);
 
-                pieChartDoneTasks.setData(dataDoneTasks);
-                pieChartDoneTasks.notifyDataSetChanged();
-                pieChartDoneTasks.invalidate();
+                    pieChartDoneTasks.setData(dataDoneTasks);
+                    pieChartDoneTasks.notifyDataSetChanged();
+                    pieChartDoneTasks.invalidate();
+                }
             }
 
             @Override

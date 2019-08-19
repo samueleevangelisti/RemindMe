@@ -344,30 +344,28 @@ public class UpdateTaskActivity extends AppCompatActivity implements AddCategory
             Spinner taskCategory = (Spinner) findViewById(R.id.update_task_category);
             EditText taskDescription = (EditText) findViewById(R.id.update_task_description);
             RadioGroup radioGroup = (RadioGroup) findViewById(R.id.update_task_radio_group);
-            this.task.setTitle(taskTitle.getText().toString());
-            this.task.setPlace(taskPlace.getText().toString());
-            this.task.setDescription(taskDescription.getText().toString());
-            this.task.setCategory(taskCategory.getSelectedItem().toString());
-            this.task.setPriority(this.seekBarValue);
-            switch (radioGroup.getCheckedRadioButtonId()) {
-                case R.id.update_task_radio_pending:
-                    this.task.setStatus("Pending");
-                    break;
-                case R.id.update_task_radio_completed:
-                    this.task.setStatus("Completed");
-                    break;
-                default:
-                    break;
-            }
-            if ((this.task.getStatus().equals("Completed")) && this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
+            if (radioGroup.getCheckedRadioButtonId() == R.id.update_task_radio_completed && this.taskCalendar.compareTo(this.taskDoneCalendar) >= 0) {
                 DialogFragment wrongDateDialogFragment = new WrongDateDialogFragment();
                 wrongDateDialogFragment.show(getSupportFragmentManager(), "wddfmanagerfromuta");
             } else {
+                this.task.setTitle(taskTitle.getText().toString());
+                this.task.setPlace(taskPlace.getText().toString());
+                this.task.setDescription(taskDescription.getText().toString());
+                this.task.setCategory(taskCategory.getSelectedItem().toString());
+                this.task.setPriority(this.seekBarValue);
+                switch (radioGroup.getCheckedRadioButtonId()) {
+                    case R.id.update_task_radio_pending:
+                        this.task.setStatus("Pending");
+                        break;
+                    case R.id.update_task_radio_completed:
+                        this.task.setStatus("Completed");
+                        break;
+                    default:
+                        break;
+                }
                 this.task.setCalendar(this.taskCalendar);
                 this.task.setDoneCalendar(this.taskDoneCalendar);
-                if (this.task.getPriority() >= 6 && this.task.getStatus().equals("Pending")) {
-                    this.task.setNotificationCalendar(this.taskNotificationCalendar);
-                }
+                this.task.setNotificationCalendar(this.taskNotificationCalendar);
                 this.update = true;
                 new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_UPDATE, this.task, categoryOld, statusOld, this.dbAsyncTaskListener).execute();
             }

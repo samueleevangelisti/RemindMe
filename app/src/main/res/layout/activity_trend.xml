@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/trend_total_task"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -28,6 +29,7 @@
         </com.github.mikephil.charting.charts.PieChart>
 
         <TextView
+            android:id="@+id/trend_done_task"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -42,6 +44,7 @@
         </com.github.mikephil.charting.charts.PieChart>
 
         <TextView
+            android:id="@+id/trend_weekly_task"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
