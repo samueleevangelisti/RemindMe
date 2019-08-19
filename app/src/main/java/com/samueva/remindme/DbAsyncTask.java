@@ -13,6 +13,7 @@ enum dbAction {
     TASK_GETALLBYFILTERS,
     TASK_GETALLBYDATE,
     TASK_GETALLBYDATESTATUS,
+    TASK_GETALLBYMONTHSTATUS,
     TASK_INSERT,
     TASK_DELETE_BYID,
     TASK_DELETE_HISTORY,
@@ -104,6 +105,16 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
+    //TASK_GETALLBYMONTHSTATUS
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, int year, int month, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+        this.db = db;
+        this.myDbAction = myDbAction;
+        this.year = year;
+        this.month = month;
+        this.string = string;
+        this.dbAsyncTaskListener = dbAsyncTaskListener;
+    }
+
     //TASK_DELETE_HISTORY, CATEGORY_GETALL
     DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
@@ -190,6 +201,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 break;
             case TASK_GETALLBYDATESTATUS:
                 this.taskList = this.db.taskDao().getAllByDateStatus(this.year, this.month, this.dayOfMonth, this.string);
+                break;
+            case TASK_GETALLBYMONTHSTATUS:
+                this.taskList = this.db.taskDao().getAllByMonthStatus(this.year, this.month, this.string);
                 break;
             case TASK_INSERT:
                 this.taskCategory = this.db.taskCategoryDao().getByName(this.task.getCategory());
@@ -336,6 +350,9 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
                 this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
                 break;
             case TASK_GETALLBYDATESTATUS:
+                this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
+                break;
+            case TASK_GETALLBYMONTHSTATUS:
                 this.dbAsyncTaskListener.onTaskGetAllByFiltersCallback(this.taskList);
                 break;
             case TASK_INSERT:

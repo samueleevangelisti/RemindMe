@@ -3,19 +3,26 @@ package com.samueva.remindme;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -120,7 +127,7 @@ public class TrendActivity extends AppCompatActivity {
         barChartWeek.getLegend().setEnabled(false);
         barChartWeek.getXAxis().setDrawLabels(false);
 
-        final List<BarEntry> yValuesWeek = new ArrayList<BarEntry>();
+        final BarEntry[] yValuesWeekArray = new BarEntry[7];
 
         final boolean[] greenlightweek = {false, false, false, false, false, false, false};
 
@@ -147,11 +154,11 @@ public class TrendActivity extends AppCompatActivity {
 
                 @Override
                 public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
-                    yValuesWeek.add(new BarEntry(finalI, taskList.size()));
+                    yValuesWeekArray[finalI] = new BarEntry(finalI, taskList.size());
 
                     greenlightweek[finalI] = true;
                     if (greenlightweek[0] && greenlightweek[1] && greenlightweek[2] && greenlightweek[3] && greenlightweek[4] && greenlightweek[5] && greenlightweek[6]) {
-                        BarDataSet dataSetWeek = new BarDataSet(yValuesWeek, "");
+                        BarDataSet dataSetWeek = new BarDataSet(Arrays.asList(yValuesWeekArray), "");
                         dataSetWeek.setColors(ColorTemplate.MATERIAL_COLORS);
                         dataSetWeek.setDrawValues(false);
 
@@ -177,12 +184,69 @@ public class TrendActivity extends AppCompatActivity {
             calendar.add(Calendar.DAY_OF_MONTH, -1);
         }
 
-        /*LineChart lineChartWeek = (LineChart) findViewById(R.id.line_chart_week);
-        lineChartWeek.setBackgroundColor(Color.WHITE);
-        lineChartWeek.setGridBackgroundColor(Color.CYAN);
-        lineChartWeek.setDrawGridBackground(true);
-        lineChartWeek.setDrawBorders(true);
-        lineChartWeek.getDescription().setEnabled(false);
-        int fillColor = Color.argb(150, 51, 181, 229);*/
+        final LineChart lineChartYear = (LineChart) findViewById(R.id.line_chart_year);
+        lineChartYear.getDescription().setEnabled(false);
+        lineChartYear.getLegend().setEnabled(false);
+        lineChartYear.getXAxis().setDrawLabels(false);
+        lineChartYear.setDragEnabled(false);
+        lineChartYear.setScaleEnabled(false);
+
+        final Entry[] yValuesYearArray = new Entry[12];
+
+        final boolean[] greenLightYear = {false, false, false, false, false, false, false, false, false, false, false, false};
+
+        calendar = Calendar.getInstance();
+
+        for (int i = 11; i >= 0; i--) {
+            final int finalI = i;
+            new DbAsyncTask(AppDatabase.getInstance(), dbAction.TASK_GETALLBYMONTHSTATUS, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), "Completed", new DbAsyncTask.DbAsyncTaskListener() {
+                @Override
+                public void onTaskGetByIdCallback(Task task) {
+
+                }
+
+                @Override
+                public void onTaskGetAllByStatusCallback(List<Task> taskList) {
+
+                }
+
+                @Override
+                public void onTaskUpdateCallback(int taskId) {
+
+                }
+
+                @Override
+                public void onTaskGetAllByFiltersCallback(List<Task> taskList) {
+                    yValuesYearArray[finalI] = new Entry(finalI, taskList.size());
+
+                    greenLightYear[finalI] = true;
+                    if (greenLightYear[0] && greenLightYear[1] && greenLightYear[2] && greenLightYear[3] && greenLightYear[4] && greenLightYear[5] && greenLightYear[6] && greenLightYear[7] && greenLightYear[8] && greenLightYear[9] && greenLightYear[10] && greenLightYear[11]) {
+                        LineDataSet dataSetYear = new LineDataSet(Arrays.asList(yValuesYearArray), "");
+                        dataSetYear.setDrawValues(false);
+
+                        List<ILineDataSet> lineDataSetYear = new ArrayList<ILineDataSet>();
+                        lineDataSetYear.add(dataSetYear);
+
+                        LineData dataYear = new LineData(lineDataSetYear);
+
+                        lineChartYear.setData(dataYear);
+                        lineChartYear.notifyDataSetChanged();
+                        lineChartYear.invalidate();
+                    }
+                }
+
+                @Override
+                public void onCategoryGetAllCallback(List<TaskCategory> categoryList) {
+
+                }
+
+                @Override
+                public void onCategoryUpdateCallback() {
+
+                }
+            }).execute();
+
+            calendar.add(Calendar.MONTH, -1);
+        }
     }
 }

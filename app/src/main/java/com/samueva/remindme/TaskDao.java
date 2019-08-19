@@ -26,6 +26,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE year = :taskYear AND month = :taskMonth AND day_of_month = :taskDayOfMonth AND status = :taskStatus")
     List<Task> getAllByDateStatus(int taskYear, int taskMonth, int taskDayOfMonth, String taskStatus);
 
+    @Query("SELECT * FROM task WHERE year = :taskYear AND month = :taskMonth AND status = :taskStatus")
+    List<Task> getAllByMonthStatus(int taskYear, int taskMonth, String taskStatus);
+
     @Insert
     long insert(Task tasks);
 
