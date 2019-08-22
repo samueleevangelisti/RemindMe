@@ -9,7 +9,8 @@ import java.util.List;
 
 enum dbAction {
     TASK_GETBYID,
-    TASK_GETALLBYSTATUS,
+    TASK_GETALLBYSTATUS_PENDING,
+    TASK_GETALLBYSTATUS_COMPLETED,
     TASK_GETALLBYFILTERS,
     TASK_GETALLBYDATE,
     TASK_GETALLBYDATESTATUS,
@@ -67,11 +68,10 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
-    //TASK_GETALLBYSTATUS
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, String string, DbAsyncTaskListener dbAsyncTaskListener) {
+    //TASK_GETALLBYSTATUS_PENDING, TASK_GETALLBYSTATUS_COMPLETED, TASK_DELETE_HISTORY, CATEGORY_GETALL
+    DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
         this.db = db;
         this.myDbAction = myDbAction;
-        this.string = string;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -112,13 +112,6 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
         this.year = year;
         this.month = month;
         this.string = string;
-        this.dbAsyncTaskListener = dbAsyncTaskListener;
-    }
-
-    //TASK_DELETE_HISTORY, CATEGORY_GETALL
-    DbAsyncTask(AppDatabase db, dbAction myDbAction, DbAsyncTaskListener dbAsyncTaskListener) {
-        this.db = db;
-        this.myDbAction = myDbAction;
         this.dbAsyncTaskListener = dbAsyncTaskListener;
     }
 
@@ -171,14 +164,25 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_GETBYID:
                 this.task = this.db.taskDao().getById(this.taskId);
                 break;
-            case TASK_GETALLBYSTATUS:
-                this.taskList = this.db.taskDao().getAllByStatus(this.string);
+            case TASK_GETALLBYSTATUS_PENDING:
+                this.taskList = this.db.taskDao().getAllByStatus("Pending");
                 this.taskList.sort(new Comparator<Task>() {
                     @Override
                     public int compare(Task task, Task t1) {
                         String s1 = String.format("%04d%02d%02d%02d%02d", task.getYear(), task.getMonth(), task.getDayOfMonth(), task.getHourOfDay(), task.getMinute());
                         String s2 = String.format("%04d%02d%02d%02d%02d", t1.getYear(), t1.getMonth(), t1.getDayOfMonth(), t1.getHourOfDay(), t1.getMinute());
                         return s1.compareTo(s2);
+                    }
+                });
+                break;
+            case TASK_GETALLBYSTATUS_COMPLETED:
+                this.taskList = this.db.taskDao().getAllByStatus("Completed");
+                this.taskList.sort(new Comparator<Task>() {
+                    @Override
+                    public int compare(Task task, Task t1) {
+                        String s1 = String.format("%04d%02d%02d%02d%02d", task.getYear(), task.getMonth(), task.getDayOfMonth(), task.getHourOfDay(), task.getMinute());
+                        String s2 = String.format("%04d%02d%02d%02d%02d", t1.getYear(), t1.getMonth(), t1.getDayOfMonth(), t1.getHourOfDay(), t1.getMinute());
+                        return s2.compareTo(s1);
                     }
                 });
                 break;
@@ -340,7 +344,10 @@ public class DbAsyncTask extends AsyncTask<Void, Void, Void> {
             case TASK_GETBYID:
                 this.dbAsyncTaskListener.onTaskGetByIdCallback(this.task);
                 break;
-            case TASK_GETALLBYSTATUS:
+            case TASK_GETALLBYSTATUS_PENDING:
+                this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
+                break;
+            case TASK_GETALLBYSTATUS_COMPLETED:
                 this.dbAsyncTaskListener.onTaskGetAllByStatusCallback(this.taskList);
                 break;
             case TASK_GETALLBYFILTERS:

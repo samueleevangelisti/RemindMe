@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onTaskUpdateCallback(int taskId) {
-            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Pending", dbAsyncTaskListener).execute();
+            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS_PENDING, dbAsyncTaskListener).execute();
         }
 
         @Override
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_PENDING, this.dbAsyncTaskListener).execute();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 datePickerFragment.show(getSupportFragmentManager(), "dpfmanagerfromma");
                 return true;
             case R.id.main_optionmenu_restore:
-                new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_PENDING, this.dbAsyncTaskListener).execute();
                 return true;
             default:
                 break;
@@ -232,22 +232,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (requestCode) {
                 case addTaskActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
-                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_PENDING, this.dbAsyncTaskListener).execute();
                     }
                     break;
                 case historyActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
-                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_PENDING, this.dbAsyncTaskListener).execute();
                     }
                     break;
                 case categoryActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
-                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_PENDING, this.dbAsyncTaskListener).execute();
                     }
                     break;
                 case taskInfoActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
-                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Pending", this.dbAsyncTaskListener).execute();
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_PENDING, this.dbAsyncTaskListener).execute();
                     }
                     break;
                 default:

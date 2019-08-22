@@ -39,7 +39,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         @Override
         public void onTaskUpdateCallback(int taskId) {
-            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS, "Completed", dbAsyncTaskListener).execute();
+            new DbAsyncTask(db, dbAction.TASK_GETALLBYSTATUS_COMPLETED, dbAsyncTaskListener).execute();
         }
 
         @Override
@@ -97,7 +97,7 @@ public class HistoryActivity extends AppCompatActivity {
         });
         this.recyclerView.setAdapter(recyclerAdapter);
 
-        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Completed", this.dbAsyncTaskListener).execute();
+        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_COMPLETED, this.dbAsyncTaskListener).execute();
     }
 
     @Override
@@ -130,7 +130,7 @@ public class HistoryActivity extends AppCompatActivity {
                 case taskInfoActivity_requestCode:
                     if (data.getBooleanExtra("update", false)) {
                         this.update = true;
-                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS, "Completed", this.dbAsyncTaskListener).execute();
+                        new DbAsyncTask(this.db, dbAction.TASK_GETALLBYSTATUS_COMPLETED, this.dbAsyncTaskListener).execute();
                     }
                     break;
                 default:
