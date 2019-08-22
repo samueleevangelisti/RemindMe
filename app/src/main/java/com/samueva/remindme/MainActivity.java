@@ -209,8 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startTrendActivity();
         } else if (id == R.id.nav_categories) {
             startCategoryActivity();
-        } else if (id == R.id.nav_info) {
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
