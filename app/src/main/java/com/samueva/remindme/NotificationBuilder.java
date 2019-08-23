@@ -13,7 +13,7 @@ public class NotificationBuilder {
 
         Notification.Builder notificationBuilder = new Notification.Builder(mContext)
                 .setContentTitle(task.getTitle())
-                .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())
+                .setContentText(String.format("%02d:%02d", task.getHourOfDay(), task.getMinute()) + " - " + task.getPlace())
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentIntent(notificationActionIntent)
                 .setAutoCancel(true);
