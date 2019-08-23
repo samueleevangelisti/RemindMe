@@ -1,6 +1,10 @@
 package com.samueva.remindme;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,6 +87,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // BroadcastReceiver
+        IntentFilter intentFilter = new IntentFilter("com.samueva.remindme.broadcast.notificationpublisher");
+        NotificationPublisher notificationPublisher = new NotificationPublisher();
+        registerReceiver(notificationPublisher, intentFilter);
+
+        // NotificationChannel
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationChannel notificationChannel = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel = new NotificationChannel("com.samueva.remindme.notification", "RemindMe Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.enableVibration(true);
+            notificationChannel.enableLights(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
 
         // Database
         this.db = AppDatabase.buildInstance(getApplicationContext(), AppDatabase.class, "database");

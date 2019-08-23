@@ -11,13 +11,17 @@ public class NotificationBuilder {
         Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
         PendingIntent notificationActionIntent = PendingIntent.getActivity(mContext, taskId, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification = new Notification.Builder(mContext)
+        Notification.Builder notificationBuilder = new Notification.Builder(mContext)
                 .setContentTitle(task.getTitle())
                 .setContentText(task.getHourOfDay() + ":" + task.getMinute() + " - " + task.getPlace())
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentIntent(notificationActionIntent)
-                .setAutoCancel(true)
-                .build();
+                .setAutoCancel(true);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationBuilder.setChannelId("com.samueva.remindme.notification");
+        }
+
+        Notification notification = notificationBuilder.build();
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("com.samueva.remindme.broadcast.notificationpublisher");
